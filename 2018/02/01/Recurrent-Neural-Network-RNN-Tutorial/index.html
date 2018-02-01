@@ -79,17 +79,22 @@
 
 
 
-<meta name="description" content="Hi! I am Guoxing Lan(兰国兴)! I’m a master student majoring in Control Science and Engineering in Tsinghua University, Beijing, China. My interests are in Machine Learning, Artificial Neural Networks, Fa">
+<meta name="description" content="##Introduction to RNNIn a feedforward neural network, we assume that all inputs (and outputs) are independent of each other. Therefore, feedforward neural networks can’t remember the recent past infor">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://lankuohsing.github.io/blog/2018/01/27/Hello-World/index.html">
+<meta property="og:title" content="Recurrent Neural Network(RNN) Tutorial">
+<meta property="og:url" content="https://lankuohsing.github.io/blog/2018/02/01/Recurrent-Neural-Network-RNN-Tutorial/index.html">
 <meta property="og:site_name" content="Guoxing Lan">
-<meta property="og:description" content="Hi! I am Guoxing Lan(兰国兴)! I’m a master student majoring in Control Science and Engineering in Tsinghua University, Beijing, China. My interests are in Machine Learning, Artificial Neural Networks, Fa">
+<meta property="og:description" content="##Introduction to RNNIn a feedforward neural network, we assume that all inputs (and outputs) are independent of each other. Therefore, feedforward neural networks can’t remember the recent past infor">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-01-27T07:19:15.223Z">
+<meta property="og:image" content="https://lankuohsing.github.io/blog/2018/02/01/Recurrent-Neural-Network-RNN-Tutorial/images/Recurrent%20Neural%20Network(RNN">
+<meta property="og:image" content="https://lankuohsing.github.io/blog/2018/02/01/Recurrent-Neural-Network-RNN-Tutorial/images/Recurrent%20Neural%20Network(RNN">
+<meta property="og:image" content="https://lankuohsing.github.io/blog/2018/02/01/Recurrent-Neural-Network-RNN-Tutorial/images/Recurrent%20Neural%20Network(RNN">
+<meta property="og:image" content="https://lankuohsing.github.io/blog/2018/02/01/Recurrent-Neural-Network-RNN-Tutorial/images/Recurrent%20Neural%20Network(RNN">
+<meta property="og:updated_time" content="2018-02-01T12:28:08.525Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Hi! I am Guoxing Lan(兰国兴)! I’m a master student majoring in Control Science and Engineering in Tsinghua University, Beijing, China. My interests are in Machine Learning, Artificial Neural Networks, Fa">
+<meta name="twitter:title" content="Recurrent Neural Network(RNN) Tutorial">
+<meta name="twitter:description" content="##Introduction to RNNIn a feedforward neural network, we assume that all inputs (and outputs) are independent of each other. Therefore, feedforward neural networks can’t remember the recent past infor">
+<meta name="twitter:image" content="https://lankuohsing.github.io/blog/2018/02/01/Recurrent-Neural-Network-RNN-Tutorial/images/Recurrent%20Neural%20Network(RNN">
 
 
 
@@ -119,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="https://lankuohsing.github.io/blog/2018/01/27/Hello-World/"/>
+  <link rel="canonical" href="https://lankuohsing.github.io/blog/2018/02/01/Recurrent-Neural-Network-RNN-Tutorial/"/>
 
 
 
 
 
-  <title>Hello World | Guoxing Lan</title>
+  <title>Recurrent Neural Network(RNN) Tutorial | Guoxing Lan</title>
   
 
 
@@ -232,7 +237,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog/blog/2018/01/27/Hello-World/">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog/blog/2018/02/01/Recurrent-Neural-Network-RNN-Tutorial/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Guoxing Lan">
@@ -249,7 +254,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">Recurrent Neural Network(RNN) Tutorial</h1>
         
 
         <div class="post-meta">
@@ -261,8 +266,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-27T15:11:17+08:00">
-                2018-01-27
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-01T20:21:39+08:00">
+                2018-02-01
               </time>
             
 
@@ -299,7 +304,13 @@
       
 
       
-        <p>Hi! I am Guoxing Lan(兰国兴)! I’m a master student majoring in Control Science and Engineering in Tsinghua University, Beijing, China. My interests are in Machine Learning, Artificial Neural Networks, Fault Diagnosis and Remaining Useful Life Estimation based on data driven methods. I am going to record and share my journey of studying Artificial Intelligence on GitHub. I hope we can enjoy the joy of sharing knowledge here!</p>
+        <p>##Introduction to RNN<br>In a feedforward neural network, we assume that all inputs (and outputs) are independent of each other. Therefore, feedforward neural networks can’t remember the recent past information of training, and become power less dealing with sequence models. Recurrent neural network(RNN) was proposed to address this issue (Jordan et al. 1986, Elman et al. 1990).  RNNs make use of sequential information by  maintaining in their hidden units a ‘state vector’ that implicitly contains information of all the past elements of  the sequence. The input of an RNN model is an sequence. The model processes one element in the input sequence at one time step. After computation of one time step, the newly updated state vector is passed down to the next time step to facilitate the computation of thee next element. Here is what a typical RNN model looks like:<br><img src="images/Recurrent Neural Network(RNN" alt="typical RNN model"> Tutorial/1517239756914.png)</p>
+<blockquote>
+<p><strong>A recurrent neural network with one hidden unit(left) and its unfolding version in time involved in its forward computation(right).</strong> The state $s_t$ in hidden unit at time $t$ get inputs from input $x<em>t$ at time $t$ and previous state $s</em>{t-1}$ at time $t-1$. In this way, an RNN model can map an input sequence $\left{ x_t \right}$ into an output sequence $\left{ o_t \right}$, with each $o<em>t$ depending on all the previous $x</em>{t’}$(for $t’\leq t$) </p>
+</blockquote>
+<p>However, theoretical and empirical evidence has shown that it’s difficult for RNNs to learn long-term dependencies (Bengio et al, 1994), because the gradients will vanish or explode when trained with gradient-based methods. To resolve this problem, a much more complicated network was proposed, named Long-Short Term Memory (LSTM ) network. </p>
+<h2 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h2><p>All recurrent neural networks have the form of a chain of repeating modules of neural network. In standard RNNs, this repeating module will have a very simple structure, such as a single tanh layer.<br><img src="images/Recurrent Neural Network(RNN" alt="The repeating module in a standard RNN contains a single layer "> Tutorial/1517371055439.png)<br>LSTMs also have this chain-like structure, but the repeating module is different from that of standard RNNs, and much more complicated. Instead of having a single neural network layer, there are four, interacting in a very special way.<br><img src="images/Recurrent Neural Network(RNN" alt="The repeating module in an LSTM contains four interacting layers"> Tutorial/LSTM-Diagram.png)<br>LSTM is able to learn for how long it should memorize the old information, when to forget, when to make use of the new data, and how to combine the old memory with new input, carefully regulated by structures called gates.<br>\begin{align<em>}<br> forget\ gate: f_t&amp;= \sigma\left(W<em>f\cdot \left[h</em>{t-1},x_t\right]+b_f\right) \<br> input\ gate: i_t&amp;=  \sigma\left(W<em>i\cdot \left[h</em>{t-1},x_t\right]+b_i\right) \<br> candidate\ cell\ state: \tilde C_t&amp;=\tanh\left(W<em>C\cdot \left[h</em>{t-1},x_t\right]+b_C\right) \<br> new\ cell\ state: C_t&amp;=f_t</em>C_{t-1}+i_t<em>\tilde C_t\<br> output\ gate: o_t&amp;= \sigma\left(W<em>o\cdot \left[h</em>{t-1},x_t\right]+b_0\right) \<br> new\ hidden value: h_t&amp;=o_t</em>\tanh \left(C_t\right)\<br>\end{align*}<br>Detailed introduction to the LSTM diagram above is shown in <a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="noopener">Understanding LSTM Networks</a>. </p>
+<p>##LSTM Variants<br>A variation is to use coupled forget and input gates. Gated Recurrent Unit(GRU) is an instance of this. It combines the forget and input gates into a single “update gate.”  It also merges the cell state and hidden state.<br><img src="images/Recurrent Neural Network(RNN" alt="GRU"> Tutorial/1517372618668.png)</p>
 
       
     </div>
@@ -324,15 +335,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/blog/2018/01/27/Hello-World/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/blog/2018/02/01/Recurrent-Neural-Network-RNN-Tutorial/" rel="prev" title="Recurrent Neural Network(RNN) Tutorial">
-                Recurrent Neural Network(RNN) Tutorial <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -384,8 +395,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -431,6 +451,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LSTM"><span class="nav-number">1.</span> <span class="nav-text">LSTM</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
