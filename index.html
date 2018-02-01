@@ -7,7 +7,7 @@
 
 <html class="theme-next pisces use-motion" lang="en">
 <head>
-  <meta charset="UTF-8"/>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
@@ -40,7 +40,7 @@
 
   
   
-  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -48,21 +48,21 @@
 
 
 
-<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+<link href="css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=5.1.4">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
 
 
-  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
 
 
 
@@ -124,7 +124,7 @@
 
 
 
-  <title>Guoxing Lan</title>
+  <title>Guoxing Lan</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -143,7 +143,7 @@
     
   
 
-  <div class="container sidebar-position-left 
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left 
   page-home">
     <div class="headband"></div>
 	<a href="https://github.com/lankuohsing"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
@@ -181,7 +181,7 @@
       
         
         <li class="menu-item menu-item-home">
-          <a href="/blog/" rel="section">
+          <a href="" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
@@ -191,7 +191,7 @@
       
         
         <li class="menu-item menu-item-about">
-          <a href="/blog/about/" rel="section">
+          <a href="" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
@@ -232,12 +232,12 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog/blog/2018/02/01/Recurrent-Neural-Network-RNN-Tutorial/">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2018/02/01/Recurrent-Neural-Network-RNN-Tutorial/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Guoxing Lan">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.jpg">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -251,7 +251,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/blog/2018/02/01/Recurrent-Neural-Network-RNN-Tutorial/" itemprop="url">Recurrent Neural Network(RNN) Tutorial</a></h1>
+                <a class="post-title-link" href="2018/02/01/Recurrent-Neural-Network-RNN-Tutorial/" itemprop="url">Recurrent Neural Network(RNN) Tutorial</a></h1>
         
 
         <div class="post-meta">
@@ -303,13 +303,13 @@
       
         
           
-            <p>##Introduction to RNN<br>In a feedforward neural network, we assume that all inputs (and outputs) are independent of each other. Therefore, feedforward neural networks can’t remember the recent past information of training, and become power less dealing with sequence models. Recurrent neural network(RNN) was proposed to address this issue (Jordan et al. 1986, Elman et al. 1990).  RNNs make use of sequential information by  maintaining in their hidden units a ‘state vector’ that implicitly contains information of all the past elements of  the sequence. The input of an RNN model is an sequence. The model processes one element in the input sequence at one time step. After computation of one time step, the newly updated state vector is passed down to the next time step to facilitate the computation of thee next element. Here is what a typical RNN model looks like:<br><img src="images/Recurrent Neural Network(RNN" alt="typical RNN model"> Tutorial/1517239756914.png)</p>
+            <h2 id="Introduction-to-RNN"><a href="#Introduction-to-RNN" class="headerlink" title="Introduction to RNN"></a>Introduction to RNN</h2><p>In a feedforward neural network, we assume that all inputs (and outputs) are independent of each other. Therefore, feedforward neural networks can’t remember the recent past information of training, and become power less dealing with sequence models. Recurrent neural network(RNN) was proposed to address this issue (Jordan et al. 1986, Elman et al. 1990).  RNNs make use of sequential information by  maintaining in their hidden units a ‘state vector’ that implicitly contains information of all the past elements of  the sequence. The input of an RNN model is an sequence. The model processes one element in the input sequence at one time step. After computation of one time step, the newly updated state vector is passed down to the next time step to facilitate the computation of thee next element. Here is what a typical RNN model looks like:<br><img src="images/Recurrent Neural Network(RNN" alt="typical RNN model"> Tutorial/1517239756914.png)</p>
 <blockquote>
 <p><strong>A recurrent neural network with one hidden unit(left) and its unfolding version in time involved in its forward computation(right).</strong> The state $s_t$ in hidden unit at time $t$ get inputs from input $x<em>t$ at time $t$ and previous state $s</em>{t-1}$ at time $t-1$. In this way, an RNN model can map an input sequence $\left{ x_t \right}$ into an output sequence $\left{ o_t \right}$, with each $o<em>t$ depending on all the previous $x</em>{t’}$(for $t’\leq t$) </p>
 </blockquote>
 <p>However, theoretical and empirical evidence has shown that it’s difficult for RNNs to learn long-term dependencies (Bengio et al, 1994), because the gradients will vanish or explode when trained with gradient-based methods. To resolve this problem, a much more complicated network was proposed, named Long-Short Term Memory (LSTM ) network. </p>
 <h2 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h2><p>All recurrent neural networks have the form of a chain of repeating modules of neural network. In standard RNNs, this repeating module will have a very simple structure, such as a single tanh layer.<br><img src="images/Recurrent Neural Network(RNN" alt="The repeating module in a standard RNN contains a single layer "> Tutorial/1517371055439.png)<br>LSTMs also have this chain-like structure, but the repeating module is different from that of standard RNNs, and much more complicated. Instead of having a single neural network layer, there are four, interacting in a very special way.<br><img src="images/Recurrent Neural Network(RNN" alt="The repeating module in an LSTM contains four interacting layers"> Tutorial/LSTM-Diagram.png)<br>LSTM is able to learn for how long it should memorize the old information, when to forget, when to make use of the new data, and how to combine the old memory with new input, carefully regulated by structures called gates.<br>\begin{align<em>}<br> forget\ gate: f_t&amp;= \sigma\left(W<em>f\cdot \left[h</em>{t-1},x_t\right]+b_f\right) \<br> input\ gate: i_t&amp;=  \sigma\left(W<em>i\cdot \left[h</em>{t-1},x_t\right]+b_i\right) \<br> candidate\ cell\ state: \tilde C_t&amp;=\tanh\left(W<em>C\cdot \left[h</em>{t-1},x_t\right]+b_C\right) \<br> new\ cell\ state: C_t&amp;=f_t</em>C_{t-1}+i_t<em>\tilde C_t\<br> output\ gate: o_t&amp;= \sigma\left(W<em>o\cdot \left[h</em>{t-1},x_t\right]+b_0\right) \<br> new\ hidden value: h_t&amp;=o_t</em>\tanh \left(C_t\right)\<br>\end{align*}<br>Detailed introduction to the LSTM diagram above is shown in <a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="noopener">Understanding LSTM Networks</a>. </p>
-<p>##LSTM Variants<br>A variation is to use coupled forget and input gates. Gated Recurrent Unit(GRU) is an instance of this. It combines the forget and input gates into a single “update gate.”  It also merges the cell state and hidden state.<br><img src="images/Recurrent Neural Network(RNN" alt="GRU"> Tutorial/1517372618668.png)</p>
+<h2 id="LSTM-Variants"><a href="#LSTM-Variants" class="headerlink" title="LSTM Variants"></a>LSTM Variants</h2><p>A variation is to use coupled forget and input gates. Gated Recurrent Unit(GRU) is an instance of this. It combines the forget and input gates into a single “update gate.”  It also merges the cell state and hidden state.<br><img src="images/Recurrent Neural Network(RNN" alt="GRU"> Tutorial/1517372618668.png)</p>
 
           
         
@@ -358,12 +358,12 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog/blog/2018/01/27/Hello-World/">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2018/01/27/Hello-World/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Guoxing Lan">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.jpg">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -377,7 +377,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/blog/2018/01/27/Hello-World/" itemprop="url">Hello World</a></h1>
+                <a class="post-title-link" href="2018/01/27/Hello-World/" itemprop="url">Hello World</a></h1>
         
 
         <div class="post-meta">
@@ -501,7 +501,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="/blog/images/avatar.jpg"
+                src="/images/avatar.jpg"
                 alt="Guoxing Lan" />
             
               <p class="site-author-name" itemprop="name">Guoxing Lan</p>
@@ -513,7 +513,7 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/blog/archives">
+                <a href="archives">
               
                   <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">posts</span>
@@ -643,60 +643,60 @@
 
   
   
-    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+    <script type="text/javascript" src="lib/jquery/index.js?v=2.1.3"></script>
   
 
   
   
-    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+    <script type="text/javascript" src="lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
   
 
   
   
-    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+    <script type="text/javascript" src="lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
   
 
   
   
-    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+    <script type="text/javascript" src="lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
   
 
 
   
 
 
-  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+  <script type="text/javascript" src="js/src/utils.js?v=5.1.4"></script>
 
-  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.4"></script>
+  <script type="text/javascript" src="js/src/motion.js?v=5.1.4"></script>
 
 
 
   
+  
+
+
+  <script type="text/javascript" src="js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
 
   
 
 
-  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+  <script type="text/javascript" src="js/src/bootstrap.js?v=5.1.4"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
 
