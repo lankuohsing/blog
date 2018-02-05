@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Deep Learning,Neural Networks," />
 
 
 
@@ -79,21 +79,22 @@
 
 
 
-<meta name="description" content="@(深度学习)[神经网络, RNN] Introduction to RNN在传统的前馈神经网络中，我们假定所有的输入（和输出）相互之间都是独立的。因此，前馈神经网络不能记住最近的历史训练信息，于是在处理序列模型时效果不佳。循环神经网络的提出就是为了解决这个问题的（Jordan et al. 1986, Elman et al. 1990）。RNN可以通过在隐藏层维护一个“状态向量”来充分利用序列">
+<meta name="description" content="Introduction to RNN在传统的前馈神经网络中，我们假定所有的输入（和输出）相互之间都是独立的。因此，前馈神经网络不能记住最近的历史训练信息，于是在处理序列模型时效果不佳。循环神经网络的提出就是为了解决这个问题的（Jordan et al. 1986, Elman et al. 1990）。RNN可以通过在隐藏层维护一个“状态向量”来充分利用序列的信息，状态向量可以隐式地包含序列中的">
+<meta name="keywords" content="Deep Learning,Neural Networks">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RNN-Tutorial">
 <meta property="og:url" content="https://lankuohsing.github.io/blog/2018/02/01/RNN-Tutorial/index.html">
 <meta property="og:site_name" content="Guoxing Lan">
-<meta property="og:description" content="@(深度学习)[神经网络, RNN] Introduction to RNN在传统的前馈神经网络中，我们假定所有的输入（和输出）相互之间都是独立的。因此，前馈神经网络不能记住最近的历史训练信息，于是在处理序列模型时效果不佳。循环神经网络的提出就是为了解决这个问题的（Jordan et al. 1986, Elman et al. 1990）。RNN可以通过在隐藏层维护一个“状态向量”来充分利用序列">
+<meta property="og:description" content="Introduction to RNN在传统的前馈神经网络中，我们假定所有的输入（和输出）相互之间都是独立的。因此，前馈神经网络不能记住最近的历史训练信息，于是在处理序列模型时效果不佳。循环神经网络的提出就是为了解决这个问题的（Jordan et al. 1986, Elman et al. 1990）。RNN可以通过在隐藏层维护一个“状态向量”来充分利用序列的信息，状态向量可以隐式地包含序列中的">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://lankuohsing.github.io/blog/images/RNN-Tutorial/1517239756914.png">
 <meta property="og:image" content="https://lankuohsing.github.io/blog/images/RNN-Tutorial/1517371055439.png">
 <meta property="og:image" content="https://lankuohsing.github.io/blog/images/RNN-Tutorial/LSTM-Diagram.png">
 <meta property="og:image" content="https://lankuohsing.github.io/blog/images/RNN-Tutorial/1517372618668.png">
-<meta property="og:updated_time" content="2018-02-02T08:14:32.161Z">
+<meta property="og:updated_time" content="2018-02-05T08:44:33.016Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RNN-Tutorial">
-<meta name="twitter:description" content="@(深度学习)[神经网络, RNN] Introduction to RNN在传统的前馈神经网络中，我们假定所有的输入（和输出）相互之间都是独立的。因此，前馈神经网络不能记住最近的历史训练信息，于是在处理序列模型时效果不佳。循环神经网络的提出就是为了解决这个问题的（Jordan et al. 1986, Elman et al. 1990）。RNN可以通过在隐藏层维护一个“状态向量”来充分利用序列">
+<meta name="twitter:description" content="Introduction to RNN在传统的前馈神经网络中，我们假定所有的输入（和输出）相互之间都是独立的。因此，前馈神经网络不能记住最近的历史训练信息，于是在处理序列模型时效果不佳。循环神经网络的提出就是为了解决这个问题的（Jordan et al. 1986, Elman et al. 1990）。RNN可以通过在隐藏层维护一个“状态向量”来充分利用序列的信息，状态向量可以隐式地包含序列中的">
 <meta name="twitter:image" content="https://lankuohsing.github.io/blog/images/RNN-Tutorial/1517239756914.png">
 
 
@@ -195,8 +196,18 @@
         </li>
       
         
+        <li class="menu-item menu-item-archives">
+          <a href="http://localhost:4000/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-about">
-          <a href="" rel="section">
+          <a href="http://localhost:4000/blog/about/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
@@ -205,22 +216,22 @@
         </li>
       
         
-        <li class="menu-item menu-item-categories">
-          <a href="" rel="section">
+        <li class="menu-item menu-item-tags">
+          <a href="http://localhost:4000/blog/tags/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
-            Categories
+            Tags
           </a>
         </li>
       
         
-        <li class="menu-item menu-item-archives">
-          <a href="" rel="section">
+        <li class="menu-item menu-item-categories">
+          <a href="http://localhost:4000/blog/categories/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
             
-            Archives
+            Categories
           </a>
         </li>
       
@@ -297,6 +308,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../../../categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Deep Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -324,8 +357,7 @@
       
 
       
-        <p>@(深度学习)[神经网络, RNN]</p>
-<h2 id="Introduction-to-RNN"><a href="#Introduction-to-RNN" class="headerlink" title="Introduction to RNN"></a>Introduction to RNN</h2><p>在传统的前馈神经网络中，我们假定所有的输入（和输出）相互之间都是独立的。因此，前馈神经网络不能记住最近的历史训练信息，于是在处理序列模型时效果不佳。循环神经网络的提出就是为了解决这个问题的（Jordan et al. 1986, Elman et al. 1990）。RNN可以通过在隐藏层维护一个“状态向量”来充分利用序列的信息，状态向量可以隐式地包含序列中的所有元素。<br>RNN模型的输入是一个序列，这个模型一步处理序列中的一个元素。在计算完每一步后，更新的状态向量会传递给下一步的计算过程。下图是一个典型的RNN模型：<br><img src="/blog/images/RNN-Tutorial/1517239756914.png" alt="typical RNN model"></p>
+        <h2 id="Introduction-to-RNN"><a href="#Introduction-to-RNN" class="headerlink" title="Introduction to RNN"></a>Introduction to RNN</h2><p>在传统的前馈神经网络中，我们假定所有的输入（和输出）相互之间都是独立的。因此，前馈神经网络不能记住最近的历史训练信息，于是在处理序列模型时效果不佳。循环神经网络的提出就是为了解决这个问题的（Jordan et al. 1986, Elman et al. 1990）。RNN可以通过在隐藏层维护一个“状态向量”来充分利用序列的信息，状态向量可以隐式地包含序列中的所有元素。<br>RNN模型的输入是一个序列，这个模型一步处理序列中的一个元素。在计算完每一步后，更新的状态向量会传递给下一步的计算过程。下图是一个典型的RNN模型：<br><img src="/blog/images/RNN-Tutorial/1517239756914.png" alt="typical RNN model"></p>
 <blockquote>
 <p><strong>一个隐藏层单元数为1的RNN模型（左）以及它的在时间上的展开形式（右）</strong><br>$t$时刻隐藏层的状态$s_t$ 的输入来自$t$时刻的输入值$x_t$ 和$t-1$时刻的状态 $s_{t-1}$。 通过这种方式，RNN模型可将输入序列 $\left\{ x_t \right\}$ 映射到输出序列 $\left\{ o_t \right\}$, 其中每个输出 $o_t$ 取决于所有的输入 $x_{t’}$($t’\leq t$) </p>
 </blockquote>
@@ -355,6 +387,14 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="../../../../tags/Deep-Learning/" rel="tag"># Deep Learning</a>
+          
+            <a href="../../../../tags/Neural-Networks/" rel="tag"># Neural Networks</a>
+          
+        </div>
       
 
       
@@ -452,7 +492,7 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="../../../../archives/">
+                <a href="http://localhost:4000/blog/archives/">
               
                   <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">posts</span>
@@ -461,7 +501,25 @@
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="../../../../categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="../../../../tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
             
 
           </nav>
