@@ -79,21 +79,21 @@
 
 
 
-<meta name="description" content="1.logistic回归详解logistic回归模型是用来解决二分类问题的，因此我们将首先在概率的框架下描述什么是分类问题。分类问题的一般描述如下图所示：  图1.1 分类问题的一般描述用X代表输入空间，是输入向量的所有可能取值的集合，也叫特征空间；Y代表输出空间，是输出的所有可能取值的集合。$x^{(i)}\in X$代表特征空间的一个样本，$y^{(i)}\in Y$代表其类别（标签）。分类问">
+<meta name="description" content="有任何问题请联系 languoxing@126.com 本文是深度学习入门教程序列的第一篇，通过介绍logistic回归的原理，进而引入一层神经网络的前向传播和后向传播公式，并提供了示例代码。 1.logistic回归详解logistic回归模型是用来解决二分类问题的，因此我们将首先在概率的框架下描述什么是分类问题。分类问题的一般描述如下图所示：  图1.1 分类问题的一般描述用X代表输入空间，是">
 <meta name="keywords" content="Deep Learning,Neural Networks">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从logistic回归到神经网络">
 <meta property="og:url" content="https://lankuohsing.github.io/blog/2018/06/05/从logistic回归到神经网络/index.html">
 <meta property="og:site_name" content="Guoxing Lan">
-<meta property="og:description" content="1.logistic回归详解logistic回归模型是用来解决二分类问题的，因此我们将首先在概率的框架下描述什么是分类问题。分类问题的一般描述如下图所示：  图1.1 分类问题的一般描述用X代表输入空间，是输入向量的所有可能取值的集合，也叫特征空间；Y代表输出空间，是输出的所有可能取值的集合。$x^{(i)}\in X$代表特征空间的一个样本，$y^{(i)}\in Y$代表其类别（标签）。分类问">
+<meta property="og:description" content="有任何问题请联系 languoxing@126.com 本文是深度学习入门教程序列的第一篇，通过介绍logistic回归的原理，进而引入一层神经网络的前向传播和后向传播公式，并提供了示例代码。 1.logistic回归详解logistic回归模型是用来解决二分类问题的，因此我们将首先在概率的框架下描述什么是分类问题。分类问题的一般描述如下图所示：  图1.1 分类问题的一般描述用X代表输入空间，是">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0.png">
 <meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/600px-Logistic-curve.png">
 <meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/logistic%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D.JPG">
-<meta property="og:updated_time" content="2018-06-05T16:09:15.321Z">
+<meta property="og:updated_time" content="2018-06-06T08:44:37.220Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从logistic回归到神经网络">
-<meta name="twitter:description" content="1.logistic回归详解logistic回归模型是用来解决二分类问题的，因此我们将首先在概率的框架下描述什么是分类问题。分类问题的一般描述如下图所示：  图1.1 分类问题的一般描述用X代表输入空间，是输入向量的所有可能取值的集合，也叫特征空间；Y代表输出空间，是输出的所有可能取值的集合。$x^{(i)}\in X$代表特征空间的一个样本，$y^{(i)}\in Y$代表其类别（标签）。分类问">
+<meta name="twitter:description" content="有任何问题请联系 languoxing@126.com 本文是深度学习入门教程序列的第一篇，通过介绍logistic回归的原理，进而引入一层神经网络的前向传播和后向传播公式，并提供了示例代码。 1.logistic回归详解logistic回归模型是用来解决二分类问题的，因此我们将首先在概率的框架下描述什么是分类问题。分类问题的一般描述如下图所示：  图1.1 分类问题的一般描述用X代表输入空间，是">
 <meta name="twitter:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0.png">
 
 
@@ -356,7 +356,9 @@
       
 
       
-        <h2 id="1-logistic回归详解"><a href="#1-logistic回归详解" class="headerlink" title="1.logistic回归详解"></a>1.logistic回归详解</h2><p>logistic回归模型是用来解决二分类问题的，因此我们将首先在概率的框架下描述什么是分类问题。分类问题的一般描述如下图所示：</p>
+        <p>有任何问题请联系 <a href="mailto:languoxing@126.com" target="_blank" rel="noopener">languoxing@126.com</a></p>
+<p>本文是深度学习入门教程序列的第一篇，通过介绍logistic回归的原理，进而引入一层神经网络的前向传播和后向传播公式，并提供了示例代码。</p>
+<h2 id="1-logistic回归详解"><a href="#1-logistic回归详解" class="headerlink" title="1.logistic回归详解"></a>1.logistic回归详解</h2><p>logistic回归模型是用来解决二分类问题的，因此我们将首先在概率的框架下描述什么是分类问题。分类问题的一般描述如下图所示：</p>
 <p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0.png" width="500" height="150" alt="分类问题的一般描述"></center></p>
 <p><center>图1.1 分类问题的一般描述</center><br>用X代表输入空间，是输入向量的所有可能取值的集合，也叫特征空间；Y代表输出空间，是输出的所有可能取值的集合。$x^{(i)}\in X$代表特征空间的一个样本，$y^{(i)}\in Y$代表其类别（标签）。分类问题的一般描述可总结为：利用已知标签的训练集$X_{train}$训练出一个模型，该模型包含一个映射关系$h:X\rightarrow Y$，$h$应该能够对新的数据点$x^{(m+1)}$预测其类别$y^{(m+1)}$，并且预测结果应该尽可能好。通常情况下，这种“好”的标准为正确率尽可能高。</p>
 <p>以二分类问题为例，用0和1代表可能的类别，也即$Y=\{0,1\}$。我们从概率的框架下来讨论二分类问题：给定输入特征向量$x$，我们希望估计出它分别属于两类的概率$P(y=0|x;\theta)$和$P(y=1|x;\theta)$。因为现在讨论的是二分类问题，可令$\hat y=P(y=1|x;\theta)$，那么只要估计出$\hat y$就可以了。在估计之前，需要选择合适形式的函数对各类别的后验概率建模，一种最简单也是最笨的方法就是令$\hat y=w ^T x+b$，也即线性回归。但是这样可能会导致$\hat y$的值大于1或者大于0，这和概率的定义相违背。因此，我们可以在线性回归的表达式前面加上一层sigmoid函数，也即$\hat y=\sigma\left(\omega ^T x+b\right)$。sigmoid函数的表达式为：</p>
@@ -383,7 +385,7 @@ L(\theta)&=P(y^{(i)}|x;\theta)\\
 <script type="math/tex; mode=display">
 \begin{align*}  l(\theta) &=\log L(\theta)  \\  &=\sum_{i=1}^{m}y^{(i)}\log h_\theta(x^{(i)})+(1-y^{(i)})\log  (1-h_\theta(x^{(i)}))\\  \tag{2-4}  \end{align*}</script><p>因为对数似然函数需要最大化，而损失函数需要最小化，因此我们选择如下表达式作为损失函数：</p>
 <script type="math/tex; mode=display">J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}y^{(i)}\log h_\theta(x^{(i)})+(1-y^{(i)})\log  (1-h_\theta(x^{(i)}))\right]  \tag{2-5}</script><p>$(2-5)$就是代价函数（cost function），它等价于对所有的$(2-2)$取平均。<br>损失函数（loss function）是定义在单个样本上的，代价函数（cost function）是定义在多个样本上的。</p>
-<h2 id="3-梯度下降方法求解最优的参数-w-和-b-（一层神经网络）"><a href="#3-梯度下降方法求解最优的参数-w-和-b-（一层神经网络）" class="headerlink" title="3.梯度下降方法求解最优的参数$w$和$b$（一层神经网络）"></a>3.梯度下降方法求解最优的参数$w$和$b$（一层神经网络）</h2><p>logistic回归的代价函数的凸函数，因此可以用梯度下降的方法求得全局最优值，并且与初始化的方式无关，一般利用零初始化。</p>
+<h2 id="3-梯度下降方法求解最优的参数-w-和-b-（一层神经网络）"><a href="#3-梯度下降方法求解最优的参数-w-和-b-（一层神经网络）" class="headerlink" title="3.梯度下降方法求解最优的参数$w$和$b$（一层神经网络）"></a>3.梯度下降方法求解最优的参数$w$和$b$（一层神经网络）</h2><p>利用logistic可以构造一个只含有输出层的神经网络，下面介绍其作为神经网络时的前向传播、反向传播过程，为后面理解更复杂的神经网络打下基础。<br>logistic回归的代价函数的凸函数，因此可以用梯度下降的方法求得全局最优值，并且与初始化的方式无关，一般利用零初始化。</p>
 <script type="math/tex; mode=display">
 \begin{align*}
 w&:=w-\alpha\frac{\partial J(w,b)}{\partial w}\\
@@ -415,7 +417,7 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{3-2}  \end{align*}</scr
 \rm d\it w&= \frac{1}{m}\cdot X\cdot \rm{d}\it{Z}^T\\  &=\frac{1}{m}X\left(A-Y\right)^T \\  \rm d\it b&= \frac{1}{m}\cdot\sum_{i=1}^{m}\left(\rm{d}\it{Z^{(i)}}\right) \\  \tag{3-5}  \end{align*}</script><p>注意，$(3-5)$的流程可以理解为先对每一个样本求损失函数关于$z$的梯度，并对每个样本求出$\rm{d}\it{w}$，在对所有样本的$\rm{d}\it{w}$球平均，因此有$1/m$。</p>
 <p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/logistic%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D.JPG" alt="logistic回归梯度下降"></center></p>
 <p><center>图3.1 logistic回归梯度下降</center><br>也可以对$m$个样本的代价函数一次性直接求偏导，这需要一定的向量微分和复合函数微分的知识。这样的话，在$\rm{d}\it{Z}$中就会有一个$1/m$，那么在求$\rm{d}\it{w}$时就不用另外再加一个$1/m$了，并且形状可能互为转置，最终的结果是一样的。具体过程这里省略，有兴趣的读者可以自行推导。</p>
-<h2 id="4-示例代码"><a href="#4-示例代码" class="headerlink" title="4.示例代码"></a>4.示例代码</h2><p><a href="https://github.com/lankuohsing/deep-learning-coursera/blob/master/Neural%20Networks%20and%20Deep%20Learning/Logistic%20Regression%20with%20a%20Neural%20Network%20mindset.ipynb" target="_blank" rel="noopener">带讲解的代码（Andrew NG Course深度学习课程作业），.ipynb版本</a><br><a href="https://github.com/lankuohsing/Coursera-Deep-Learning-Specialization/blob/master/Neural%20Networs%20and%20Deep%20Learning/Logistic_Regression_with_a_Neural_Network_mindset.py" target="_blank" rel="noopener">.py版本，方便在本地直接运行，包含了所需的数据以及必要的函数文件</a></p>
+<h2 id="4-示例代码"><a href="#4-示例代码" class="headerlink" title="4.示例代码"></a>4.示例代码</h2><p>请点击下面的超链接跳转至github页面。<br><a href="https://github.com/lankuohsing/deep-learning-coursera/blob/master/Neural%20Networks%20and%20Deep%20Learning/Logistic%20Regression%20with%20a%20Neural%20Network%20mindset.ipynb" target="_blank" rel="noopener">.ipynb版本，带详细讲解的代码（Andrew NG Course深度学习课程作业）</a><br><a href="https://github.com/lankuohsing/Coursera-Deep-Learning-Specialization/blob/master/Neural%20Networs%20and%20Deep%20Learning/Logistic_Regression_with_a_Neural_Network_mindset.py" target="_blank" rel="noopener">.py版本，方便在本地直接运行，包含了所需的数据以及必要的函数文件</a></p>
 
       
     </div>
@@ -448,8 +450,8 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{3-2}  \end{align*}</scr
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="../../../02/01/RNN-Tutorial/" rel="next" title="RNN-Tutorial">
-                <i class="fa fa-chevron-left"></i> RNN-Tutorial
+              <a href="../../../01/27/Hello-World/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
               </a>
             
           </div>
@@ -537,7 +539,7 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{3-2}  \end{align*}</scr
               
                 <a href="https://lankuohsing.github.io/blog/archives">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
