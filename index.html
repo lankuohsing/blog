@@ -433,7 +433,7 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{3-2}  \end{align*}</scr
 \tag{3-3}  
 \end{align*}</script><script type="math/tex; mode=display">
 \begin{align*}  
-{\rm d} z&= \frac{\rm{d}\it{L(a,y)}}{\rm{d}\it{z}}\\  
+\rm d\it z&= \frac{\rm{d}\it{L(a,y)}}{\rm{d}\it{z}}\\  
 &= \frac{\rm{d}\it{L(a,y)}}{\rm{d}\it{a}}\cdot  
 \frac{\rm d \it a}{\rm d \it z}\\  &= \left(-\frac{y}{a}+\frac{1-y}{1-a}\right)\cdot a(1-a)\\  
 &=a-y \\  
@@ -469,9 +469,9 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{5-1}  \end{align*}</scr
 \end{align*}</script><p>$(5-2)$中从上到下的顺序可以代表前向传播过程。</p>
 <h3 id="5-3-关于参数的初始化"><a href="#5-3-关于参数的初始化" class="headerlink" title="5.3.关于参数的初始化"></a>5.3.关于参数的初始化</h3><p>在单层神经网络（logistic回归）中，可以将参数初始化wie全零值；但是在多层神经网络中，$W$不能初始化为0，否则每一层的各个节点对应的$W$会训练成一样的值；$b$可以初始化为0  $W$不能初始化为特别大，浅层网络一般是0.01量级；因为太大了的话，激活函数的自变量要么正向很大，要么负向很大，导致斜率趋近于0 ，收敛速度很慢。尤其是你使用$sigmoid$或$tanh$激活函数。如果不使用这些激活函数，但是你是二分类问题（输出层是sigmoid函数），也会出现这个问题.</p>
 <h3 id="5-4-2层神经网络示例代码"><a href="#5-4-2层神经网络示例代码" class="headerlink" title="5.4.2层神经网络示例代码"></a>5.4.2层神经网络示例代码</h3><p>对如下二维平面上的点进行分类：</p>
-<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/planar.png" alt="二维平面上的非线性二分类数据集例子"></center></p>
+<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/planar.png"></center></p>
 <p><center>图5.1 二维平面上的非线性二分类数据集例子</center><br>网络结构如下：</p>
-<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/2_layer_NN.png" alt="2层神经网络结构例子"></center></p>
+<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/2_layer_NN.png"></center></p>
 <p><center>图5.2 2层神经网络结构例子</center><br>点击下面的超链接查看完整代码：<br><a href="https://github.com/lankuohsing/Coursera-Deep-Learning-Specialization/tree/master/Neural%20Networs%20and%20Deep%20Learning" target="_blank" rel="noopener">2层神经网络的示例代码</a><br>其中Palnar_data_clf_with_one_hidden_layer.ipynb文件包含详细的注释和图示，但需要在jupyternotebook中运行；Palnar_data_clf_with_one_hidden_layer.py文件可直接用“python”命令运行，两者的功能是一样的。</p>
 <h2 id="6-深层神经网络"><a href="#6-深层神经网络" class="headerlink" title="6.深层神经网络"></a>6.深层神经网络</h2><h3 id="6-1-每层的参数及变量的尺寸"><a href="#6-1-每层的参数及变量的尺寸" class="headerlink" title="6.1.每层的参数及变量的尺寸"></a>6.1.每层的参数及变量的尺寸</h3><script type="math/tex; mode=display">\begin{align*}  z^{[l]}&:\left(n^{[l]},1\right)\\  a^{[l]}&:\left(n^{[l]},1\right)\\  W^{[l]}&:\left(n^{[l]},n^{[l-1]}\right)\\  b^{[l]}&:\left(n^{[l]},1\right)\\  dW^{[l]}&:\left(n^{[l]},n^{[l-1]}\right)\\  db^{[l]}&:\left(n^{[l]},1\right)\\  \tag{6-1}
 \end{align*}</script><h3 id="6-2-前向传播递推公式"><a href="#6-2-前向传播递推公式" class="headerlink" title="6.2.前向传播递推公式"></a>6.2.前向传播递推公式</h3><script type="math/tex; mode=display">
@@ -490,7 +490,8 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</scr
 {\rm d}b^{[l]}&=\frac{1}{m}np.sum\left({\rm d}Z^{[l]},axis=1,keepdims=True\right)\\  
 {\rm d}A^{[l-1]}&={W^{[l]}}^T{\rm d}Z^{[l]}\\  
 \tag{6-3}
-\end{align*}</script>
+\end{align*}</script><h3 id="6-4-多层神经网络的示例代码"><a href="#6-4-多层神经网络的示例代码" class="headerlink" title="6.4.多层神经网络的示例代码"></a>6.4.多层神经网络的示例代码</h3><p>点击如下超链接。<br><a href="https://github.com/lankuohsing/Coursera-Deep-Learning-Specialization/tree/master/Neural%20Networs%20and%20Deep%20Learning" target="_blank" rel="noopener">对比了2层神经网络和5层神经网络在对猫分类时的性能</a><br>Deep Neural Network - Application.py<br>Deep Neural Network - Application.ipynb</p>
+
           
         
       
