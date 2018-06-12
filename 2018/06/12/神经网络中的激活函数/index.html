@@ -91,7 +91,7 @@
 <meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/tanh.png">
 <meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/ReLU.png">
 <meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/Leaky-ReLU.png">
-<meta property="og:updated_time" content="2018-06-12T13:38:42.222Z">
+<meta property="og:updated_time" content="2018-06-12T13:42:17.824Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="神经网络中的激活函数">
 <meta name="twitter:description" content="$tanh(z)=\frac{e^z-e^{-z}}{e^z+e^{-z}}$效果严格地比$sigmoid$函数好，因为该函数的对称中心在$(0,0)$，具有将数据归一化为0均值的效果。当然，二分类的输出层的激活函数还是一般用$sigmoid(z)$，因为$sigmod$函数能将输出值映射到$0\sim1$之间（概率值）$Relu(z)=max(0,z)$出现后，神经网络默认都用$Relu$函数（">
@@ -716,7 +716,7 @@
   
 
 
-  <script type="text/javascript" src="../../../../js/src/bootstrap.js?v=5.1.4"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <script type="text/javascript" src="../../../../js/src/bootstrap.js?v=5.1.4"></script>
 
 
 
@@ -769,6 +769,26 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 

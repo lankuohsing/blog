@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Guoxing Lan">
 <meta property="og:description" content="Adding regularization will often help To prevent overfitting problem (high variance problem ).   1. Logistic regression回忆一下训练时的优化目标函数 \min \limits_{w,b}J\left(w,b\right), \ \ \ \ w\in\mathbb{R}^{n_x},">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-06-12T13:40:16.016Z">
+<meta property="og:updated_time" content="2018-06-12T13:42:20.487Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="神经网络中的正则化">
 <meta name="twitter:description" content="Adding regularization will often help To prevent overfitting problem (high variance problem ).   1. Logistic regression回忆一下训练时的优化目标函数 \min \limits_{w,b}J\left(w,b\right), \ \ \ \ w\in\mathbb{R}^{n_x},">
@@ -712,7 +712,7 @@ $$  J\left(w^{[1]},b^{[1]},\cdots,w^{[L]},b^{[L]}\right)=\frac{1}{m}\sum_{i=1}^{
   
 
 
-  <script type="text/javascript" src="../../../../js/src/bootstrap.js?v=5.1.4"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <script type="text/javascript" src="../../../../js/src/bootstrap.js?v=5.1.4"></script>
 
 
 
@@ -765,6 +765,26 @@ $$  J\left(w^{[1]},b^{[1]},\cdots,w^{[L]},b^{[L]}\right)=\frac{1}{m}\sum_{i=1}^{
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
