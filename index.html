@@ -363,18 +363,19 @@
 <script type="math/tex; mode=display">\left\lVert w \right\rVert_2^2=\sum_{j=1}^{n_x}w_j^2=w^Tw\tag{1-4}</script><p>Why do we regularize just the parameter w? Because w Is usually a high dimensional parameter vector while b is A scalar. Almost all The parameters are in w rather than b.<br>$L_1 \ \ regularization $  $$  J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{m}\left\lvert w \right\rvert_1\tag{1-5}  </p>
 <script type="math/tex; mode=display">
 其中
-$$  \left\lvert w \right\rvert_1=\sum_j^{n_x}\left\lvert w_j \right\rvert \tag{1-6} $$  w will end up being sparse. In other words the w vector will have a lot of zeros in it. This can help with compressing the model a little.  
-## 2. Neural network "Frobenius norm"  
-$$  J\left(w^{[1]},b^{[1]},\cdots,w^{[L]},b^{[L]}\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{2m}\sum_{l=1}^{L}{\left\lVert w \right\rVert_2^2 }\tag{2-1}</script><p>其中</p>
-<script type="math/tex; mode=display">\left\lVert w^{[l]} \right\rVert_F^2=\sum_i^{n^{[l-1]}}\sum_j^{n^{[l]}}\left(w_{ij}\right)^2  \tag{2-2}</script><p>$L_2$ regulation is also called <strong>Weight decay</strong>:  </p>
-<script type="math/tex; mode=display">\begin{align*} dw^{[l]}&=\left(from\ backprop\right)+\frac{\lambda}{m}w^{[l]}\\  w^{l}:&=w^{[l]}-\alpha dw^{[l]}\\  &=\left(1-\frac{\alpha\lambda}{m}\right)w^{[l]}-\alpha(from\ backprop)\\
+$$  \left\lvert w \right\rvert_1=\sum_j^{n_x}\left\lvert w_j \right\rvert \tag{1-6}</script><p>w will end up being sparse. In other words the w vector will have a lot of zeros in it. This can help with compressing the model a little.  </p>
+<h2 id="2-Neural-network-“Frobenius-norm”"><a href="#2-Neural-network-“Frobenius-norm”" class="headerlink" title="2. Neural network “Frobenius norm”"></a>2. Neural network “Frobenius norm”</h2><script type="math/tex; mode=display">J\left(w^{[1]},b^{[1]},\cdots,w^{[L]},b^{[L]}\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{2m}\sum_{l=1}^{L}{\left\lVert w \right\rVert_2^2 }\tag{2-1}</script><p>其中</p>
+<script type="math/tex; mode=display">
+\left\lVert w^{[l]} \right\rVert_F^2=\sum_i^{n^{[l-1]}}\sum_j^{n^{[l]}}\left(w_{ij}\right)^2  \tag{2-2}</script><p>$L_2$ regulation is also called <strong>Weight decay</strong>:  </p>
+<script type="math/tex; mode=display">
+\begin{align*} dw^{[l]}&=\left(from\ backprop\right)+\frac{\lambda}{m}w^{[l]}\\  w^{l}:&=w^{[l]}-\alpha dw^{[l]}\\  &=\left(1-\frac{\alpha\lambda}{m}\right)w^{[l]}-\alpha(from\ backprop)\\
 \tag{2-3}
-\end{align*} $$  能够防止权重$w$过大，从而避免过拟合
-## 3. inverted dropout 
-对于不同的训练样本都可以随机消除一部分结点  
-**反向随机失活**（前向和后向都需要dropout）：</script><p>\begin{align<em>}  d^3&amp;=np.random.rand(a_3.shape[0],a_3.shape[1]) &lt; keep.prob\\  a^3&amp;=np.multiply(a_3,d_3)\ \ \ #a3</em>d3, element\ wise\ multiplication\\  a^3/&amp;=keep.prob\ \ \ #in\ order\ to\ not\ reduce\ the\ expected\ value\ of\ a^3\ \ inverted\ dropout\\  z^{[4]}&amp;=w^{[4]}a^{[3]}+b^{[4]}\\  z^{[4]}/&amp;=keep.prob\\<br>\tag{3-1}<br>\end{align*}  </p>
-<p>$$</p>
-<p>this inverted dropout technique by dividing by the keep.prob, it ensures that the expected value of a3 remains the same. This makes test time easier because you have less of a scaling problem.<br><strong>测试时不需要使用drop out</strong></p>
+\end{align*}</script><p>能够防止权重$w$过大，从而避免过拟合</p>
+<h2 id="3-inverted-dropout"><a href="#3-inverted-dropout" class="headerlink" title="3. inverted dropout"></a>3. inverted dropout</h2><p>对于不同的训练样本都可以随机消除一部分结点<br><strong>反向随机失活</strong>（前向和后向都需要dropout）：</p>
+<script type="math/tex; mode=display">
+\begin{align*}  d^3&=np.random.rand(a_3.shape[0],a_3.shape[1]) < keep.prob\\  a^3&=np.multiply(a_3,d_3)\ \ \ \#a3*d3, element\ wise\ multiplication\\  a^3/&=keep.prob\ \ \ \#in\ order\ to\ not\ reduce\ the\ expected\ value\ of\ a^3\ \ inverted\ dropout\\  z^{[4]}&=w^{[4]}a^{[3]}+b^{[4]}\\  z^{[4]}/&=keep.prob\\
+\tag{3-1}
+\end{align*}</script><p>this inverted dropout technique by dividing by the keep.prob, it ensures that the expected value of a3 remains the same. This makes test time easier because you have less of a scaling problem.<br><strong>测试时不需要使用drop out</strong></p>
 
           
         
@@ -518,16 +519,23 @@ $$  J\left(w^{[1]},b^{[1]},\cdots,w^{[L]},b^{[L]}\right)=\frac{1}{m}\sum_{i=1}^{
           
             <p>$tanh(z)=\frac{e^z-e^{-z}}{e^z+e^{-z}}$效果严格地比$sigmoid$函数好，因为该函数的对称中心在$(0,0)$，具有将数据归一化为0均值的效果。当然，二分类的输出层的激活函数还是一般用$sigmoid(z)$，因为$sigmod$函数能将输出值映射到$0\sim1$之间（概率值）<br>$Relu(z)=max(0,z)$出现后，神经网络默认都用$Relu$函数（rectified linear）来作为激活函数。此时一般默认$z&gt;0$<br>$leaky(z)=max(0.01z,z)$可以避免$z&lt;0$时斜率为零的情况  输出层有时也用线性激活函数（房价预测）  </p>
 <h2 id="1-Sigmoid-activation-function"><a href="#1-Sigmoid-activation-function" class="headerlink" title="1. Sigmoid activation function"></a>1. Sigmoid activation function</h2><p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/sigmoid.png"></center></p>
-<p><center>图1.1 激活函数-sigmoid</center><br>\begin{align<em>}  a&amp;=g(z) \\  &amp;=\frac{1}{1+e^{-z}}\\  \tag{1-1}  \end{align</em>}  \begin{align<em>}  g’(z)&amp;=\frac{d}{dz}g(z)\\  &amp;=\frac{e^{-z}}{1+e^{-z}}\\  &amp;=\frac{1}{1+e^{-z}}\left(1-\frac{1}{1+e^{-z}}\right)\\  &amp;=g(z)\left(1-g(z)\right)\\  &amp;=a(1-a)\\  \tag{1-2}  \end{align</em>}  </p>
-<h2 id="2-Tanh-activation-function"><a href="#2-Tanh-activation-function" class="headerlink" title="2. Tanh activation function"></a>2. Tanh activation function</h2><p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/tanh.png"></center></p>
-<p><center>图2.1 激活函数-tanh</center><br>\begin{align<em>}  a&amp;=g(z) \\  &amp;=\frac{e^{z}-e^{-z}}{e^{z}+e^{-z}}\\  \tag{2-1}  \end{align</em>}  \begin{align<em>}  g’(z)&amp;=\frac{d}{dz}g(z)\\  &amp;=\frac{e^{-z}}{1+e^{-z}}\\  &amp;=\frac{\left(e^{z}+e^{-z}\right)^2-\left(e^z-e^{-z}\right)^2}{\left(e^z+e^{-z}\right)^2}\\  &amp;=1-\left(g(z)\right)^2\\  &amp;=1-a^2\\  \tag{2-2}  \end{align</em>}  </p>
-<h2 id="3-ReLU-and-Leaky-ReLU"><a href="#3-ReLU-and-Leaky-ReLU" class="headerlink" title="3. ReLU and Leaky ReLU"></a>3. ReLU and Leaky ReLU</h2><p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/ReLU.png"></center></p>
+<p><center>图1.1 激活函数-sigmoid</center></p>
+<script type="math/tex; mode=display">
+\begin{align*}  a&=g(z) \\  &=\frac{1}{1+e^{-z}}\\  \tag{1-1}  \end{align*}</script><script type="math/tex; mode=display">
+\begin{align*}  g'(z)&=\frac{d}{dz}g(z)\\  &=\frac{e^{-z}}{1+e^{-z}}\\  &=\frac{1}{1+e^{-z}}\left(1-\frac{1}{1+e^{-z}}\right)\\  &=g(z)\left(1-g(z)\right)\\  &=a(1-a)\\  \tag{1-2}  \end{align*}</script><h2 id="2-Tanh-activation-function"><a href="#2-Tanh-activation-function" class="headerlink" title="2. Tanh activation function"></a>2. Tanh activation function</h2><p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/tanh.png"></center></p>
+<p><center>图2.1 激活函数-tanh</center></p>
+<script type="math/tex; mode=display">
+\begin{align*}  
+a&=g(z) \\  &=\frac{e^{z}-e^{-z}}{e^{z}+e^{-z}}\\  \tag{2-1}  \end{align*}</script><script type="math/tex; mode=display">
+\begin{align*}  g'(z)&=\frac{d}{dz}g(z)\\  &=\frac{e^{-z}}{1+e^{-z}}\\  &=\frac{\left(e^{z}+e^{-z}\right)^2-\left(e^z-e^{-z}\right)^2}{\left(e^z+e^{-z}\right)^2}\\  &=1-\left(g(z)\right)^2\\  &=1-a^2\\  \tag{2-2}  \end{align*}</script><h2 id="3-ReLU-and-Leaky-ReLU"><a href="#3-ReLU-and-Leaky-ReLU" class="headerlink" title="3. ReLU and Leaky ReLU"></a>3. ReLU and Leaky ReLU</h2><p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/ReLU.png"></center></p>
 <p><center>图3.1 激活函数-ReLU</center><br><strong>ReLU:</strong>  </p>
 <script type="math/tex; mode=display">
-\begin{align*}  a&=g(z) \\  &=max(0,z)\\  \tag{3-1}  \end{align*}</script><p>\begin{align<em>}  g’(z)&amp;=\frac{d}{dz}g(z)\\  &amp;=\left\{  \begin{aligned}  0\quad if\ z&lt;0\\  1\quad if\ z\geq0  \end{aligned}  \right.  \tag{3-2}  \end{align</em>}<br><strong>Leaky ReLU:</strong>  </p>
+\begin{align*}  a&=g(z) \\  &=max(0,z)\\  \tag{3-1}  \end{align*}</script><script type="math/tex; mode=display">
+\begin{align*}  g'(z)&=\frac{d}{dz}g(z)\\  &=\left\{  \begin{aligned}  0\quad if\ z<0\\  1\quad if\ z\geq0  \end{aligned}  \right.  \tag{3-2}  \end{align*}</script><p><strong>Leaky ReLU:</strong>  </p>
 <p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/Leaky-ReLU.png"></center></p>
-<p><center>图3.2 激活函数-Leaky ReLU</center><br>\begin{align<em>}  a&amp;=g(z) \\  &amp;=max(0.01z,z)\\  \tag{3-3}  \end{align</em>}  </p>
+<p><center>图3.2 激活函数-Leaky ReLU</center></p>
 <script type="math/tex; mode=display">
+\begin{align*}  a&=g(z) \\  &=max(0.01z,z)\\  \tag{3-3}  \end{align*}</script><script type="math/tex; mode=display">
 \begin{align*}  g'(z)&=\frac{d}{dz}g(z)\\  &=\left\{  \begin{aligned}  0.01\quad if\ z<0\\  1\quad if\ z\geq0  \end{aligned}  \right.  \tag{3-4}  \end{align*}</script><h2 id="4-选择激活函数的准则"><a href="#4-选择激活函数的准则" class="headerlink" title="4.选择激活函数的准则"></a>4.选择激活函数的准则</h2><ul>
 <li>如果处理的问题是二分类问题，输出为0和1，那么输出层选择sigmoid函数，其他神经元选择ReLU(有时也可用tanh)，理论上Leaky ReLU比ReLU好，但是实践中差不多。</li>
 </ul>

@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Guoxing Lan">
 <meta property="og:description" content="Adding regularization will often help To prevent overfitting problem (high variance problem ).   1. Logistic regression回忆一下训练时的优化目标函数 \min \limits_{w,b}J\left(w,b\right), \ \ \ \ w\in\mathbb{R}^{n_x},">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-06-12T13:42:20.487Z">
+<meta property="og:updated_time" content="2018-06-12T13:52:11.543Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="神经网络中的正则化">
 <meta name="twitter:description" content="Adding regularization will often help To prevent overfitting problem (high variance problem ).   1. Logistic regression回忆一下训练时的优化目标函数 \min \limits_{w,b}J\left(w,b\right), \ \ \ \ w\in\mathbb{R}^{n_x},">
@@ -360,18 +360,19 @@
 <script type="math/tex; mode=display">\left\lVert w \right\rVert_2^2=\sum_{j=1}^{n_x}w_j^2=w^Tw\tag{1-4}</script><p>Why do we regularize just the parameter w? Because w Is usually a high dimensional parameter vector while b is A scalar. Almost all The parameters are in w rather than b.<br>$L_1 \ \ regularization $  $$  J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{m}\left\lvert w \right\rvert_1\tag{1-5}  </p>
 <script type="math/tex; mode=display">
 其中
-$$  \left\lvert w \right\rvert_1=\sum_j^{n_x}\left\lvert w_j \right\rvert \tag{1-6} $$  w will end up being sparse. In other words the w vector will have a lot of zeros in it. This can help with compressing the model a little.  
-## 2. Neural network "Frobenius norm"  
-$$  J\left(w^{[1]},b^{[1]},\cdots,w^{[L]},b^{[L]}\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{2m}\sum_{l=1}^{L}{\left\lVert w \right\rVert_2^2 }\tag{2-1}</script><p>其中</p>
-<script type="math/tex; mode=display">\left\lVert w^{[l]} \right\rVert_F^2=\sum_i^{n^{[l-1]}}\sum_j^{n^{[l]}}\left(w_{ij}\right)^2  \tag{2-2}</script><p>$L_2$ regulation is also called <strong>Weight decay</strong>:  </p>
-<script type="math/tex; mode=display">\begin{align*} dw^{[l]}&=\left(from\ backprop\right)+\frac{\lambda}{m}w^{[l]}\\  w^{l}:&=w^{[l]}-\alpha dw^{[l]}\\  &=\left(1-\frac{\alpha\lambda}{m}\right)w^{[l]}-\alpha(from\ backprop)\\
+$$  \left\lvert w \right\rvert_1=\sum_j^{n_x}\left\lvert w_j \right\rvert \tag{1-6}</script><p>w will end up being sparse. In other words the w vector will have a lot of zeros in it. This can help with compressing the model a little.  </p>
+<h2 id="2-Neural-network-“Frobenius-norm”"><a href="#2-Neural-network-“Frobenius-norm”" class="headerlink" title="2. Neural network “Frobenius norm”"></a>2. Neural network “Frobenius norm”</h2><script type="math/tex; mode=display">J\left(w^{[1]},b^{[1]},\cdots,w^{[L]},b^{[L]}\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{2m}\sum_{l=1}^{L}{\left\lVert w \right\rVert_2^2 }\tag{2-1}</script><p>其中</p>
+<script type="math/tex; mode=display">
+\left\lVert w^{[l]} \right\rVert_F^2=\sum_i^{n^{[l-1]}}\sum_j^{n^{[l]}}\left(w_{ij}\right)^2  \tag{2-2}</script><p>$L_2$ regulation is also called <strong>Weight decay</strong>:  </p>
+<script type="math/tex; mode=display">
+\begin{align*} dw^{[l]}&=\left(from\ backprop\right)+\frac{\lambda}{m}w^{[l]}\\  w^{l}:&=w^{[l]}-\alpha dw^{[l]}\\  &=\left(1-\frac{\alpha\lambda}{m}\right)w^{[l]}-\alpha(from\ backprop)\\
 \tag{2-3}
-\end{align*} $$  能够防止权重$w$过大，从而避免过拟合
-## 3. inverted dropout 
-对于不同的训练样本都可以随机消除一部分结点  
-**反向随机失活**（前向和后向都需要dropout）：</script><p>\begin{align<em>}  d^3&amp;=np.random.rand(a_3.shape[0],a_3.shape[1]) &lt; keep.prob\\  a^3&amp;=np.multiply(a_3,d_3)\ \ \ #a3</em>d3, element\ wise\ multiplication\\  a^3/&amp;=keep.prob\ \ \ #in\ order\ to\ not\ reduce\ the\ expected\ value\ of\ a^3\ \ inverted\ dropout\\  z^{[4]}&amp;=w^{[4]}a^{[3]}+b^{[4]}\\  z^{[4]}/&amp;=keep.prob\\<br>\tag{3-1}<br>\end{align*}  </p>
-<p>$$</p>
-<p>this inverted dropout technique by dividing by the keep.prob, it ensures that the expected value of a3 remains the same. This makes test time easier because you have less of a scaling problem.<br><strong>测试时不需要使用drop out</strong></p>
+\end{align*}</script><p>能够防止权重$w$过大，从而避免过拟合</p>
+<h2 id="3-inverted-dropout"><a href="#3-inverted-dropout" class="headerlink" title="3. inverted dropout"></a>3. inverted dropout</h2><p>对于不同的训练样本都可以随机消除一部分结点<br><strong>反向随机失活</strong>（前向和后向都需要dropout）：</p>
+<script type="math/tex; mode=display">
+\begin{align*}  d^3&=np.random.rand(a_3.shape[0],a_3.shape[1]) < keep.prob\\  a^3&=np.multiply(a_3,d_3)\ \ \ \#a3*d3, element\ wise\ multiplication\\  a^3/&=keep.prob\ \ \ \#in\ order\ to\ not\ reduce\ the\ expected\ value\ of\ a^3\ \ inverted\ dropout\\  z^{[4]}&=w^{[4]}a^{[3]}+b^{[4]}\\  z^{[4]}/&=keep.prob\\
+\tag{3-1}
+\end{align*}</script><p>this inverted dropout technique by dividing by the keep.prob, it ensures that the expected value of a3 remains the same. This makes test time easier because you have less of a scaling problem.<br><strong>测试时不需要使用drop out</strong></p>
 
       
     </div>
@@ -548,7 +549,7 @@ $$  J\left(w^{[1]},b^{[1]},\cdots,w^{[L]},b^{[L]}\right)=\frac{1}{m}\sum_{i=1}^{
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Logistic-regression"><span class="nav-number">1.</span> <span class="nav-text">1. Logistic regression</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Logistic-regression"><span class="nav-number">1.</span> <span class="nav-text">1. Logistic regression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Neural-network-“Frobenius-norm”"><span class="nav-number">2.</span> <span class="nav-text">2. Neural network “Frobenius norm”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-inverted-dropout"><span class="nav-number">3.</span> <span class="nav-text">3. inverted dropout</span></a></li></ol></div>
             
 
           </div>
