@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Adding regularization will often help To prevent overfitting problem (high variance problem ).   1. Logistic regression回忆一下训练时的优化目标函数 \min \limits_{w,b}J\left(w,b\right), \ \ \ \ w\in\mathbb{R}^{n_x},">
+<meta name="description" content="Adding regularization will often help To prevent overfitting problem (high variance problem ).   1. Logistic regression回忆一下训练时的优化目标函数  \min \limits_{w,b}J\left(w,b\right), \ \ \ \ w\in\mathbb{R}^{n_x}">
 <meta name="keywords" content="Deep Learning,Neural Networks">
 <meta property="og:type" content="article">
 <meta property="og:title" content="神经网络中的正则化">
 <meta property="og:url" content="https://lankuohsing.github.io/blog/2018/06/12/神经网络中的正则化/index.html">
 <meta property="og:site_name" content="Guoxing Lan">
-<meta property="og:description" content="Adding regularization will often help To prevent overfitting problem (high variance problem ).   1. Logistic regression回忆一下训练时的优化目标函数 \min \limits_{w,b}J\left(w,b\right), \ \ \ \ w\in\mathbb{R}^{n_x},">
+<meta property="og:description" content="Adding regularization will often help To prevent overfitting problem (high variance problem ).   1. Logistic regression回忆一下训练时的优化目标函数  \min \limits_{w,b}J\left(w,b\right), \ \ \ \ w\in\mathbb{R}^{n_x}">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-06-12T13:52:11.543Z">
+<meta property="og:updated_time" content="2018-06-12T13:55:26.373Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="神经网络中的正则化">
-<meta name="twitter:description" content="Adding regularization will often help To prevent overfitting problem (high variance problem ).   1. Logistic regression回忆一下训练时的优化目标函数 \min \limits_{w,b}J\left(w,b\right), \ \ \ \ w\in\mathbb{R}^{n_x},">
+<meta name="twitter:description" content="Adding regularization will often help To prevent overfitting problem (high variance problem ).   1. Logistic regression回忆一下训练时的优化目标函数  \min \limits_{w,b}J\left(w,b\right), \ \ \ \ w\in\mathbb{R}^{n_x}">
 
 
 
@@ -354,13 +354,16 @@
       
         <p>Adding regularization will often help To prevent overfitting problem (high variance problem ).  </p>
 <h2 id="1-Logistic-regression"><a href="#1-Logistic-regression" class="headerlink" title="1. Logistic regression"></a>1. Logistic regression</h2><p>回忆一下训练时的优化目标函数</p>
-<script type="math/tex; mode=display">\min \limits_{w,b}J\left(w,b\right), \ \ \ \ w\in\mathbb{R}^{n_x},b\in\mathbb{R} \tag{1-1}</script><p>其中</p>
-<script type="math/tex; mode=display">J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)\\  \tag{1-2}</script><p>$L_2 \ \ regularization $ (most commonly used)：  </p>
-<script type="math/tex; mode=display">J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{2m}\left\lVert w \right\rVert_2^2\\  \tag{1-3}</script><p>其中</p>
-<script type="math/tex; mode=display">\left\lVert w \right\rVert_2^2=\sum_{j=1}^{n_x}w_j^2=w^Tw\tag{1-4}</script><p>Why do we regularize just the parameter w? Because w Is usually a high dimensional parameter vector while b is A scalar. Almost all The parameters are in w rather than b.<br>$L_1 \ \ regularization $  $$  J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{m}\left\lvert w \right\rvert_1\tag{1-5}  </p>
 <script type="math/tex; mode=display">
-其中
-$$  \left\lvert w \right\rvert_1=\sum_j^{n_x}\left\lvert w_j \right\rvert \tag{1-6}</script><p>w will end up being sparse. In other words the w vector will have a lot of zeros in it. This can help with compressing the model a little.  </p>
+\min \limits_{w,b}J\left(w,b\right), \ \ \ \ w\in\mathbb{R}^{n_x},b\in\mathbb{R} \tag{1-1}</script><p>其中</p>
+<script type="math/tex; mode=display">
+J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)\\  \tag{1-2}</script><p>$L_2 \ \ regularization $ (most commonly used)：  </p>
+<script type="math/tex; mode=display">J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{2m}\left\lVert w \right\rVert_2^2\\  \tag{1-3}</script><p>其中</p>
+<script type="math/tex; mode=display">\left\lVert w \right\rVert_2^2=\sum_{j=1}^{n_x}w_j^2=w^Tw\tag{1-4}</script><p>Why do we regularize just the parameter w? Because w Is usually a high dimensional parameter vector while b is A scalar. Almost all The parameters are in w rather than b.<br>$L_1 \ \ regularization $  </p>
+<script type="math/tex; mode=display">
+J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{m}\left\lvert w \right\rvert_1\tag{1-5}</script><p>其中</p>
+<script type="math/tex; mode=display">
+\left\lvert w \right\rvert_1=\sum_j^{n_x}\left\lvert w_j \right\rvert \tag{1-6}</script><p>w will end up being sparse. In other words the w vector will have a lot of zeros in it. This can help with compressing the model a little.  </p>
 <h2 id="2-Neural-network-“Frobenius-norm”"><a href="#2-Neural-network-“Frobenius-norm”" class="headerlink" title="2. Neural network “Frobenius norm”"></a>2. Neural network “Frobenius norm”</h2><script type="math/tex; mode=display">J\left(w^{[1]},b^{[1]},\cdots,w^{[L]},b^{[L]}\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{2m}\sum_{l=1}^{L}{\left\lVert w \right\rVert_2^2 }\tag{2-1}</script><p>其中</p>
 <script type="math/tex; mode=display">
 \left\lVert w^{[l]} \right\rVert_F^2=\sum_i^{n^{[l-1]}}\sum_j^{n^{[l]}}\left(w_{ij}\right)^2  \tag{2-2}</script><p>$L_2$ regulation is also called <strong>Weight decay</strong>:  </p>
