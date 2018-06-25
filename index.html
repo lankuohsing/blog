@@ -262,6 +262,171 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2018/06/25/创建机器学习项目的注意事项/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guoxing Lan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Guoxing Lan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="2018/06/25/创建机器学习项目的注意事项/" itemprop="url">创建机器学习项目的注意事项</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-25T14:48:06+08:00">
+                2018-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Deep Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="1-Orthogonalization-正交化"><a href="#1-Orthogonalization-正交化" class="headerlink" title="1. Orthogonalization(正交化)"></a>1. Orthogonalization(正交化)</h2><p>正交化的思想就是，每个输入单独控制一个属性，不要让一个输入同时控制多个属性。不同属性的控制是独立的，这样便于调试。<br>如果模型在training set上表现好，在dev set上表现不好，则可以正则化；<br>如果在dev set上表现好，在test set上表现不好，则可以增大dev set的规模；<br>如果在test set上表现好，在真实世界表现不好，则可以改变dev set或者cost function。<br>在神经网络中一般不用early stopping</p>
+<h2 id="2-使用单一的量化评价指标"><a href="#2-使用单一的量化评价指标" class="headerlink" title="2. 使用单一的量化评价指标"></a>2. 使用单一的量化评价指标</h2><h3 id="2-1-状态与决策"><a href="#2-1-状态与决策" class="headerlink" title="2.1. 状态与决策"></a>2.1. 状态与决策</h3><ul>
+<li>True: 预测正确的样本数  </li>
+<li>False: 预测错误的样本数  </li>
+<li>Positive: 预测为正样本的样本数  </li>
+<li>Negative: 预测为负样本的样本数  <h3 id="2-2-状态与决策的组合"><a href="#2-2-状态与决策的组合" class="headerlink" title="2.2. 状态与决策的组合"></a>2.2. 状态与决策的组合</h3></li>
+<li>TP: 将正样本预测为正样本的样本数 （真阳性）  </li>
+<li>FP: 将负样本预测为正样本的样本数 （假阳性）  </li>
+<li>TN: 将负样本预测为负样本的样本数 （真阴性)  </li>
+<li>FN: 将负样本预测为负样本的样本数 （假阳性）<h3 id="2-3-评价指标"><a href="#2-3-评价指标" class="headerlink" title="2.3. 评价指标"></a>2.3. 评价指标</h3></li>
+<li>Precision（精确率）：P=TP/(TP+FP)，反映了被分类器判定的正例中，真正的正例样本的比重；</li>
+<li>Accuracy（准确率）：A=(TP+TN)/(P+N)=(TP+TN)/(TP+FN+FP+TN)，反映了分类器对整个样本集的判定能力——能将正的判定为正，负的判定为负的能力；</li>
+<li>Recall（召回率）：R=TP(TP+FN)=1-FN/T，反映了呗正确判定的正例占总的正例的比重；<br>在实际中， 一般同时用Precision和Recall来综合评价一个分类器，我们希望分类器的这两个指标都很高。<br>采用$F_1$ score来衡量分类器的性能，可以兼顾Precision和Recall。它是Precision和Recall的调和平均数：<script type="math/tex; mode=display">
+\begin{align*}
+F_1&=\frac{2}{\frac{1}{P}+\frac{1}{R}}\\
+&=2\cdot \frac{P\cdot R}{P+R}\\
+\tag{2-1}
+\end{align*}</script>更为一般地，定义$F_{\beta}$ score：<script type="math/tex; mode=display">
+F_{\beta}=(1+\beta^2)\cdot \frac{P\cdot R}{(\beta^2\cdot P)+R} \tag{2-2}</script>一个好的验证机和单一量化评估指标可以提高迭代的效率<br>如果有多个指标（例如准确率和运行时间），选择其中一个加以优化，并使其他指标满足一个阈值，有时候是一个合理的策略。<h3 id="2-3-关于train-dec-test-set"><a href="#2-3-关于train-dec-test-set" class="headerlink" title="2.3. 关于train/dec/test set"></a>2.3. 关于train/dec/test set</h3>三者的分布应该一样，并且都应该对未来的实际数据的分布基本一样。<br>关于三者的尺寸，在传统的机器学习时代，尤其是数据规模不大（万级以下的时候，如果只有train和test，则70%：30%比较合适；如果三者都有，则60%：20%：20%比较合适。在现代机器学习中，数据规模很大，一般都是百万级，那么98%：1%：1%比较合适。<h3 id="2-4-与人类表现比较"><a href="#2-4-与人类表现比较" class="headerlink" title="2.4. 与人类表现比较"></a>2.4. 与人类表现比较</h3>当训练集准确率与人类表现相差比较大时（高偏差），应该优先考虑消除偏差；当偏差小，但是测试集与训练集准确率相差大（高方差）时，应该优先考虑消除高方差。<br>贝叶斯误差是理论上的最小误差，人类表的误差略大于贝叶斯误差，一把可以用人类误差来估计贝叶斯误差。除非过拟合，否则机器学习模型在训练集上的误差不会小于人类误差（贝叶斯误差）<h2 id="3-错误分析"><a href="#3-错误分析" class="headerlink" title="3. 错误分析"></a>3. 错误分析</h2>在实际应用中，人工对分类错误的样本进行统计（记录错误的类别），然后制定相应的改进策略，能够提高模型迭代效率。<br>训练集比较大时，有少量标签错误的样本影响不大，因为深度学习算法对随机错误很稳健，但是对系统误差不那么稳健；在开发集（dev set）中，如果由于标签错误导致的错误率占比较大，则应该考虑去纠正标签错误。<br>dev set和test set必须严格服从相同的分布，而train set的分布可以有稍微的不同。<br>如果你要构建机器学习应用系统，一般可以先建立一个简单的系统，然后采取前面提到的各种方法进行迭代，除非是你经验特别丰富的领域或者学术界有很多参考文献的领域（这个时候你可以直接建立一个复杂的系统）<h2 id="4-train-set和dev-test-set不匹配的问题"><a href="#4-train-set和dev-test-set不匹配的问题" class="headerlink" title="4. train set和dev/test set不匹配的问题"></a>4. train set和dev/test set不匹配的问题</h2>如果你获得了两个分布不同的数据集，一种看似可行的方案是可以把它们混合后随即排列，再用来进行train/dev/test划分。这种方案可能会出现问题，例如当我们关心的那个分布的数据集（记为A，相应地不太关心的数据集记为B）比较小时，会出现dev set中A的比例很小的情况。而dev set是用来选择、迭代模型的，应该对我们关心的数据集更加侧重。因此可以考虑，train set中包含所有的B以及少量的A，而dev set和test set包含剩余的A。<br>当train set与dev set的分布不一样，而两者的错误率相差很大时，不能贸然地下结论说模型的variance很大。此时可以将train set进一步划分为train set和train-dev set，这两个set分布一样，可以用来检验模型的泛化能力。<h2 id="5-从多个任务中学习"><a href="#5-从多个任务中学习" class="headerlink" title="5. 从多个任务中学习"></a>5. 从多个任务中学习</h2>如果你训练好了一个识别猫的网络，想用这个网络进一步得到识别医学影像的网络，可以用少量医学影像的数据来训练该网络的最后一层和输出层，或者用很多医学影像的数据训练网络的所有参数，此时训练识别猫的阶段成为预训练（pre-training），更新网络参数的阶段叫做微调（fine tuning）。<br>迁移学习（transfer learning）可以把一个拥有大量数据的问题模型，迁移到一个先对之下仅有很少数据的问题模型中。<br>迁移学习是有先后顺序的，而多任务学习（multi-task learning）在一开始就尝试让一个神经网络同时做几件事。比如在一张图片中识别是否有车、行人、红绿灯、交通标示牌等。这要比训练多个单独的网络（每个网络解决一个问题）的效果要好。损失函数的形式：<script type="math/tex; mode=display">
+\begin{align*}
+\frac{1}{m}\sum_{i=1}^m\sum_{j=1}^4L(\hat y_j^{(i)},y_j^{(i)})\\
+\tag{5-1}
+\end{align*}</script>而且你在标注图片的时候，哪怕图片里面只标了部分任务的标签,多任务学习也可以正常进行下去，因为$(5-1)$只对0或者1的标签进行统计，没有标记的任务可以不统计。<br>目标检测就是多任务学习的一个例子。总体而言，多任务学习比迁移学习的场景要少一些。<h2 id="6-端到端（end-to-end-学习"><a href="#6-端到端（end-to-end-学习" class="headerlink" title="6. 端到端（end-to-end)学习"></a>6. 端到端（end-to-end)学习</h2>端到端学习就是省略了传统的多阶段过程，但是需要大量的数据。如果只有中等的数据，可以考虑折中一下，分阶段进行。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2018/06/15/神经网络中的优化方法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1255,7 +1420,7 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</scr
               
                 <a href="https://lankuohsing.github.io/blog/archives">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1277,7 +1442,7 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</scr
               
               <div class="site-state-item site-state-tags">
                 <a href="tags/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
