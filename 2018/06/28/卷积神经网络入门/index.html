@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="../../../../lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="../../../../lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="../../../../css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../../images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../../images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="../../../../images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="../../../../images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Deep Learning,Convolutional Neural Networks," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1. 计算机视觉（Computer Vision）领域介绍图片分类(Image Classification)、目标检测(Object detection)、神经风格转换(Neural Style Transfer)。计算机视觉的一大挑战就是输入样本的尺寸可以任意大，进一步导致神经网络的参数很多，容易过拟合并且对计算机的内存和运算速度要求极高。为了解决这个问题，可以引入卷积运算。 2. 卷积运算2">
+<meta name="keywords" content="Deep Learning,Convolutional Neural Networks">
+<meta property="og:type" content="article">
+<meta property="og:title" content="卷积神经网络入门">
+<meta property="og:url" content="https://lankuohsing.github.io/blog/2018/06/28/卷积神经网络入门/index.html">
+<meta property="og:site_name" content="Guoxing Lan">
+<meta property="og:description" content="1. 计算机视觉（Computer Vision）领域介绍图片分类(Image Classification)、目标检测(Object detection)、神经风格转换(Neural Style Transfer)。计算机视觉的一大挑战就是输入样本的尺寸可以任意大，进一步导致神经网络的参数很多，容易过拟合并且对计算机的内存和运算速度要求极高。为了解决这个问题，可以引入卷积运算。 2. 卷积运算2">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Convolutions%20on%20RGB%20image.JPG">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Multiple%20Filters.JPG">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Example%20of%20a%20convolutional%20layer.JPG">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Example%20Convnet.JPG">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/LeNet-5.png">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/LeNet-5%E5%8F%82%E6%95%B0.JPG">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/AlexNet.png">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/VGG-16.png">
+<meta property="og:updated_time" content="2018-06-28T14:31:13.184Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="卷积神经网络入门">
+<meta name="twitter:description" content="1. 计算机视觉（Computer Vision）领域介绍图片分类(Image Classification)、目标检测(Object detection)、神经风格转换(Neural Style Transfer)。计算机视觉的一大挑战就是输入样本的尺寸可以任意大，进一步导致神经网络的参数很多，容易过拟合并且对计算机的内存和运算速度要求极高。为了解决这个问题，可以引入卷积运算。 2. 卷积运算2">
+<meta name="twitter:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Convolutions%20on%20RGB%20image.JPG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lankuohsing.github.io/blog/2018/06/28/卷积神经网络入门/"/>
+
+
+
+
+
+  <title>卷积神经网络入门 | Guoxing Lan</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/lankuohsing"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Guoxing Lan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Journey To Truth</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="https://lankuohsing.github.io/blog" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="https://lankuohsing.github.io/blog/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="https://lankuohsing.github.io/blog/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="https://lankuohsing.github.io/blog/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="https://lankuohsing.github.io/blog/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guoxing Lan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="../../../../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Guoxing Lan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">卷积神经网络入门</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-28T22:30:38+08:00">
+                2018-06-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../../../categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Deep Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-计算机视觉（Computer-Vision）领域介绍"><a href="#1-计算机视觉（Computer-Vision）领域介绍" class="headerlink" title="1. 计算机视觉（Computer Vision）领域介绍"></a>1. 计算机视觉（Computer Vision）领域介绍</h2><p>图片分类(Image Classification)、目标检测(Object detection)、神经风格转换(Neural Style Transfer)。<br>计算机视觉的一大挑战就是输入样本的尺寸可以任意大，进一步导致神经网络的参数很多，容易过拟合并且对计算机的内存和运算速度要求极高。为了解决这个问题，可以引入卷积运算。</p>
+<h2 id="2-卷积运算"><a href="#2-卷积运算" class="headerlink" title="2. 卷积运算"></a>2. 卷积运算</h2><h3 id="2-1-一维场合"><a href="#2-1-一维场合" class="headerlink" title="2.1. 一维场合"></a>2.1. 一维场合</h3><p>卷积的一个重要物理意义是：一个函数（如：单位响应）在另一个函数（如：输入信号）上的<strong>加权叠加</strong>。  对于线性时不变系统，如果知道该系统的单位响应，那么将单位响应和输入信号求卷积，就相当于把输入信号的各个时间点的单位响应 加权叠加，就直接得到了输出信号。  形象的物理含义见<a href="https://www.zhihu.com/question/22298352/answer/34267457" target="_blank" rel="noopener">怎样通俗易懂地解释卷积？ - 知乎</a><br>给定一个输入信号序列$x(t), t=1,···,n$，和单位响应序列（有时也称滤波器）$f(t), t=1,···,m$，一般情况下单位响应的长度$m$远小于输入信号长度$n$。  则卷积输出：  </p>
+<script type="math/tex; mode=display">
+\begin{align*} 
+y(t) &=(f*x)(t)\\  &=\sum_{k=1}^{\infty}f(t-k+1)·x(k)) \\ 
+&=\sum_{k=1}^{\infty}f(k)·x(t-k+1)) \\  
+&=\sum_{k=1}^{m}f(k)·x(t-k+1))\\
+\tag{2-1}  
+\end{align*}</script><p>在卷积神经网络中，对于不在$[1,n]$范围之内的$x(t)$用零补齐(zero-padding)，输出长度一般为$n+m-1$。此时也称为<strong>宽卷积</strong>。另一类是<strong>窄卷积</strong>，输出长度为$n-m+1$  </p>
+<h3 id="2-2-二维场合"><a href="#2-2-二维场合" class="headerlink" title="2.2. 二维场合"></a>2.2. 二维场合</h3><p>二维卷积经常用在图像处理中。给定一个图像$x_{ij}, 1\le i\le M,1\le j\le N$，和滤波器$f_{ij}, 1\le i\le m,1\le j\le n$，一般$m &lt;&lt; M,n &lt;&lt; N$。<br>卷积的输出为：  </p>
+<script type="math/tex; mode=display">
+\begin{align*} y_{ij}&=\sum_{u=1}^{+\infty}\sum_{v=1}^{+\infty}f_{i-u+1,i-v+1}·x_{u,v}\\  
+&=\sum_{u=1}^{m}\sum_{v=1}^{n}f_{u,v}·x_{i-u+1,i-v+1}\\
+\tag{2-2}  
+\end{align*}</script><p>在图像处理中，常用的均值滤波（mean filter）就是当前位置的像素值设为滤波器窗口中素有像素的平均值，也就是$f_{uv}=\frac{1}{mn}$。<br>上面的运算是信号与系统里面的定义，在实际的操作中通常要将卷积核进行翻转（水平和竖直方向上分别进行一次翻转）再与输入信号进行逐元素相乘（再相加）。但是在深度学习中，简化了翻转的操作，因此其实不适用于上述的公式。深度学习里面的卷积，更严谨的称呼是交叉相关（cross-correlation），但是由于习惯，还是叫做卷积。</p>
+<h2 id="3-卷积操作的作用和优点"><a href="#3-卷积操作的作用和优点" class="headerlink" title="3. 卷积操作的作用和优点"></a>3. 卷积操作的作用和优点</h2><h3 id="3-1-参数共享和连接的稀疏性"><a href="#3-1-参数共享和连接的稀疏性" class="headerlink" title="3.1. 参数共享和连接的稀疏性"></a>3.1. 参数共享和连接的稀疏性</h3><p>假设输入图像形状为$32\times 32\times 3$，卷积核形状为$5\times 5\times 6$，则卷积后的图像大小为$28\times 28\times 6$。如果是传统的神经网络，那么参数个数为：$3072\times 4704\approx 14M$，而在卷积神经网络中参数个数为$(5\times 5+1)\times 6=156$<br>卷积核在图像上移动时，参数不变（参数共享）<br>输出图像上的每个像素只来源于上一层图像的一个局部（连接的稀疏性）</p>
+<h3 id="3-2-平移不变性"><a href="#3-2-平移不变性" class="headerlink" title="3.2. 平移不变性"></a>3.2. 平移不变性</h3><h3 id="3-2-边缘检测"><a href="#3-2-边缘检测" class="headerlink" title="3.2. 边缘检测"></a>3.2. 边缘检测</h3><h2 id="4-Padding（填充）"><a href="#4-Padding（填充）" class="headerlink" title="4. Padding（填充）"></a>4. Padding（填充）</h2><p>常规卷积操作的后果：  </p>
+<ul>
+<li>shrinking image没经过一次卷积操作，图片都会缩小 </li>
+<li>throw away info from edge（忽视边界信息） ，角落或者边界上的像素被使用的次数比中间的像素少很多</li>
+</ul>
+<p>记输入图片尺寸为$n\times n$，滤波器大小为$f\times f$，填充的数量为$p$，下面是两种常用的填充方式：</p>
+<ul>
+<li>“valid”: no padding $n\times n\ *\ f\times f \rightarrow n-f+1\ \times\ n-f+1$  </li>
+<li>“Same”: Pad so that output size is the same as the input size $(n+2p-f+1)\times (n+2p-f+1)$， 其中$p=\frac{f-1}{2}$。</li>
+</ul>
+<p>在计算机视觉领域，f基本上是奇数。因为如果是偶数，需要不对称的填充。而且奇数的滤波器有一个中心，这样可以描述滤波器的位置。$3\times3$的滤波器最常见</p>
+<h2 id="5-Strided-Convolutions-带步长的卷积"><a href="#5-Strided-Convolutions-带步长的卷积" class="headerlink" title="5. Strided Convolutions(带步长的卷积)"></a>5. Strided Convolutions(带步长的卷积)</h2><p>假设padding p, stride S，则卷积操作的尺寸运算为：$(n\times n)*(f\times f)\ \rightarrow\ \left(\frac{n+2p-f}{S}+1\right)\times \left(\frac{n+2p-f}{S}+1\right)$<br>如果不能整除，则向下取整：$\lfloor\frac{n+2p-f}{S}+1\rfloor\times \lfloor\frac{n+2p-f}{S}+1\rfloor$ ，这意味着滤波器必须全部落在（填充后的）图像上。</p>
+<h2 id="6-对三维图片（RGB）的卷积操作"><a href="#6-对三维图片（RGB）的卷积操作" class="headerlink" title="6. 对三维图片（RGB）的卷积操作"></a>6. 对三维图片（RGB）的卷积操作</h2><p>RGB图像有三个通道（channel），或者叫做深度（depth），因此卷积核也应该有三个通道。卷积核的三个通道分别与RGB图像的三个通道逐元素相乘，再将乘积结果相加，得到卷积后的图像。下图是检测红色垂直边缘（上）和整体图像的垂直边缘（下）的例子：</p>
+<center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Convolutions%20on%20RGB%20image.JPG"></center>
+<center>图6.1 RGB图像卷积操作例子</center>
+有时为了检测多种类型的边缘，可以用同时多个滤波器对图像进行卷积操作，具体的尺寸运算总结如下：
+$n\times n\times n_c\ *\ f\times f\times n_c\ \rightarrow\ n-f+1\times n-f+1\times n_c'$
+其中$n_c$代表通道数，通常图像的通道数与滤波器的通道数相等；$n$和$f$分别代表图像和滤波器每个通道的尺寸；$n_c'$代表滤波器的个数
+<center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Multiple%20Filters.JPG"></center>
+<center>图6.2 同时用多个卷积核对图像进行卷积操作</center>
+
+<h2 id="7-一层卷积层的例子"><a href="#7-一层卷积层的例子" class="headerlink" title="7. 一层卷积层的例子"></a>7. 一层卷积层的例子</h2><p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Example%20of%20a%20convolutional%20layer.JPG"></center></p>
+<p><center>图7.1 一层卷积层的例子</center><br>卷积核相关说明：</p>
+<script type="math/tex; mode=display">
+\begin{align*} f^{[l]}&=filter\ size,\\  
+p^{[l]}&=padding\\  s^{[l]}&=stride\\ 
+\tag{7-1}
+\end{align*}</script><p>卷积核的形状为: </p>
+<script type="math/tex; mode=display">f^{[l]}\times f^{[l]}\times n_c^{[l-1]}\tag{7-2}</script><p>输入输出的形状：</p>
+<script type="math/tex; mode=display">
+\begin{align*} Input&: n_H^{[l-1]}\times n_W^{[l-1]}\times n_c^{[l-1]}\\  
+Output&: n_H^{[l]}\times n_W^{[l]}\times n_c^{[l]}\\  
+\tag{7-3}
+\end{align*}</script><p>其中：</p>
+<script type="math/tex; mode=display">
+\begin{align*} n_H^{[l]}&=\lfloor\frac{n_H^{[l-1]}+2p^{[l]}-f^{l}}{S^{[l]}}+1\rfloor\\  n_W^{[l]}&=\lfloor\frac{n_W^{[l-1]}+2p^{[l]}-f^{l}}{S^{[l]}}+1\rfloor\\  
+\tag{7-4}
+\end{align*}</script><p>Activations: $a^{[l]}=n_H^{[l]}\times n_W^{[l]}\times n_c^{[l]}$<br>Batch or mini batch: $A^{[l]}=m\times n_H^{[l]}\times n_W^{[l]}\times n_c^{[l]}$<br>Weights: $f^{[l]}\times f^{[l]}\times n_c^{[l-1]}\times n_c^{l}$<br>bias: $n_c^{[l]}\rightarrow (1,1,1,n_c^{[l]})$</p>
+<h2 id="8-卷积神经网络的一个完整例子"><a href="#8-卷积神经网络的一个完整例子" class="headerlink" title="8. 卷积神经网络的一个完整例子"></a>8. 卷积神经网络的一个完整例子</h2><p>一个完整的卷积神经网络模型：</p>
+<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Example%20Convnet.JPG"></center></p>
+<p><center>图8.1 一个完整卷积神经网络例子</center><br>在设计卷积神经网络中的许多工作是选择合适的超参数，例如总单元数多少？步长多少？padding多少？使用了多少滤波器等。<br>Types of layer in a convolutional network:  </p>
+<ul>
+<li>Convolution (CONV)  </li>
+<li>Pooling (POOL )  </li>
+<li>Fully connected (FC)</li>
+</ul>
+<h2 id="9-Pooling-layer（池化层）"><a href="#9-Pooling-layer（池化层）" class="headerlink" title="9. Pooling layer（池化层）"></a>9. Pooling layer（池化层）</h2><p>Max pooling  没有参数，因此不需要通过反向传播来学习参数<br>多通道图片时，对每个通道分别进行max pooling<br>pooling层的作用：平移不变性，减少图片尺寸<a href="https://www.zhihu.com/question/36686900/answer/130890492" target="_blank" rel="noopener">pooling层的作用-知乎</a>  </p>
+<p>The pooling (POOL) layer reduces the height and width of the input. It helps reduce computation, as well as helps make feature detectors more invariant to its position in the input.<br>max pooling比较常用，average pooling不常用<br>hyperparameters:  </p>
+<ul>
+<li>f: filter size (f=2,s=2,used quite often)  </li>
+<li>s: stride  </li>
+<li>Max or average pooling<h2 id="10-卷积神经网络经典模型"><a href="#10-卷积神经网络经典模型" class="headerlink" title="10. 卷积神经网络经典模型"></a>10. 卷积神经网络经典模型</h2><h3 id="10-1-Outline"><a href="#10-1-Outline" class="headerlink" title="10.1 Outline"></a>10.1 Outline</h3>经典的网络结构：</li>
+<li>LeNet-5</li>
+<li>AlexNet</li>
+<li>VGG</li>
+<li>ResNet</li>
+<li>Inception<h3 id="10-1-LeNet-5"><a href="#10-1-LeNet-5" class="headerlink" title="10.1 LeNet-5"></a>10.1 LeNet-5</h3>在计算层数时通常把有参数的算作一层，因为pooling层没有参数，因此conv层和pooling层放在一起当作一层.<br>LetNet-5结构图：<center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/LeNet-5.png"></center>
+<center>图10.1 LeNet-5模型结构图</center>
+LetNet-5参数表
+<center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/LeNet-5%E5%8F%82%E6%95%B0.JPG"></center>
+<center>图10.2 LetNet-5参数说明</center></li>
+<li>用的是sigmoid/tanh激活函数</li>
+<li>由于那时的计算机性能比较差，采用了比较复杂的训练技巧<br>注意：</li>
+<li>最大池化没有任何参数</li>
+<li>卷积层趋向于拥有越来越少的参数，多数参数集中在神经网络的全连接层上</li>
+<li>随着神经网络的深入，激活输入大小也逐渐变小。如果减少得太快，通常不利于网络性能<h3 id="10-2-AlexNet"><a href="#10-2-AlexNet" class="headerlink" title="10.2 AlexNet"></a>10.2 AlexNet</h3><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/AlexNet.png"></center>
+<center>图10.3 AlexNet模型结构图</center></li>
+<li>与LSNet-5架构相似，但是规模大许多，约60M个参数</li>
+<li>用了ReLU激活函数</li>
+<li>由于计算机性能仍然不是很好，采用复杂的训练技巧（将不同的层放在两个GPU上分别训练）</li>
+<li>用了Local Response Normalization，但是后面被发现不太有效<h3 id="10-3-VGG-16"><a href="#10-3-VGG-16" class="headerlink" title="10.3 VGG-16"></a>10.3 VGG-16</h3><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/VGG-16.png"></center><br><center>图10.4 VGG-16模型结构图</center><br>138M个参数<br>16是指有16层含有参数的层。<br>前面两层都是64个$3\times 3$的卷积核进行卷积操作。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="../../../../tags/Deep-Learning/" rel="tag"># Deep Learning</a>
+          
+            <a href="../../../../tags/Convolutional-Neural-Networks/" rel="tag"># Convolutional Neural Networks</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="../../25/神经网络之将二分类问题推广到多分类问题/" rel="next" title="神经网络之将二分类问题推广到多分类问题">
+                <i class="fa fa-chevron-left"></i> 神经网络之将二分类问题推广到多分类问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="../../../../images/avatar.jpg"
+                alt="Guoxing Lan" />
+            
+              <p class="site-author-name" itemprop="name">Guoxing Lan</p>
+              <p class="site-description motion-element" itemprop="description">On The Journey To Truth</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="https://lankuohsing.github.io/blog/archives">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="../../../../categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="../../../../tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-计算机视觉（Computer-Vision）领域介绍"><span class="nav-number">1.</span> <span class="nav-text">1. 计算机视觉（Computer Vision）领域介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-卷积运算"><span class="nav-number">2.</span> <span class="nav-text">2. 卷积运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-一维场合"><span class="nav-number">2.1.</span> <span class="nav-text">2.1. 一维场合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-二维场合"><span class="nav-number">2.2.</span> <span class="nav-text">2.2. 二维场合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-卷积操作的作用和优点"><span class="nav-number">3.</span> <span class="nav-text">3. 卷积操作的作用和优点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-参数共享和连接的稀疏性"><span class="nav-number">3.1.</span> <span class="nav-text">3.1. 参数共享和连接的稀疏性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-平移不变性"><span class="nav-number">3.2.</span> <span class="nav-text">3.2. 平移不变性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-边缘检测"><span class="nav-number">3.3.</span> <span class="nav-text">3.2. 边缘检测</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Padding（填充）"><span class="nav-number">4.</span> <span class="nav-text">4. Padding（填充）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Strided-Convolutions-带步长的卷积"><span class="nav-number">5.</span> <span class="nav-text">5. Strided Convolutions(带步长的卷积)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-对三维图片（RGB）的卷积操作"><span class="nav-number">6.</span> <span class="nav-text">6. 对三维图片（RGB）的卷积操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-一层卷积层的例子"><span class="nav-number">7.</span> <span class="nav-text">7. 一层卷积层的例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-卷积神经网络的一个完整例子"><span class="nav-number">8.</span> <span class="nav-text">8. 卷积神经网络的一个完整例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-Pooling-layer（池化层）"><span class="nav-number">9.</span> <span class="nav-text">9. Pooling layer（池化层）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-卷积神经网络经典模型"><span class="nav-number">10.</span> <span class="nav-text">10. 卷积神经网络经典模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-Outline"><span class="nav-number">10.1.</span> <span class="nav-text">10.1 Outline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-LeNet-5"><span class="nav-number">10.2.</span> <span class="nav-text">10.1 LeNet-5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-AlexNet"><span class="nav-number">10.3.</span> <span class="nav-text">10.2 AlexNet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-3-VGG-16"><span class="nav-number">10.4.</span> <span class="nav-text">10.3 VGG-16</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async="" src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_uv">
+    visitor count:<span id="busuanzi_value_site_uv"></span>
+  </span>
+</div>
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Guoxing Lan</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="../../../../js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="../../../../js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="../../../../js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="../../../../js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/bootstrap.js?v=5.1.4"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
