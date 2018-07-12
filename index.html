@@ -1452,68 +1452,33 @@ a&=g(z) \\  &=\frac{e^{z}-e^{-z}}{e^{z}+e^{-z}}\\  \tag{2-1}  \end{align*}</scri
             <p>有任何问题请联系 <a href="mailto:languoxing@126.com" target="_blank" rel="noopener">languoxing@126.com</a></p>
 <p>本文是深度学习入门教程序列的第一篇，通过介绍logistic回归的原理，进而引入一层神经网络的前向传播和后向传播公式，并提供了示例代码。</p>
 <h2 id="1-logistic回归详解"><a href="#1-logistic回归详解" class="headerlink" title="1.logistic回归详解"></a>1.logistic回归详解</h2><p>logistic回归模型是用来解决二分类问题的，因此我们将首先在概率的框架下描述什么是分类问题。分类问题的一般描述如下图所示：</p>
-<center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0.png" width="500" height="150" alt="分类问题的一般描述"></center>
-<center>图1.1 分类问题的一般描述</center>
-用X代表输入空间，是输入向量的所有可能取值的集合，也叫特征空间；Y代表输出空间，是输出的所有可能取值的集合。$x^{(i)}\in X$代表特征空间的一个样本，$y^{(i)}\in Y$代表其类别（标签）。分类问题的一般描述可总结为：利用已知标签的训练集$X_{train}$训练出一个模型，该模型包含一个映射关系$h:X\rightarrow Y$，$h$应该能够对新的数据点$x^{(m+1)}$预测其类别$y^{(m+1)}$，并且预测结果应该尽可能好。通常情况下，这种“好”的标准为正确率尽可能高。
-
-以二分类问题为例，用0和1代表可能的类别，也即$Y=\{0,1\}$。我们从概率的框架下来讨论二分类问题：给定输入特征向量$x$，我们希望估计出它分别属于两类的概率$P(y=0|x;\theta)$和$P(y=1|x;\theta)$。因为现在讨论的是二分类问题，可令$\hat y=P(y=1|x;\theta)$，那么只要估计出$\hat y$就可以了。在估计之前，需要选择合适形式的函数对各类别的后验概率建模，一种最简单也是最笨的方法就是令$\hat y=w ^T x+b$，也即线性回归。但是这样可能会导致$\hat y$的值大于1或者大于0，这和概率的定义相违背。因此，我们可以在线性回归的表达式前面加上一层sigmoid函数，也即$\hat y=\sigma\left(\omega ^T x+b\right)$。sigmoid函数的表达式为：
-$$  \sigma (z)=\frac{1}{1+e^{-z}}\\  \tag{1-1}  $$
-其函数图像为：
-<center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/600px-Logistic-curve.png" width="300" height="200" alt="sigmoid函数图像"></center>
-<center>图1.2 logistic函数图像</center>
-到此，我们得到了logistic回归模型：
-$$  \hat y=\frac{1}{1+e^{(-\theta^Tx)}}  \tag{1-2}  $$
-注意，在$(1-2)$中，我们将参数项b用$x_0$表示，这样能够写成更紧凑的形式。为了突出参数$\theta$，我们用$h_\theta$表示公式$(2)$中的函数，它代表了在已知特征$x$的情况下，类别为$y=1$的概率，也即$P(y=1|x;\theta)=h_\theta$；显然,$P(y=0|x;\theta)=1-h_\theta$
-假设我们的目标是让分类的错误率最小（即最小错误率决策准则，这是最普遍的一种分类准则）。不难证明，最小化错误等价于最大化各类的后验概率。因此，若$(1-2)$的值大于0.5，则判定为类别1；否则判定为类别0。
-
-注意，logistic模型仍然是一个线性分类模型，因为它的决策面是$0=w ^T x+b$，我一个线性决策面。
-## 2.损失函数的选取
-选取好了模型后，接下来要选取损失函数（Loss function），然后在训练集上利用一定的算法（例如梯度下降法）最小化损失函数，从而确定$h_{\theta}$中的参数$\theta$。一种很自然的想法是选取$L\left(\hat y,y\right)=\frac{1}{2}\left(\hat y-y\right)^2$作为损失函数，但是这会导致在后面学习参数的过程中，最优问题不是一个凸问题。我们在这里采用极大似然估计的方法来推导出一个更合理的损失函数，并且该损失函数是凸函数。
-### 2.1.最大化后验概率与极大似然估计
-回忆一下极大似然估计的思想：对于可观测的样本$X$及其观测值$Y$，写出该观测值的概率表达式（记为$L\left(\theta\right)$)，该概率表达式一般依赖于参数$\theta$，极大似然估计的目标是寻找$\theta$的估计值$\hat \theta$使得$L\left(\theta\right)$最大。
-对于某一个观测样本$x^{(i)}$和观测值$y^{(i)}$,有：
-$$
+<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0.png" width="500" height="150" alt="分类问题的一般描述"></center></p>
+<p><center>图1.1 分类问题的一般描述</center><br>用X代表输入空间，是输入向量的所有可能取值的集合，也叫特征空间；Y代表输出空间，是输出的所有可能取值的集合。$x^{(i)}\in X$代表特征空间的一个样本，$y^{(i)}\in Y$代表其类别（标签）。分类问题的一般描述可总结为：利用已知标签的训练集$X_{train}$训练出一个模型，该模型包含一个映射关系$h:X\rightarrow Y$，$h$应该能够对新的数据点$x^{(m+1)}$预测其类别$y^{(m+1)}$，并且预测结果应该尽可能好。通常情况下，这种“好”的标准为正确率尽可能高。</p>
+<p>以二分类问题为例，用0和1代表可能的类别，也即$Y=\{0,1\}$。我们从概率的框架下来讨论二分类问题：给定输入特征向量$x$，我们希望估计出它分别属于两类的概率$P(y=0|x;\theta)$和$P(y=1|x;\theta)$。因为现在讨论的是二分类问题，可令$\hat y=P(y=1|x;\theta)$，那么只要估计出$\hat y$就可以了。在估计之前，需要选择合适形式的函数对各类别的后验概率建模，一种最简单也是最笨的方法就是令$\hat y=w ^T x+b$，也即线性回归。但是这样可能会导致$\hat y$的值大于1或者大于0，这和概率的定义相违背。因此，我们可以在线性回归的表达式前面加上一层sigmoid函数，也即$\hat y=\sigma\left(\omega ^T x+b\right)$。sigmoid函数的表达式为：</p>
+<script type="math/tex; mode=display">\sigma (z)=\frac{1}{1+e^{-z}}\\ \tag{1-1}</script><p>其函数图像为：</p>
+<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/600px-Logistic-curve.png" width="300" height="200" alt="sigmoid函数图像"></center></p>
+<p><center>图1.2 logistic函数图像</center><br>到此，我们得到了logistic回归模型：</p>
+<script type="math/tex; mode=display">\hat y=\frac{1}{1+e^{(-\theta^Tx)}} \tag{1-2}</script><p>注意，在$(1-2)$中，我们将参数项b用$x_0$表示，这样能够写成更紧凑的形式。为了突出参数$\theta$，我们用$h_\theta$表示公式$(2)$中的函数，它代表了在已知特征$x$的情况下，类别为$y=1$的概率，也即$P(y=1|x;\theta)=h_\theta$；显然,$P(y=0|x;\theta)=1-h_\theta$<br>假设我们的目标是让分类的错误率最小（即最小错误率决策准则，这是最普遍的一种分类准则）。不难证明，最小化错误等价于最大化各类的后验概率。因此，若$(1-2)$的值大于0.5，则判定为类别1；否则判定为类别0。</p>
+<p>注意，logistic模型仍然是一个线性分类模型，因为它的决策面是$0=w ^T x+b$，我一个线性决策面。 </p>
+<h2 id="2-损失函数的选取"><a href="#2-损失函数的选取" class="headerlink" title="2.损失函数的选取"></a>2.损失函数的选取</h2><p>选取好了模型后，接下来要选取损失函数（Loss function），然后在训练集上利用一定的算法（例如梯度下降法）最小化损失函数，从而确定$h_{\theta}$中的参数$\theta$。一种很自然的想法是选取$L\left(\hat y,y\right)=\frac{1}{2}\left(\hat y-y\right)^2$作为损失函数，但是这会导致在后面学习参数的过程中，最优问题不是一个凸问题。我们在这里采用极大似然估计的方法来推导出一个更合理的损失函数，并且该损失函数是凸函数。</p>
+<h3 id="2-1-最大化后验概率与极大似然估计"><a href="#2-1-最大化后验概率与极大似然估计" class="headerlink" title="2.1.最大化后验概率与极大似然估计"></a>2.1.最大化后验概率与极大似然估计</h3><p>回忆一下极大似然估计的思想：对于可观测的样本$X$及其观测值$Y$，写出该观测值的概率表达式（记为$L\left(\theta\right)$)，该概率表达式一般依赖于参数$\theta$，极大似然估计的目标是寻找$\theta$的估计值$\hat \theta$使得$L\left(\theta\right)$最大。<br>对于某一个观测样本$x^{(i)}$和观测值$y^{(i)}$,有：</p>
+<script type="math/tex; mode=display">
 \begin{align*}
 L(\theta)&=P(y^{(i)}|x;\theta)\\
 &=(h_\theta(x))^{1\left(y^{(i)}=1\right)}(1-h_\theta(x))^{1\left(y^{(i)}=0\right)}\\
 &=(h_\theta(x))^y(1-h_\theta(x))^{1-y}\\
 \tag{2-1}  
-\end{align*}
-$$
-$L(\theta)$也叫似然函数。
-对数似然函数为：
-$$
-\begin{align*}  l(\theta) &=\log L(\theta)  \\  
-&=y\log\left(h_\theta(x)\right)+(1-y)\log  (1-h_\theta(x))  \tag{2-2}  \end{align*}
-$$
-$(2-2)$就是单个样本的损失函数。下面讨论训练集上的代价函数（cost function）。
-对于多个观测样本$X$和观测值$Y$，似然函数可写成：
-$$
-\begin{align*}  L(\theta) &=P(\boldsymbol{Y}|\boldsymbol{X};\theta)  \\  &=\prod_{i=1}^{m}P(y^{(i)}|x^{(i)};\theta)  \\  &=\prod_{i=1}^{m}(h_\theta(x^{(i)}))^{y^{(i)}}(1-h_\theta(x^{(i)}))^{1-y^{(i)}}\\  \tag{2-3}  
-\end{align*}
-$$
-对数似然函数为：
-$$
-\begin{align*}  l(\theta) &=\log L(\theta)  \\  &=\sum_{i=1}^{m}y^{(i)}\log h_\theta(x^{(i)})+(1-y^{(i)})\log  (1-h_\theta(x^{(i)}))\\  \tag{2-4}  \end{align*}
-$$
-因为对数似然函数需要最大化，而损失函数需要最小化，因此我们选择如下表达式作为损失函数：
-$$  J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}y^{(i)}\log h_\theta(x^{(i)})+(1-y^{(i)})\log  (1-h_\theta(x^{(i)}))\right]  \tag{2-5}  
-$$
-$(2-5)$就是代价函数（cost function），它等价于对所有的$(2-2)$取平均。
-损失函数（loss function）是定义在单个样本上的，代价函数（cost function）是定义在多个样本上的。
-
-## 3.梯度下降方法求解最优的参数$w$和$b$（一层神经网络）
-利用logistic可以构造一个只含有输出层的神经网络，其结构图如下：
-<center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/single_layer_NN.png" alt="single layer NN"></center>
-<center>图3.1 用logistic回归表示的单层神经网络结构图</center>
-
-<p>下面介绍其作为神经网络时的前向传播、反向传播过程，为后面理解更复杂的神经网络打下基础。<br>logistic回归的代价函数的凸函数，因此可以用梯度下降的方法求得全局最优值，并且与初始化的方式无关，一般利用零初始化。</p>
+\end{align*}</script><p>$L(\theta)$也叫似然函数。<br>对数似然函数为：</p>
 <script type="math/tex; mode=display">
-\begin{align*}
-w&:=w-\alpha\frac{\partial J(w,b)}{\partial w}\\
-b&:=b-\alpha\frac{\partial J(b,b)}{\partial b}\\
-\tag{3-1}
-\end{align*}</script><p>注意，Andrew NG在Cousera开设的深度学习课程中，求偏导用的是符号$d$，我们这里不区分$\partial$和$d$。<br>下面我们讨论只有输入层和输出层（激活函数为sigmoid函数）的简单神经网络的前向传播和反向传播过程，也即logistic回归。</p>
+\begin{align*} l(\theta) &=\log L(\theta) \\  
+&=y\log\left(h_\theta(x)\right)+(1-y)\log (1-h_\theta(x)) \tag{2-2} \end{align*}</script><p>$(2-2)$就是单个样本的损失函数。下面讨论训练集上的代价函数（cost function）。<br>对于多个观测样本$X$和观测值$Y$，似然函数可写成：</p>
+<script type="math/tex; mode=display">
+\begin{align*} L(\theta) &=P(\boldsymbol{Y}|\boldsymbol{X};\theta) \\ &=\prod_{i=1}^{m}P(y^{(i)}|x^{(i)};\theta) \\ &=\prod_{i=1}^{m}(h_\theta(x^{(i)}))^{y^{(i)}}(1-h_\theta(x^{(i)}))^{1-y^{(i)}}\\ \tag{2-3}  
+\end{align*}</script><p>对数似然函数为：</p>
+<script type="math/tex; mode=display">
+\begin{align*} l(\theta) &=\log L(\theta) \\ &=\sum_{i=1}^{m}y^{(i)}\log h_\theta(x^{(i)})+(1-y^{(i)})\log (1-h_\theta(x^{(i)}))\\ \tag{2-4} \end{align*}</script><p>因为对数似然函数需要最大化，而损失函数需要最小化，因此我们选择如下表达式作为损失函数：</p>
+<script type="math/tex; mode=display">J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}y^{(i)}\log h_\theta(x^{(i)})+(1-y^{(i)})\log (1-h_\theta(x^{(i)}))\right] \tag{2-5}</script><p>$(2-5)$就是代价函数（cost function），它等价于对所有的$(2-2)$取平均。<br>损失函数（loss function）是定义在单个样本上的，代价函数（cost function）是定义在多个样本上的。</p>
+<h2 id="3-梯度下降方法求解最优的参数-w-和-b-（一层神经网络）"><a href="#3-梯度下降方法求解最优的参数-w-和-b-（一层神经网络）" class="headerlink" title="3.梯度下降方法求解最优的参数$w$和$b$（一层神经网络）"></a>3.梯度下降方法求解最优的参数$w$和$b$（一层神经网络）</h2><p>下面我们讨论只有输入层和输出层（激活函数为sigmoid函数）的简单神经网络的前向传播和反向传播过程，也即logistic回归。</p>
 <h3 id="3-1-前向传播"><a href="#3-1-前向传播" class="headerlink" title="3.1.前向传播"></a>3.1.前向传播</h3><script type="math/tex; mode=display">
 \begin{align*}  X&=\left[x^{(1)},x^{(2)},\cdots,x^{(m)}\right]\\  Z&=\left[z^{(1)},z^{(2)},\cdots,z^{(m)}\right]\\  
 &=[w^Tx^{(1)}+b,w^Tx^{(2)}+b,\cdots,w^Tx^{(m)}+b]\\  A&=\left[a^{(1)},a^{(2)},\cdots,a^{(m)}\right]\\
