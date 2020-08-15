@@ -262,6 +262,208 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2020/08/16/统计学之样本方差与总体方差/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guoxing Lan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Guoxing Lan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="2020/08/16/统计学之样本方差与总体方差/" itemprop="url">统计学之样本方差与总体方差</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-16T00:23:00+08:00">
+                2020-08-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="categories/Tutorials-of-Statistics/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Statistics</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>参考资料：<a href="https://www.cnblogs.com/zzdbullet/p/10087196.html" target="_blank" rel="noopener">https://www.cnblogs.com/zzdbullet/p/10087196.html</a></p>
+<h2 id="1-方差（variance）的定义"><a href="#1-方差（variance）的定义" class="headerlink" title="1. 方差（variance）的定义"></a>1. 方差（variance）的定义</h2><p>方差是用来度量随机变量和其数学期望（均值）之间的偏离程度的一个统计量。</p>
+<p>统计学中（所有样本）的总体方差公式：</p>
+<script type="math/tex; mode=display">
+\sigma^2=\frac{\sum(X-\mu)^2}{N} \tag{1-1}</script><p>其中$\sigma^2$是总体方差，$X$是随机变量，$\mu$是总体均值（有时也用$\bar X$表示），$N$是总体样本数。这里提到的样本，是基于样本数量$N$（几乎）无限的假设。对应的各个统计量，也是所有的样本所服从的分布的真实参数，是客观正真实的。</p>
+<h2 id="2-样本方差"><a href="#2-样本方差" class="headerlink" title="2. 样本方差"></a>2. 样本方差</h2><p>现实情况中，我们往往得不到所有的无限样本，而只能抽样出一定数量的有限样本。通过有限的样本来计算的方差，称为样本方差，公式如下：</p>
+<script type="math/tex; mode=display">
+S^2=\frac{1}{n-1}\sum_{i=1}^{n}(X_i-\bar X)^2\tag{2-1}</script><p>注意上式的系数和总体方差公式里面的系数不一样，分母是$n-1$。为什么不用$n$作为分母呢？这是因为如果沿用总体方差的公式得到的样本方差，是对方差的一个有偏估计。用$n$作为分母的样本方差公式，才是对方差的无偏估计。</p>
+<h2 id="3-总体方差公式的有偏性证明"><a href="#3-总体方差公式的有偏性证明" class="headerlink" title="3. 总体方差公式的有偏性证明"></a>3. 总体方差公式的有偏性证明</h2><script type="math/tex; mode=display">
+\begin{align*}
+\frac{1}{n}\sum_{i=1}^{n}(X_i-\bar X)^2&=\frac{1}{n}\sum_{i=1}^{n}\left[(X_i-\mu)+(\mu-\bar X)\right]^2\\
+&=\frac{1}{n}\sum_{i=1}^{n}(X_i-\mu)^2+\frac{2}{n}\sum_{i=1}^{n}(X_i-\mu)(\mu-\bar X)+\frac{1}{n}\sum_{i=1}^{n}(\mu-\bar X)^2\\
+&=\frac{1}{n}\sum_{i=1}^{n}(X_i-\mu)^2+2(\bar X-\mu)(\mu-\bar X)+(\mu-\bar X)^2\\
+&=\frac{1}{n}\sum_{i=1}^{n}(X_i-\mu)^2-(\mu-\bar X)^2\\
+\tag{3-1}
+\end{align*}</script><p>换言之，除非正好有$\bar X=\mu$，否则一定会有</p>
+<script type="math/tex; mode=display">
+\frac{1}{n}\sum_{i=1}^{n}(X_i-\bar X)^2<\frac{1}{n}\sum_{i=1}^{n}(X_i-\mu)^2\tag{3-2}</script><p>上式的右边是对方差的正确估计，左边是有偏估计。<br>产生这一偏差的本质是因为均值用的是样本均值$\bar X$。这将导致采样出来的样本之间不是完全相互独立的，自由度从$n$降为了$n-1$。（注意，一个好的采样有两点要求：随机采样，并且样本之间是相互独立的）这是因为，给定$\bar X$和任意$n-1$个样本，就能确定剩下的一个样本，也即只有$n-1$个样本是完全相互独立的，自由度为$n-1$。</p>
+<h2 id="4-样本方差公式分母为n-1的推导"><a href="#4-样本方差公式分母为n-1的推导" class="headerlink" title="4. 样本方差公式分母为n-1的推导"></a>4. 样本方差公式分母为n-1的推导</h2><p>在正式推导之前，先给几个公式作为铺垫：</p>
+<ol>
+<li>方差计算公式：<script type="math/tex; mode=display">
+D(X)=E(X^2)-[E(X)]^2\tag{4-1}</script></li>
+<li>均值的均值：<script type="math/tex; mode=display">
+\begin{align*}
+E(\bar X)&=E\left(\frac{1}{n}\sum_{i=1}^{n}X_i\right)\\
+&=\frac{1}{n}E(\sum_{i=1}^{n}X_i)\\
+&=E(X_i)\\
+&=\bar X\tag{4-4}
+\end{align*}</script></li>
+<li>均值的方差<script type="math/tex; mode=display">
+\begin{align*}
+D(\bar X)&=D\left(\frac{1}{n}\sum_{i=1}^nX_i\right)\\
+&=\frac{1}{n^2}D(\sum_{i=1}^{n}X_i)\\
+&=\frac{1}{n}D(X_i)\\
+\tag{4-5}
+\end{align*}</script></li>
+</ol>
+<p>对于没有修正的方差计算公式，计算其期望：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+E(S^2)&=E\left(\frac{1}{n}\sum_{i=1}^{n}(x_i-\bar x)^2\right)\\
+&=E\left(\frac{1}{n}\sum_{i=1}^{n}(x_i)^2-\frac{2}{n}(X_i)(\bar X)+\frac{1}{n}\sum_{i=1}^{n}(\bar X)^2\right)\\
+&=E\left(\frac{1}{n}\sum_{i=1}^{n}(x_i)^2-2(\bar X)^2+(\bar X)^2\right)\\
+&=E\left(\frac{1}{n}\sum_{i=1}^{n}(x_i)^2-(\bar X)^2\right)\\
+&=E((X_i)^2)-E((\bar X)^2)\\
+&=D(X_i)+\left(E(X_i)\right)^2-\left(D(\bar X)+\left(E(\bar X)\right)^2\right)
+\tag{4-6}
+\end{align*}</script><p>结合{4-4}和{4-5}，可将{4-6}化简为</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+E(S^2)&=D(X_i)-\frac{1}{n}D(X_i)\\
+&=\frac{n-1}{n}D(X_i)\\
+&=\frac{n-1}{n}\sigma^2\\
+\tag{4-7}
+\end{align*}</script><p>要使样本方差的期望等于总体方差，就需要进行修正，也即给样本方差乘上$\frac{n}{n-1}$<br>因此得到修正后的样本方差公式:</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+S^2&=\frac{n}{n-1}\left(\frac{1}{n}\sum_{i=1}^{n}(x_i-\bar x)^2\right)\\
+&=\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar x)^2\\
+\tag{4-8}
+\end{align*}</script><p>推导完毕！</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2020/08/15/统计学之假设检验详解/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1940,7 +2142,7 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</scr
               
                 <a href="https://lankuohsing.github.io/blog/archives">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
