@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Deep Learning,Neural Networks," />
+  <meta name="keywords" content="Statistics,Hypothesis Testing," />
 
 
 
@@ -79,23 +79,18 @@
 
 
 
-<meta name="description" content="$tanh(z)=\frac{e^z-e^{-z}}{e^z+e^{-z}}$效果严格地比$sigmoid$函数好，因为该函数的对称中心在$(0,0)$，具有将数据归一化为0均值的效果。当然，二分类的输出层的激活函数还是一般用$sigmoid(z)$，因为$sigmod$函数能将输出值映射到$0\sim1$之间（概率值）$Relu(z)=max(0,z)$出现后，神经网络默认都用$Relu$函数（">
-<meta name="keywords" content="Deep Learning,Neural Networks">
+<meta name="description" content="参考：https://cosx.org/2010/11/hypotheses-testing/ 0. 背景在实际生产生活中，我们经常需要对一些逻辑推理进行真假判断，例如  如果你打了某种疫苗P，就不会得某种流行病Q如果一个疑似病人隔离了14天还没确诊，那他就没有被感染新冠肺炎  在统计学里面，不会像上面那样说，而是会说：  如果你打了某种疫苗 ，就有95%的把握不会得流行病Q如果一个疑似病人隔离了">
+<meta name="keywords" content="Statistics,Hypothesis Testing">
 <meta property="og:type" content="article">
-<meta property="og:title" content="神经网络中的激活函数">
-<meta property="og:url" content="https://lankuohsing.github.io/blog/2018/06/12/神经网络中的激活函数/index.html">
+<meta property="og:title" content="统计学之假设检验详解">
+<meta property="og:url" content="https://lankuohsing.github.io/blog/2020/08/15/统计学之假设检验详解/index.html">
 <meta property="og:site_name" content="Guoxing Lan">
-<meta property="og:description" content="$tanh(z)=\frac{e^z-e^{-z}}{e^z+e^{-z}}$效果严格地比$sigmoid$函数好，因为该函数的对称中心在$(0,0)$，具有将数据归一化为0均值的效果。当然，二分类的输出层的激活函数还是一般用$sigmoid(z)$，因为$sigmod$函数能将输出值映射到$0\sim1$之间（概率值）$Relu(z)=max(0,z)$出现后，神经网络默认都用$Relu$函数（">
+<meta property="og:description" content="参考：https://cosx.org/2010/11/hypotheses-testing/ 0. 背景在实际生产生活中，我们经常需要对一些逻辑推理进行真假判断，例如  如果你打了某种疫苗P，就不会得某种流行病Q如果一个疑似病人隔离了14天还没确诊，那他就没有被感染新冠肺炎  在统计学里面，不会像上面那样说，而是会说：  如果你打了某种疫苗 ，就有95%的把握不会得流行病Q如果一个疑似病人隔离了">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/sigmoid.png">
-<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/tanh.png">
-<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/ReLU.png">
-<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/Leaky-ReLU.png">
-<meta property="og:updated_time" content="2018-06-12T13:48:59.830Z">
+<meta property="og:updated_time" content="2020-08-15T15:39:58.406Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="神经网络中的激活函数">
-<meta name="twitter:description" content="$tanh(z)=\frac{e^z-e^{-z}}{e^z+e^{-z}}$效果严格地比$sigmoid$函数好，因为该函数的对称中心在$(0,0)$，具有将数据归一化为0均值的效果。当然，二分类的输出层的激活函数还是一般用$sigmoid(z)$，因为$sigmod$函数能将输出值映射到$0\sim1$之间（概率值）$Relu(z)=max(0,z)$出现后，神经网络默认都用$Relu$函数（">
-<meta name="twitter:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/sigmoid.png">
+<meta name="twitter:title" content="统计学之假设检验详解">
+<meta name="twitter:description" content="参考：https://cosx.org/2010/11/hypotheses-testing/ 0. 背景在实际生产生活中，我们经常需要对一些逻辑推理进行真假判断，例如  如果你打了某种疫苗P，就不会得某种流行病Q如果一个疑似病人隔离了14天还没确诊，那他就没有被感染新冠肺炎  在统计学里面，不会像上面那样说，而是会说：  如果你打了某种疫苗 ，就有95%的把握不会得流行病Q如果一个疑似病人隔离了">
 
 
 
@@ -125,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://lankuohsing.github.io/blog/2018/06/12/神经网络中的激活函数/"/>
+  <link rel="canonical" href="https://lankuohsing.github.io/blog/2020/08/15/统计学之假设检验详解/"/>
 
 
 
 
 
-  <title>神经网络中的激活函数 | Guoxing Lan</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>统计学之假设检验详解 | Guoxing Lan</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -285,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">神经网络中的激活函数</h1>
+          <h1 class="post-title" itemprop="name headline">统计学之假设检验详解</h1>
         
 
         <div class="post-meta">
@@ -297,8 +292,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-12T21:37:51+08:00">
-                2018-06-12
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-15T23:37:41+08:00">
+                2020-08-15
               </time>
             
 
@@ -320,8 +315,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../../../categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Tutorials of Deep Learning</span>
+                  <a href="../../../../categories/Tutorials-of-Statistics/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Statistics</span>
                   </a>
                 </span>
 
@@ -357,28 +352,28 @@
       
 
       
-        <p>$tanh(z)=\frac{e^z-e^{-z}}{e^z+e^{-z}}$效果严格地比$sigmoid$函数好，因为该函数的对称中心在$(0,0)$，具有将数据归一化为0均值的效果。当然，二分类的输出层的激活函数还是一般用$sigmoid(z)$，因为$sigmod$函数能将输出值映射到$0\sim1$之间（概率值）<br>$Relu(z)=max(0,z)$出现后，神经网络默认都用$Relu$函数（rectified linear）来作为激活函数。此时一般默认$z&gt;0$<br>$leaky(z)=max(0.01z,z)$可以避免$z&lt;0$时斜率为零的情况  输出层有时也用线性激活函数（房价预测）  </p>
-<h2 id="1-Sigmoid-activation-function"><a href="#1-Sigmoid-activation-function" class="headerlink" title="1. Sigmoid activation function"></a>1. Sigmoid activation function</h2><p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/sigmoid.png"></center></p>
-<p><center>图1.1 激活函数-sigmoid</center></p>
-<script type="math/tex; mode=display">
-\begin{align*}  a&=g(z) \\  &=\frac{1}{1+e^{-z}}\\  \tag{1-1}  \end{align*}</script><script type="math/tex; mode=display">
-\begin{align*}  g'(z)&=\frac{d}{dz}g(z)\\  &=\frac{e^{-z}}{1+e^{-z}}\\  &=\frac{1}{1+e^{-z}}\left(1-\frac{1}{1+e^{-z}}\right)\\  &=g(z)\left(1-g(z)\right)\\  &=a(1-a)\\  \tag{1-2}  \end{align*}</script><h2 id="2-Tanh-activation-function"><a href="#2-Tanh-activation-function" class="headerlink" title="2. Tanh activation function"></a>2. Tanh activation function</h2><p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/tanh.png"></center></p>
-<p><center>图2.1 激活函数-tanh</center></p>
-<script type="math/tex; mode=display">
-\begin{align*}  
-a&=g(z) \\  &=\frac{e^{z}-e^{-z}}{e^{z}+e^{-z}}\\  \tag{2-1}  \end{align*}</script><script type="math/tex; mode=display">
-\begin{align*}  g'(z)&=\frac{d}{dz}g(z)\\  &=\frac{e^{-z}}{1+e^{-z}}\\  &=\frac{\left(e^{z}+e^{-z}\right)^2-\left(e^z-e^{-z}\right)^2}{\left(e^z+e^{-z}\right)^2}\\  &=1-\left(g(z)\right)^2\\  &=1-a^2\\  \tag{2-2}  \end{align*}</script><h2 id="3-ReLU-and-Leaky-ReLU"><a href="#3-ReLU-and-Leaky-ReLU" class="headerlink" title="3. ReLU and Leaky ReLU"></a>3. ReLU and Leaky ReLU</h2><p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/ReLU.png"></center></p>
-<p><center>图3.1 激活函数-ReLU</center><br><strong>ReLU:</strong>  </p>
-<script type="math/tex; mode=display">
-\begin{align*}  a&=g(z) \\  &=max(0,z)\\  \tag{3-1}  \end{align*}</script><script type="math/tex; mode=display">
-\begin{align*}  g'(z)&=\frac{d}{dz}g(z)\\  &=\left\{  \begin{aligned}  0\quad if\ z<0\\  1\quad if\ z\geq0  \end{aligned}  \right.  \tag{3-2}  \end{align*}</script><p><strong>Leaky ReLU:</strong>  </p>
-<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/Leaky-ReLU.png"></center></p>
-<p><center>图3.2 激活函数-Leaky ReLU</center></p>
-<script type="math/tex; mode=display">
-\begin{align*}  a&=g(z) \\  &=max(0.01z,z)\\  \tag{3-3}  \end{align*}</script><script type="math/tex; mode=display">
-\begin{align*}  g'(z)&=\frac{d}{dz}g(z)\\  &=\left\{  \begin{aligned}  0.01\quad if\ z<0\\  1\quad if\ z\geq0  \end{aligned}  \right.  \tag{3-4}  \end{align*}</script><h2 id="4-选择激活函数的准则"><a href="#4-选择激活函数的准则" class="headerlink" title="4.选择激活函数的准则"></a>4.选择激活函数的准则</h2><ul>
-<li>如果处理的问题是二分类问题，输出为0和1，那么输出层选择sigmoid函数，其他神经元选择ReLU(有时也可用tanh)，理论上Leaky ReLU比ReLU好，但是实践中差不多。</li>
-</ul>
+        <p>参考：<a href="https://cosx.org/2010/11/hypotheses-testing/" target="_blank" rel="noopener">https://cosx.org/2010/11/hypotheses-testing/</a></p>
+<h2 id="0-背景"><a href="#0-背景" class="headerlink" title="0. 背景"></a>0. 背景</h2><p>在实际生产生活中，我们经常需要对一些逻辑推理进行真假判断，例如</p>
+<blockquote>
+<p>如果你打了某种疫苗P，就不会得某种流行病Q<br>如果一个疑似病人隔离了14天还没确诊，那他就没有被感染新冠肺炎</p>
+</blockquote>
+<p>在统计学里面，不会像上面那样说，而是会说：</p>
+<blockquote>
+<p>如果你打了某种疫苗 ，就有95%的把握不会得流行病Q<br>如果一个疑似病人隔离了14天还没确诊，那他就有95%的把握没有被感染新冠肺炎</p>
+</blockquote>
+<p>其中的把握水平，在统计推断中用“置信水平”来代替。置信水平是可以人为选取的。</p>
+<h2 id="1-从一个硬币的例子来引入假设检验"><a href="#1-从一个硬币的例子来引入假设检验" class="headerlink" title="1. 从一个硬币的例子来引入假设检验"></a>1. 从一个硬币的例子来引入假设检验</h2><p>如何从统计推断的角度来判断一个逻辑推理是否正确呢？通常，我们会给定一个置信水平，然后判断该逻辑推理是否在这个置信水平下成立。这里重新举一个硬币的例子，来引入置信水平的概念。<br>假设有如下命题：</p>
+<blockquote>
+<p>if P then Q<br>P: 在 100 次投掷中，得到 90 次正面，10 次反面。<br>Q: 硬币不是均匀的。</p>
+</blockquote>
+<p>我们想知道，如果P成立，判断Q成立的把握有多大。很多时候（但不是所有时候），在统计推断里面，要证明的结论都是直觉上可能性比较大的，直接证明可能不太方便，可以反其道行之，证明Q的反面是否成立，来推断出Q是否成立。为此，列出如下原假设和备择假设：</p>
+<blockquote>
+<p>H0: 硬币是均匀的（P）<br>Ha: 硬币是不均匀的（not P）</p>
+</blockquote>
+<p>如果原假设为真，即硬币是均匀的，就不可能会发生这样极端的事情比如：在 100 次投掷中，得到 90 次正面，10 次反面。如果真的观察到了这么极端的事情，就有把握认为硬币不是均匀的，则拒绝原假设，选择备选假设。如果观察到的是60次正面，40个反面，则没有特别大的把握拒绝原假设，这枚硬币是否有偏，需要更多的证据来证明（这通常意味着做更多的实验，比如再投1000次）。</p>
+<p>即使观测到100次投掷中90次正面10次反面，也不能说硬币一定是不均匀的（也即不能百分之百的把握拒绝原假设）。如果原假设为真，但是拒绝了原假设，这种情况称为<strong>第一类错误</strong>。发生第一类错误的概率，称为<strong>显著性水平</strong>，用$\alpha$表示。$1-\alpha$称为<strong>置信度</strong>或者<strong>置信水平</strong>，它表示我们根据抽样样本对总体参数的估计的可靠性。$\alpha$一般是人为定的，如0.05，0.01.给定置信水平后，就可以去利用一些统计学的知识去检验原假设是否需要拒绝。<br>如果原假设是错误的，但是没有拒绝原假设，则称为<strong>第二类错误</strong>。如果要求犯第一类错误的概率尽可能小，就会导致第二类错误的概率增大；反之，如果要求第二类错误的Giallo极可能小，就会导致第一类错误的概率增大。在实际中需要权衡。权衡的方式就是调节$\alpha$。在实际中，我们通常认为犯第一类错误的后果比犯第二类错误的后果更为严重。例如，关于打疫苗会后会不会得病的命题，我们通常会将原假设写成：会得病，然后去搜集数据试图拒绝原假设。此时犯第一类错误的后果是比较严重的（实际会得病却认为不会得病，会放松警惕造成大流行），而犯第二类错误的后果不是很严重（实际不糊得病，却没有拒绝原假设，只是会将打疫苗的部分人隔离起来造成一定的不便）</p>
+<p>再强调一下，一般都是先提出需要建议的假设，再搜集数据，这是统计推断的原则之一。因为如果现有了数据再提出假设，容易有主观干扰。<br>到这里，我们还是没有解答如何去检验原假设是否需要被拒绝。别急，接着往下看。</p>
+<h2 id="2-P值"><a href="#2-P值" class="headerlink" title="2. P值"></a>2. P值</h2><p>如何去定义一个事件是否“极端”呢？首先我们引入“更极端”的概念。更极端，意味着概率更小。例如，91次正面9次反面，比90次正面10次反面，更为极端。因此，很自然地，我们只需要描述出原假设为真，第一类错误恰好为$\alpha$时的事件，然后判断出当前样本集合里面的事件是否比它更极端，就能判断是否要在当前显著性水平下拒绝原假设了。当然，直接这样比较麻烦，可以转换一下思路：计算出发生比当前事件（90次正面，10次反面）更极端的事件的概率P，判断P与$\alpha$的大小，如果$P&lt;\alpha$，则说明如果原假设为真时，发生当前事件的概率很极端（比我们给定的显著性水平$\alpha$还低），因此说明原假设不合理，于是可以拒绝原假设了。此时发生第一类错误的概率小于$\alpha$。这里的概率P，称为<strong>P值</strong>。<br>在硬币投掷实验中，正面出现的次数服$X$服从一个二项分布：$X\sim B(n,p)$，其中$n=100,p-0.5$。根据中心极限定理，二项分布的极限分布是正态分布，因此可以由均值为$np=50$，方差为$np(1-p)=25$的正态分布来近似。我们用这个近似的正态分布的两端去考察所谓“更极端”的事件。取$\alpha=0.05$，由正态分布的性质不难得到，$P$值等于$X<10$或$x>90$的概率值，等于$2\times P(X&lt;10)=1.2442e-15$。这个小于我们给定的$\alpha$，因此该事件很极端，原假设不合理，拒绝原假设。</10$或$x></p>
 
       
     </div>
@@ -396,9 +391,9 @@ a&=g(z) \\  &=\frac{e^{z}-e^{-z}}{e^{z}+e^{-z}}\\  \tag{2-1}  \end{align*}</scri
       
         <div class="post-tags">
           
-            <a href="../../../../tags/Deep-Learning/" rel="tag"># Deep Learning</a>
+            <a href="../../../../tags/Statistics/" rel="tag"># Statistics</a>
           
-            <a href="../../../../tags/Neural-Networks/" rel="tag"># Neural Networks</a>
+            <a href="../../../../tags/Hypothesis-Testing/" rel="tag"># Hypothesis Testing</a>
           
         </div>
       
@@ -411,8 +406,8 @@ a&=g(z) \\  &=\frac{e^{z}-e^{-z}}{e^{z}+e^{-z}}\\  \tag{2-1}  \end{align*}</scri
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="../../05/从logistic回归到神经网络/" rel="next" title="从logistic回归到神经网络">
-                <i class="fa fa-chevron-left"></i> 从logistic回归到神经网络
+              <a href="../../../../2018/06/28/卷积神经网络入门/" rel="next" title="卷积神经网络入门">
+                <i class="fa fa-chevron-left"></i> 卷积神经网络入门
               </a>
             
           </div>
@@ -420,10 +415,6 @@ a&=g(z) \\  &=\frac{e^{z}-e^{-z}}{e^{z}+e^{-z}}\\  \tag{2-1}  \end{align*}</scri
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="../神经网络中的正则化/" rel="prev" title="神经网络中的正则化">
-                神经网络中的正则化 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -559,7 +550,7 @@ a&=g(z) \\  &=\frac{e^{z}-e^{-z}}{e^{z}+e^{-z}}\\  \tag{2-1}  \end{align*}</scri
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Sigmoid-activation-function"><span class="nav-number">1.</span> <span class="nav-text">1. Sigmoid activation function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Tanh-activation-function"><span class="nav-number">2.</span> <span class="nav-text">2. Tanh activation function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-ReLU-and-Leaky-ReLU"><span class="nav-number">3.</span> <span class="nav-text">3. ReLU and Leaky ReLU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-选择激活函数的准则"><span class="nav-number">4.</span> <span class="nav-text">4.选择激活函数的准则</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0-背景"><span class="nav-number">1.</span> <span class="nav-text">0. 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-从一个硬币的例子来引入假设检验"><span class="nav-number">2.</span> <span class="nav-text">1. 从一个硬币的例子来引入假设检验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-P值"><span class="nav-number">3.</span> <span class="nav-text">2. P值</span></a></li></ol></div>
             
 
           </div>
