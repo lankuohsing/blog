@@ -262,6 +262,162 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2020/08/16/统计学之t检验详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guoxing Lan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Guoxing Lan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="2020/08/16/统计学之t检验详解/" itemprop="url">统计学之t检验详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-16T00:31:29+08:00">
+                2020-08-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="categories/Tutorials-of-Statistics/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Statistics</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>参考：<a href="https://blog.csdn.net/Tonywu2018/article/details/83897806" target="_blank" rel="noopener">https://blog.csdn.net/Tonywu2018/article/details/83897806</a></p>
+<h2 id="0-背景故事"><a href="#0-背景故事" class="headerlink" title="0. 背景故事"></a>0. 背景故事</h2><p>t检验又叫学生t检验（Student‘s t test），它是由20世纪爱尔兰的一家啤酒厂-健力士酒厂的一名员工（戈斯特）采用笔名“Student”发表的学术文章而得名。</p>
+<h2 id="1-从一个例子引入t检验的思路"><a href="#1-从一个例子引入t检验的思路" class="headerlink" title="1. 从一个例子引入t检验的思路"></a>1. 从一个例子引入t检验的思路</h2><p>健力士公司是酿啤酒的，啤酒的原材料是麦子，因此公司种了很多麦田。假设有两片麦田，一块采用A工艺（旧）种植，另一块采用B工艺（新）种植。A工艺的麦田平均每株麦子可以结100粒穗子。公司想知道B工艺是否相比A工艺提高了产量。为了节约成本、小小损耗，抠门的资本家老板从B工艺的麦田里随机摘了5株大麦，每株麦子的平均穗子数量为120粒，看起来似乎产量提高了，因为每株麦子的麦穗粒数均值增加了20%。如何确定这样的结论是否可信呢？</p>
+<blockquote>
+<p>原假设：B工艺没有提高产量，即AB工艺下的每株麦子麦穗数量服从同一个分布<br>备选假设：B工艺提高了产量</p>
+</blockquote>
+<p>由中心极限定理，A攻一下每株麦穗的粒数服从均值为100，方差未知的正态分布：</p>
+<script type="math/tex; mode=display">
+X\sim N(\mu,\sigma^2)\tag{1-1}</script><p>B工艺的单株麦穗粒数也可以认为服从正态分布。如果原假设正确的话，B和A服从同样的正态分布。那么这时候我们可以去评估出现5株均值为120的麦穗的概率是否很极端，来判断原假设是否合理。可以对B的每株麦穗数的分布归一化为标准正态分布，再去查表评估其概率值。也即要计算$\frac{\bar x-\mu_0}{\delta_0}$，其中$\bar x$是B工艺的麦穗粒数均值，$\mu_0$为A工艺的麦穗粒数均值，$\delta_0$为A工艺的麦穗粒数均值。由于B工艺是抽取出一定的样本数来计算均值$\bar x$的，因此不能代表总体均值。当样本数很大时，根据大数定理可以直接认为B工艺提高了产量；当样本数很小时，可能是随机误差。因此，不妨对前面的式子再除以一个n相关的数。为此，戈斯特构造了一个新的统计量：</p>
+<script type="math/tex; mode=display">
+t=\frac{\bar x-\mu_0}{\delta_0/\sqrt n}\tag{1-2}</script><p>该统计量越大，寿命AB工艺导致的差别越大，越有可能说明B工艺提高了产量。</p>
+<h2 id="3-t分布"><a href="#3-t分布" class="headerlink" title="3. t分布"></a>3. t分布</h2><p>对于t统计量：<script type="math/tex">t=\frac{\bar x-\mu_0}{\delta_0/\sqrt n}</script>,其对应的概率密度函数也即t分布为：</p>
+<script type="math/tex; mode=display">
+f(x)=\frac{\Gamma((\nu+1)/2)}{\sqrt(\nu \pi)\Gamma(\nu/2)}(1+t^2/\nu)^{-(\nu+1)/2}\tag{3-1}</script><p>其中$\nu=n-1$称为自由度，$\Gamma(x)=\int_0^{+\infty}t^{x-1}e^{-t}dt(x&gt;0)$是伽马函数。<br>t分布的函数图像与正态分布有点像，给定t值和自由度，可以通过查表的方式去找到对应的P值。t分布表如下：<br><img src="https://img-blog.csdnimg.cn/20200320000514397.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="t分布表"></p>
+<p>以本文中的例子为例，假设置信水平wie$\alpha=0.05$，查表得T值为2.132（单侧检验）。假设A工艺的标准差为$5\sqrt5$，可计算得出t=4，大于T。因此可以拒绝原假设。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2020/08/16/统计学之样本方差与总体方差/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1950,151 +2106,13 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</scr
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2018/01/27/Hello-World/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Guoxing Lan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Guoxing Lan">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="2018/01/27/Hello-World/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-27T15:11:17+08:00">
-                2018-01-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="categories/About-Me/" itemprop="url" rel="index">
-                    <span itemprop="name">About Me</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Hi! I am Guoxing Lan(兰国兴)! I’m a master student majoring in Control Science and Engineering in Tsinghua University, Beijing, China. My interests are in theories and applications of Machine Learning and Deep Learning. My research work during my Master’s Program is focused on Data-driven Fault Diagnosis and Remaining Useful Estimation of Aircraft Engine. I am going to record and share my journey of studying Artificial Intelligence here. You are also welcome to visit my other Blog on CSDN—<a href="https://blog.csdn.net/thuchina" target="_blank" rel="noopener"><strong>lankuohsing的博客</strong></a> to find things not only restrict to AI. Click <a href="https://github.com/lankuohsing" target="_blank" rel="noopener"><strong>here</strong></a> to visit my GitHub! I hope we can enjoy the joy of sharing knowledge !</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="page/2/">2</a><a class="extend next" rel="next" href="page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -2142,7 +2160,7 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</scr
               
                 <a href="https://lankuohsing.github.io/blog/archives">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
