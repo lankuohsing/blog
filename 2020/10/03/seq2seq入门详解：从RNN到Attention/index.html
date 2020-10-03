@@ -87,30 +87,30 @@
 <meta property="og:site_name" content="Guoxing Lan">
 <meta property="og:description" content="[TOC] 1. 前馈神经网络的缺点对于输入向量中个分量的位置信息不感知，也即无法利用序列型输入特征向量中的位置信息（将个分量调换顺序最后训练出的模型是等价的），但是在实际的任务中，各分量是有先后关系的。例如，我们在理解一段文本时，孤立地理解每个字或者词是不够的，还要将它们作为一个整体的序列来理解。 2. 循环神经网络RNN2.1. RNN的基本结构与数学定义输入层的维数是$(n_x,m,T_x">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/_u6807_u51C6RNN_u6A21_u578B-_u8.png">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/RNN_u7684_u4E00_u4E2A_u57FA_u672C_u5355_u5143.png">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/RNN-_u8F93_u5165_u8F93_u51FA_u7.jpg">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/RNN-_u8F93_u51FA_u7EF4_u6570_u4E3A1.jpg">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/RNN-_u8F93_u5165_u957F_u5EA6_u4E3A1.jpg">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/bdf3da45-1e40-42e1-b483-40dd514d51e7.png">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/LSTM__u57FA_u672C_u5355_u5143.png">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/_u6807_u51C6LSTM_u6A21_u578B-_u.png">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/LSTM_u53D8_u79CD-peephole.png">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/Encoder-Decoder.png">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/C_u4F5C_u4E3ADecoder_u7684_u521.png">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/C_u4F5C_u4E3ADecoder_u7684_u6BC.png">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/encoder-decoder-_u6846_u67B62.jpg">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/encoder-decoder-_u6846_u67B611600961291202.jpg">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/attention_u673A_u5236_u793A_u610F_u56FE.png">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/Attention-_u5BF9encoder_u9690_u.png">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/attention_u4E2D_u6743_u91CD_u7C1599923586930.jpg">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/attention_u6846_u67B61.JPG">
-<meta property="og:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/attention_u6846_u67B62-global-attention.JPG">
-<meta property="og:updated_time" content="2020-10-03T15:19:26.181Z">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/%E6%A0%87%E5%87%86RNN%E6%A8%A1%E5%9E%8B-%E8%BE%93%E5%85%A5%E7%BB%B4%E6%95%B0%E7%AD%89%E4%BA%8E%E8%BE%93%E5%87%BA%E7%BB%B4%E6%95%B0.png">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/RNN%E7%9A%84%E4%B8%80%E4%B8%AA%E5%9F%BA%E6%9C%AC%E5%8D%95%E5%85%83.png">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/RNN-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E9%95%BF%E5%BA%A6%E7%9B%B8%E7%AD%89.jpg">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/RNN-%E8%BE%93%E5%87%BA%E9%95%BF%E5%BA%A6%E4%B8%BA1.jpg">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/RNN-%E8%BE%93%E5%85%A5%E9%95%BF%E5%BA%A6%E4%B8%BA1.jpg">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/GRU.png">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/LSTM_%E5%9F%BA%E6%9C%AC%E5%8D%95%E5%85%83.png">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/%E6%A0%87%E5%87%86LSTM%E6%A8%A1%E5%9E%8B-%E8%BE%93%E5%85%A5%E7%BB%B4%E6%95%B0%E7%AD%89%E4%BA%8E%E8%BE%93%E5%87%BA%E7%BB%B4%E6%95%B0.png">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/LSTM%E5%8F%98%E7%A7%8D-peephole.png">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/Encoder-Decoder.png">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/C%E4%BD%9C%E4%B8%BADecoder%E7%9A%84%E5%88%9D%E5%A7%8B%E7%8A%B6%E6%80%81h0.png">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/C%E4%BD%9C%E4%B8%BADecoder%E7%9A%84%E6%AF%8F%E4%B8%80%E6%AD%A5%E8%BE%93%E5%85%A5.png">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/encoder-decoder-%E6%A1%86%E6%9E%B61.jpg">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/encoder-decoder-%E6%A1%86%E6%9E%B62.jpg">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/attention%E6%9C%BA%E5%88%B6%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/Attention-%E5%AF%B9encoder%E9%9A%90%E8%97%8F%E7%8A%B6%E6%80%81%E8%BF%9B%E8%A1%8C%E5%8A%A0%E6%9D%83%E6%B1%82%E5%92%8C%E5%BE%97%E5%88%B0%E4%B8%8D%E5%90%8C%E7%9A%84C.png">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/attention%E4%B8%AD%E6%9D%83%E9%87%8D%E7%B3%BB%E6%95%B0%E8%AE%A1%E7%AE%97%E7%9A%84%E4%B8%89%E4%B8%AA%E9%98%B6%E6%AE%B5.jpg">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/encoder-decoder-%E6%A1%86%E6%9E%B62.jpg">
+<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/attention%E6%A1%86%E6%9E%B62-global-attention.JPG">
+<meta property="og:updated_time" content="2020-10-03T16:31:39.188Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="seq2seq入门详解：从RNN到Attention">
 <meta name="twitter:description" content="[TOC] 1. 前馈神经网络的缺点对于输入向量中个分量的位置信息不感知，也即无法利用序列型输入特征向量中的位置信息（将个分量调换顺序最后训练出的模型是等价的），但是在实际的任务中，各分量是有先后关系的。例如，我们在理解一段文本时，孤立地理解每个字或者词是不够的，还要将它们作为一个整体的序列来理解。 2. 循环神经网络RNN2.1. RNN的基本结构与数学定义输入层的维数是$(n_x,m,T_x">
-<meta name="twitter:image" content="https://lankuohsing.github.io/blog/2020/10/03/seq2seq入门详解：从RNN到Attention/index_files/_u6807_u51C6RNN_u6A21_u578B-_u8.png">
+<meta name="twitter:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/%E6%A0%87%E5%87%86RNN%E6%A8%A1%E5%9E%8B-%E8%BE%93%E5%85%A5%E7%BB%B4%E6%95%B0%E7%AD%89%E4%BA%8E%E8%BE%93%E5%87%BA%E7%BB%B4%E6%95%B0.png">
 
 
 
@@ -382,11 +382,11 @@
 <h1 id="1-前馈神经网络的缺点"><a href="#1-前馈神经网络的缺点" class="headerlink" title="1. 前馈神经网络的缺点"></a>1. 前馈神经网络的缺点</h1><p>对于输入向量中个分量的位置信息不感知，也即无法利用序列型输入特征向量中的位置信息（将个分量调换顺序最后训练出的模型是等价的），但是在实际的任务中，各分量是有先后关系的。例如，我们在理解一段文本时，孤立地理解每个字或者词是不够的，还要将它们作为一个整体的序列来理解。</p>
 <h1 id="2-循环神经网络RNN"><a href="#2-循环神经网络RNN" class="headerlink" title="2. 循环神经网络RNN"></a>2. 循环神经网络RNN</h1><h2 id="2-1-RNN的基本结构与数学定义"><a href="#2-1-RNN的基本结构与数学定义" class="headerlink" title="2.1. RNN的基本结构与数学定义"></a>2.1. RNN的基本结构与数学定义</h2><p>输入层的维数是$(n_x,m,T_x)$,其中$n_x$是每个训练样本的维数，例如输入词one-hot向量的大小，也即词典大小；$m$是一个batch的大小；$T_x$是输入序列的长度。</p>
 <p>输出层的维数是$(n_y,m,T_y)$,其中$n_y$是输出预测向量的维数；$m$是一个batch的大小；$T_y$是输出序列的长度。</p>
-<p>我们先研究输入向量和输出向量相等，即$n_x=n_y$的情况，结构图如下所示（图片来源<a href="https://www.coursera.org/learn/nlp-sequence-models/notebook/X20PE/building-a-recurrent-neural-network-step-by-step）。" target="_blank" rel="noopener">https://www.coursera.org/learn/nlp-sequence-models/notebook/X20PE/building-a-recurrent-neural-network-step-by-step）。</a><br><img src="index_files/_u6807_u51C6RNN_u6A21_u578B-_u8.png" alt="RNN的基本结构" title="RNN的基本结构-输入输出维数相等"></p>
+<p>我们先研究输入向量和输出向量相等，即$n_x=n_y$的情况，结构图如下所示（图片来源<a href="https://www.coursera.org/learn/nlp-sequence-models/notebook/X20PE/building-a-recurrent-neural-network-step-by-step）。" target="_blank" rel="noopener">https://www.coursera.org/learn/nlp-sequence-models/notebook/X20PE/building-a-recurrent-neural-network-step-by-step）。</a><br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/%E6%A0%87%E5%87%86RNN%E6%A8%A1%E5%9E%8B-%E8%BE%93%E5%85%A5%E7%BB%B4%E6%95%B0%E7%AD%89%E4%BA%8E%E8%BE%93%E5%87%BA%E7%BB%B4%E6%95%B0.png" alt="RNN的基本结构"></p>
 <center>图2.1 RNN基本结构</center>
 
 
-<p>上下标说明举例：$a_5^{(2)[3]<4>}$表示第2个训练样本，第3层，第4个时刻，激活函数输出向量的第5维。<br>每个RNN-Cell的内部结构见下图<br><img src="index_files/RNN_u7684_u4E00_u4E2A_u57FA_u672C_u5355_u5143.png" alt="RNN的一个基本单元" title="RNN的一个基本单元"></4></p>
+<p>上下标说明举例：$a_5^{(2)[3]<4>}$表示第2个训练样本，第3层，第4个时刻，激活函数输出向量的第5维。<br>每个RNN-Cell的内部结构见下图<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/RNN%E7%9A%84%E4%B8%80%E4%B8%AA%E5%9F%BA%E6%9C%AC%E5%8D%95%E5%85%83.png" alt="RNN的一个基本单元"></4></p>
 <center>图2.2 RNN的一个基本单元</center>
 
 <p>注意，输出$\hat y$是状态向量$a$经过线性变换再经过softmax变换得到的。</p>
@@ -396,23 +396,23 @@ a^{\langle t\rangle}&=tanh\left(W_{ax}x^{\langle t\rangle}+W_{aa}a^{\langle t-1\
 \hat y^{\langle t\rangle}&=softmax\left(W_{ya}a^{\langle t\rangle}+b_y\right)\\
 \tag{2-1}
 \end{align*}</script><p>需要注意的是，在不同的RNN-Cell中，上述公式里面的参数$W,b$都是共享的。</p>
-<h2 id="2-2-输入输出长度的讨论"><a href="#2-2-输入输出长度的讨论" class="headerlink" title="2.2. 输入输出长度的讨论"></a>2.2. 输入输出长度的讨论</h2><h3 id="2-2-1-n-x-n-y-n"><a href="#2-2-1-n-x-n-y-n" class="headerlink" title="2.2.1. $n_x=n_y=n$"></a>2.2.1. $n_x=n_y=n$</h3><p>第一种情况是输入输出长度相等的情况，如下图所示（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="index_files/RNN-_u8F93_u5165_u8F93_u51FA_u7.jpg" alt="RNN-输入输出长度相等" title="RNN-输入输出长度相等"></p>
+<h2 id="2-2-输入输出长度的讨论"><a href="#2-2-输入输出长度的讨论" class="headerlink" title="2.2. 输入输出长度的讨论"></a>2.2. 输入输出长度的讨论</h2><h3 id="2-2-1-n-x-n-y-n"><a href="#2-2-1-n-x-n-y-n" class="headerlink" title="2.2.1. $n_x=n_y=n$"></a>2.2.1. $n_x=n_y=n$</h3><p>第一种情况是输入输出长度相等的情况，如下图所示（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/RNN-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E9%95%BF%E5%BA%A6%E7%9B%B8%E7%AD%89.jpg" alt="RNN-输入输出长度相等"></p>
 <center>图2.3 RNN-输入输出长度相等</center>
 
 <p>常用于序列标注模型，例如命名实体识别模型中。</p>
-<h3 id="2-2-2-n-x-n-n-y-1"><a href="#2-2-2-n-x-n-n-y-1" class="headerlink" title="2.2.2. $n_x=n,n_y=1$"></a>2.2.2. $n_x=n,n_y=1$</h3><p>第二种情况是输入长度为N，输出长度为1（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="index_files/RNN-_u8F93_u51FA_u7EF4_u6570_u4E3A1.jpg" alt="RNN-输出长度为1" title="RNN-输出长度为1"></p>
+<h3 id="2-2-2-n-x-n-n-y-1"><a href="#2-2-2-n-x-n-n-y-1" class="headerlink" title="2.2.2. $n_x=n,n_y=1$"></a>2.2.2. $n_x=n,n_y=1$</h3><p>第二种情况是输入长度为N，输出长度为1（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/RNN-%E8%BE%93%E5%87%BA%E9%95%BF%E5%BA%A6%E4%B8%BA1.jpg" alt="RNN-输出长度为1"></p>
 <center>图2.4 RNN-输出长度为1</center>
 
 <p>模型只在最后一个时刻输出，常用于文本分类模型</p>
-<h3 id="2-2-3-n-x-1-n-y-n"><a href="#2-2-3-n-x-1-n-y-n" class="headerlink" title="2.2.3. $n_x=1,n_y=n$"></a>2.2.3. $n_x=1,n_y=n$</h3><p>第三种情况是输入长度为1，输出长度为N。uti实现时，可以将输入作为最开始时刻的输入，也可以作为所有时刻的输入（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="index_files/RNN-_u8F93_u5165_u957F_u5EA6_u4E3A1.jpg" alt="RNN-输入长度为1" title="RNN-输入长度为1"></p>
+<h3 id="2-2-3-n-x-1-n-y-n"><a href="#2-2-3-n-x-1-n-y-n" class="headerlink" title="2.2.3. $n_x=1,n_y=n$"></a>2.2.3. $n_x=1,n_y=n$</h3><p>第三种情况是输入长度为1，输出长度为N。uti实现时，可以将输入作为最开始时刻的输入，也可以作为所有时刻的输入（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/RNN-%E8%BE%93%E5%85%A5%E9%95%BF%E5%BA%A6%E4%B8%BA1.jpg" alt="RNN-输入长度为1"></p>
 <center>图2.5 RNN-输入长度为1</center>
-![RNN-输入长度为1（输入特征在所有时刻重复使用）](index_files/RNN-_u8F93_u5165_u957F_u5EA6_u4.jpg "RNN-输入长度为1（输入特征在所有时刻重复使用）")
+![RNN-输入长度为1（输入特征在所有时刻重复使用）](https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/RNN-%E8%BE%93%E5%85%A5%E9%95%BF%E5%BA%A6%E4%B8%BA1%EF%BC%88%E8%BE%93%E5%85%A5%E7%89%B9%E5%BE%81%E5%9C%A8%E6%89%80%E6%9C%89%E6%97%B6%E5%88%BB%E9%87%8D%E5%A4%8D%E4%BD%BF%E7%94%A8%EF%BC%89.jpg)
 <center>图2.6 RNN-输入长度为1（输入特征在所有时刻重复使用）</center>
 常用于文字生成模型中。
 
 ### 2.2.4. $n_x=n,n_y=m$，Encoder-Decoder模型
 第四种情况是输入长度为N,输出长度为M的情况，也即Encoder-Decoder模型（图片来源[https://www.jianshu.com/p/c5723c3bb921](https://www.jianshu.com/p/c5723c3bb921)）
-![Encoder-Decoder模型](index_files/RNN-_u8F93_u5165_u8F93_u51FA_u9.png "Encoder-Decoder模型")
+![Encoder-Decoder模型](https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/Encoder-Decoder.png)
 <center>图2.7 Encoder-Decoder模型，输入输出长度为一般情况的RNN</center>
 
 <p>常用于语音识别、机器翻译等场景。在后面的章节中我们会详细介绍Encoder-Decoder模型</p>
@@ -427,7 +427,7 @@ C^{\langle t\rangle}=\Gamma_u*\tilde C^{\langle t\rangle}+（1-\Gamma_u）* C^{\
 <p>The cat, which already ate …, was full</p>
 </blockquote>
 <p>cat后面的词直到was之前，都不需要更新$C$,直接等于cat对应的$C$<br>可以解决梯度消失的问题.输出层的梯度可以传播到cat处</p>
-<p>注：$C$和$\Gamma$都可以是想聊，它们在相乘时采用的是element-wise的乘法。当为向量时，与cat的单复数无关的词对应的$\Gamma$可能有些维度为零，有些维度不为零。为零的维度，是用来保留cat的单复数信息的；不为零的维度可能是保留其他语义信息的，比如是不是food呀之类的<br>目前讨论的是简化版的GRU，结构图如下<br><img src="index_files/bdf3da45-1e40-42e1-b483-40dd514d51e7.png" alt=""></p>
+<p>注：$C$和$\Gamma$都可以是想聊，它们在相乘时采用的是element-wise的乘法。当为向量时，与cat的单复数无关的词对应的$\Gamma$可能有些维度为零，有些维度不为零。为零的维度，是用来保留cat的单复数信息的；不为零的维度可能是保留其他语义信息的，比如是不是food呀之类的<br>目前讨论的是简化版的GRU，结构图如下<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/GRU.png" alt=""></p>
 <center>图3.1GRU的一个基本单元</center>
 
 <p>完整的GRU：</p>
@@ -452,14 +452,14 @@ a^{\langle t\rangle}&=\Gamma_o*tanh\left(C^{\langle t\rangle}\right)\\
 \tilde y^{\langle t\rangle}&=softmax(a^{\langle t\rangle})\\
 \tag{3-2}
 \end{align*}</script><p>(注意公式里面的$\Gamma_u$等价于图片中的$\Gamma_i$)</p>
-<p><img src="index_files/LSTM__u57FA_u672C_u5355_u5143.png" alt="LSTM基本单元" title="LSTM基本单元"></p>
+<p><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/LSTM_%E5%9F%BA%E6%9C%AC%E5%8D%95%E5%85%83.png" alt="LSTM基本单元"></p>
 <center>图3.2 LSTM的一个基本单元</center>
 
-<p><img src="index_files/_u6807_u51C6LSTM_u6A21_u578B-_u.png" alt="标准LSTM模型-输入维数等于输出维数" title="标准LSTM模型-输入维数等于输出维数"></p>
+<p><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/%E6%A0%87%E5%87%86LSTM%E6%A8%A1%E5%9E%8B-%E8%BE%93%E5%85%A5%E7%BB%B4%E6%95%B0%E7%AD%89%E4%BA%8E%E8%BE%93%E5%87%BA%E7%BB%B4%E6%95%B0.png" alt="标准LSTM模型-输入维数等于输出维数"></p>
 <center>图3.3 标准LSTM模型-输入维数等于输出维数</center>
 
-<h3 id="3-2-1-peephole连接"><a href="#3-2-1-peephole连接" class="headerlink" title="3.2.1. peephole连接"></a>3.2.1. peephole连接</h3><p><img src="index_files/LSTM_u53D8_u79CD-peephole.png" alt="LSTM-peephole" title="LSTM-peephole"></p>
-<center>图3.4 LSTM的一个基本单元</center>
+<h3 id="3-2-1-peephole连接"><a href="#3-2-1-peephole连接" class="headerlink" title="3.2.1. peephole连接"></a>3.2.1. peephole连接</h3><p><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/LSTM%E5%8F%98%E7%A7%8D-peephole.png" alt="LSTM-peephole"></p>
+<center>图3.4 LSTM——peephole</center>
 
 <script type="math/tex; mode=display">
 \begin{align*}
@@ -483,7 +483,7 @@ a_0^{\langle t\rangle}&=\Gamma_o*tanh\left(C^{\langle t\rangle}\right)\\
 a^{\langle t\rangle}&=W_{proj}a_0^{\langle t\rangle}+b_{proj}\\
 \tilde y^{\langle t\rangle}&=softmax(a^{\langle t\rangle})\\
 \tag{3-4}
-\end{align*}</script><h1 id="4-Encoder-Decoder模型"><a href="#4-Encoder-Decoder模型" class="headerlink" title="4. Encoder-Decoder模型"></a>4. Encoder-Decoder模型</h1><p>由前面的章节我们知道，Encoder-Decoder模型就是输入输出长度为一般情况的RNN模型，示意图如下：<br><img src="index_files/Encoder-Decoder.png" alt="Encoder-Decoder" title="Encoder-Decoder"></p>
+\end{align*}</script><h1 id="4-Encoder-Decoder模型"><a href="#4-Encoder-Decoder模型" class="headerlink" title="4. Encoder-Decoder模型"></a>4. Encoder-Decoder模型</h1><p>由前面的章节我们知道，Encoder-Decoder模型就是输入输出长度为一般情况的RNN模型，示意图如下：<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/Encoder-Decoder.png" alt="Encoder-Decoder"></p>
 <center>图4.1 Encoder-Decoder</center>
 
 <p>其中Encoder负责将输入进行编码，得到语义编码向量C；Decoder负责将语义编码向量C进行解码，得到输出。以机器翻译为例，英文作为输入，输出为中文。可以用如下的数学模型来表示：</p>
@@ -494,16 +494,16 @@ C&=f(input)\\
 y_i&=g( C,y_1,y_2,\cdots,y_{i-1} ),i=1,2,\cdots,m\\
 output&=&lt y_1,y_2,\cdots,y_m &gt\\
 \tag{4-1}
-\end{align*}</script><p>从Encoder得到C的方式有多种，可以将Encoder最后一个时刻的隐藏状态作为C，也可以将所有的隐藏状态进行某种变换得到C。<br>语义编码C在Decoder中的作用当时有多种，常见的有如下两种<br>（1） C作为Decoder的初始状态$h_0$。<br><img src="index_files/C_u4F5C_u4E3ADecoder_u7684_u521.png" alt="C作为Decoder的初始状态h0" title="C作为Decoder的初始状态h0"></p>
+\end{align*}</script><p>从Encoder得到C的方式有多种，可以将Encoder最后一个时刻的隐藏状态作为C，也可以将所有的隐藏状态进行某种变换得到C。<br>语义编码C在Decoder中的作用当时有多种，常见的有如下两种<br>（1） C作为Decoder的初始状态$h_0$。<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/C%E4%BD%9C%E4%B8%BADecoder%E7%9A%84%E5%88%9D%E5%A7%8B%E7%8A%B6%E6%80%81h0.png" alt="C作为Decoder的初始状态h0"></p>
 <center>图4.2 C作为Decoder的初始状态h0</center>
 
-<p>（2） C作为Decoder的每一步输入。<br><img src="index_files/C_u4F5C_u4E3ADecoder_u7684_u6BC.png" alt="C作为Decoder的每一步输入" title="C作为Decoder的每一步输入"></p>
-<center>图4.2 C作为Decoder的每一步输入</center>
+<p>（2） C作为Decoder的每一步输入。<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/C%E4%BD%9C%E4%B8%BADecoder%E7%9A%84%E6%AF%8F%E4%B8%80%E6%AD%A5%E8%BE%93%E5%85%A5.png" alt="C作为Decoder的每一步输入"></p>
+<center>图4.3 C作为Decoder的每一步输入</center>
 
 <p>具体公式和应用场景见下一小节。</p>
 <h2 id="4-1-几种典型的encoder-decoder"><a href="#4-1-几种典型的encoder-decoder" class="headerlink" title="4.1. 几种典型的encoder-decoder"></a>4.1. 几种典型的encoder-decoder</h2><p>参考<a href="https://zhuanlan.zhihu.com/p/70880679" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/70880679</a></p>
-<h3 id="4-1-1-第一种-语义编码C作为Decoder的初始输入"><a href="#4-1-1-第一种-语义编码C作为Decoder的初始输入" class="headerlink" title="4.1.1. 第一种:语义编码C作为Decoder的初始输入"></a>4.1.1. 第一种:语义编码C作为Decoder的初始输入</h3><p><a href="https://arxiv.org/abs/1409.3215" target="_blank" rel="noopener">https://arxiv.org/abs/1409.3215</a> Sequence to Sequence Learning with Neural Networks<br><img src="index_files/encoder-decoder-_u6846_u67B62.jpg" alt=""></p>
-<center>图4.3 Encoder-Decoder框架1-C作为Decoder的初始输入</center>
+<h3 id="4-1-1-第一种-语义编码C作为Decoder的初始输入"><a href="#4-1-1-第一种-语义编码C作为Decoder的初始输入" class="headerlink" title="4.1.1. 第一种:语义编码C作为Decoder的初始输入"></a>4.1.1. 第一种:语义编码C作为Decoder的初始输入</h3><p><a href="https://arxiv.org/abs/1409.3215" target="_blank" rel="noopener">https://arxiv.org/abs/1409.3215</a> Sequence to Sequence Learning with Neural Networks<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/encoder-decoder-%E6%A1%86%E6%9E%B61.jpg" alt=""></p>
+<center>图4.4 Encoder-Decoder框架1-C作为Decoder的初始输入</center>
 
 <p>Encoder：</p>
 <script type="math/tex; mode=display">
@@ -517,8 +517,8 @@ c&=h_T\\
 h_t&=tanh(W[h_{t-1},y_{t-1}]+b),h_0=c\\
 o_t&=softmax(Vh_t+d)\\
 \tag{4-3}
-\end{align*}</script><h3 id="4-1-2-第一种-语义编码C作为Decoder的每一步输入"><a href="#4-1-2-第一种-语义编码C作为Decoder的每一步输入" class="headerlink" title="4.1.2. 第一种:语义编码C作为Decoder的每一步输入"></a>4.1.2. 第一种:语义编码C作为Decoder的每一步输入</h3><p><a href="https://arxiv.org/pdf/1406.1078" target="_blank" rel="noopener">https://arxiv.org/pdf/1406.1078</a> Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation<br><img src="index_files/encoder-decoder-_u6846_u67B611600961291202.jpg" alt=""></p>
-<center>图4.4 Encoder-Decoder框架1-C作为Decoder的每一步输入</center>
+\end{align*}</script><h3 id="4-1-2-第一种-语义编码C作为Decoder的每一步输入"><a href="#4-1-2-第一种-语义编码C作为Decoder的每一步输入" class="headerlink" title="4.1.2. 第一种:语义编码C作为Decoder的每一步输入"></a>4.1.2. 第一种:语义编码C作为Decoder的每一步输入</h3><p><a href="https://arxiv.org/pdf/1406.1078" target="_blank" rel="noopener">https://arxiv.org/pdf/1406.1078</a> Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/encoder-decoder-%E6%A1%86%E6%9E%B62.jpg" alt=""></p>
+<center>图4.5 Encoder-Decoder框架1-C作为Decoder的每一步输入</center>
 
 <p>Encoder：</p>
 <script type="math/tex; mode=display">
@@ -537,10 +537,10 @@ o_t&=softmax(Vh_t+c)\\
 <li>如果在Decoder阶段，仅仅将C作为初始状态，随着时间往后推进，C的作用会越来越微弱。</li>
 </ol>
 <p>事实上，Attention机制的提出，主要就是为了解决上述问题。</p>
-<h1 id="5-Attention机制详解"><a href="#5-Attention机制详解" class="headerlink" title="5. Attention机制详解"></a>5. Attention机制详解</h1><p>前面讲到，在一般形式的encoder-decoder中，输入信息先经过encoder编码保存在C中，C再被decoder使用。这种“直接粗暴”的方式，可能会导致输入信息没有被合理的利用，尤其是当输入信息过长的时候。为了解决这个问题，Attention机制被提出，解决的思路是：在decoder阶段，每个时间点输入的C是不同的(示意图如下图所示)，需要根据当前时刻要输出的y去合理地选择输入x中的上下文信息。<br><img src="index_files/attention_u673A_u5236_u793A_u610F_u56FE.png" alt="Attention机制示意图" title="Attention机制示意图"></p>
+<h1 id="5-Attention机制详解"><a href="#5-Attention机制详解" class="headerlink" title="5. Attention机制详解"></a>5. Attention机制详解</h1><p>前面讲到，在一般形式的encoder-decoder中，输入信息先经过encoder编码保存在C中，C再被decoder使用。这种“直接粗暴”的方式，可能会导致输入信息没有被合理的利用，尤其是当输入信息过长的时候。为了解决这个问题，Attention机制被提出，解决的思路是：在decoder阶段，每个时间点输入的C是不同的(示意图如下图所示)，需要根据当前时刻要输出的y去合理地选择输入x中的上下文信息。<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/attention%E6%9C%BA%E5%88%B6%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="Attention机制示意图"></p>
 <center>图5.1 Attention机制示意图</center>
 
-<p>具体来讲，就是对encoder的隐藏状态进行加权求和，以便得到不同的C，以中文翻译英文为例，示意图如下（图片来源<a href="https://www.jianshu.com/p/d2ae158fc9e5" target="_blank" rel="noopener">https://www.jianshu.com/p/d2ae158fc9e5</a>）：<br><img src="index_files/Attention-_u5BF9encoder_u9690_u.png" alt="Attention-对encoder隐藏状态进行加权求和得到不同的C" title="Attention-对encoder隐藏状态进行加权求和得到不同的C"></p>
+<p>具体来讲，就是对encoder的隐藏状态进行加权求和，以便得到不同的C，以中文翻译英文为例，示意图如下（图片来源<a href="https://www.jianshu.com/p/d2ae158fc9e5" target="_blank" rel="noopener">https://www.jianshu.com/p/d2ae158fc9e5</a>）：<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/Attention-%E5%AF%B9encoder%E9%9A%90%E8%97%8F%E7%8A%B6%E6%80%81%E8%BF%9B%E8%A1%8C%E5%8A%A0%E6%9D%83%E6%B1%82%E5%92%8C%E5%BE%97%E5%88%B0%E4%B8%8D%E5%90%8C%E7%9A%84C.png" alt="Attention-对encoder隐藏状态进行加权求和得到不同的C"></p>
 <center>图5.2 Attention-对encoder隐藏状态进行加权求和得到不同的C</center>
 
 <p>记$a_{ij}$为encoder中第$j$个隐藏状态$h_j$到decoder中第$i$个隐藏状态$h_i’$对应的$c_i$的权重，可以通过训练确定的，具体计算方法见后文。attention机制的核心思想可以概括为”对输入信息加权求和得到编码信息c”，也即如下公式：</p>
@@ -548,13 +548,13 @@ o_t&=softmax(Vh_t+c)\\
 c_i=\sum_{j=1}^{n_x}a_{ij}h_j\tag{5-1}</script><h2 id="5-1-attention机制中权重系数的计算过程"><a href="#5-1-attention机制中权重系数的计算过程" class="headerlink" title="5.1. attention机制中权重系数的计算过程"></a>5.1. attention机制中权重系数的计算过程</h2><p>attention机制中权重系数有多种计算过程，对应于不同种类的attention机制。但是大部分的attention机制，都能表示为下文提到的三个抽象阶段。这里先引入几个概念。<br>我们将模型输入内容记为source，输出内容记为target。<br>source可以表示为一个一个的（key,value），target则表示为一个一个的query。在机器翻译中，key和value合并为一个，就是输入句子中每个单词对应的隐藏层状态。<br>通过计算Query和各个Key的相似性或者相关性（需要进行softmax归一化），得到每个Key对应Value的权重系数，然后对Value进行加权求和，即得到了最终的Attention数值。</p>
 <script type="math/tex; mode=display">
 Attention(Query_i,Source)=\sum_{j=1}^{L_x}Similarity(Query,key_j)*value_j\tag{5-2}</script><p>具体来说可以分为三个阶段，如下图所示：</p>
-<p><img src="index_files/attention_u4E2D_u6743_u91CD_u7C1599923586930.jpg" alt="attention机制中计算权重系数的三个阶段"></p>
+<p><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/attention%E4%B8%AD%E6%9D%83%E9%87%8D%E7%B3%BB%E6%95%B0%E8%AE%A1%E7%AE%97%E7%9A%84%E4%B8%89%E4%B8%AA%E9%98%B6%E6%AE%B5.jpg" alt="attention机制中计算权重系数的三个阶段"></p>
 <center>图5.3 attention机制中计算权重系数的三个阶段</center>
 
 <p>其中第一阶段计算相似性时有多种方法，例如向量点积、余弦相似度，甚至可以用一个小的神经网络来通过学习的方式计算。<br>第二阶段softmax归一化的公式如下：</p>
 <script type="math/tex; mode=display">
 a_{ij}=softmax(S_{ij})=\frac{exp(Sim_{ij})}{\sum_{j=1}^{L_x}exp(Sim_{ij})}\tag{5-3}</script><h2 id="5-2-几种典型的attention机制"><a href="#5-2-几种典型的attention机制" class="headerlink" title="5.2. 几种典型的attention机制"></a>5.2. 几种典型的attention机制</h2><p><a href="https://zhuanlan.zhihu.com/p/70905983" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/70905983</a></p>
-<h3 id="5-2-1-第一种-Bahdanau-Attention"><a href="#5-2-1-第一种-Bahdanau-Attention" class="headerlink" title="5.2.1. 第一种:Bahdanau Attention"></a>5.2.1. 第一种:<strong>Bahdanau Attention</strong></h3><p><a href="https://arxiv.org/abs/1409.0473" target="_blank" rel="noopener">https://arxiv.org/abs/1409.0473</a><br><img src="index_files/attention_u6846_u67B61.JPG" alt="attention机制框架1" title="attention机制框架1"></p>
+<h3 id="5-2-1-第一种-Bahdanau-Attention"><a href="#5-2-1-第一种-Bahdanau-Attention" class="headerlink" title="5.2.1. 第一种:Bahdanau Attention"></a>5.2.1. 第一种:<strong>Bahdanau Attention</strong></h3><p><a href="https://arxiv.org/abs/1409.0473" target="_blank" rel="noopener">https://arxiv.org/abs/1409.0473</a><br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/encoder-decoder-%E6%A1%86%E6%9E%B62.jpg" alt="attention机制框架1"></p>
 <center>图5.4 attention机制框架1</center>
 
 <p>Encoder：</p>
@@ -575,7 +575,7 @@ c_t&=\sum_{i=1}^T\alpha_{ti}h_i\\
 s_t&=tanh(W[s_{t-1},y_{t-1},c_t])\\
 o_t&=softmax(Vs_t)\\
 \tag{5-6}
-\end{align*}</script><h3 id="5-2-2-第二种：-Global-attentional-model"><a href="#5-2-2-第二种：-Global-attentional-model" class="headerlink" title="5.2.2. 第二种： Global attentional model"></a>5.2.2. 第二种： <strong>Global attentional model</strong></h3><p><img src="index_files/attention_u6846_u67B62-global-attention.JPG" alt="attention框架2-global-attention" title="attention框架2-global-attention"></p>
+\end{align*}</script><h3 id="5-2-2-第二种：-Global-attentional-model"><a href="#5-2-2-第二种：-Global-attentional-model" class="headerlink" title="5.2.2. 第二种： Global attentional model"></a>5.2.2. 第二种： <strong>Global attentional model</strong></h3><p><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/attention%E6%A1%86%E6%9E%B62-global-attention.JPG" alt="attention框架2-global-attention"></p>
 <center>图5.5 attention框架2-global attention</center>
 
 <p>Encoder与第一种attention是一样的。<br>语义向量：</p>
