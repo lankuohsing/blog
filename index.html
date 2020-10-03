@@ -262,6 +262,363 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2020/10/03/seq2seq入门详解：从RNN到Attention/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guoxing Lan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Guoxing Lan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="2020/10/03/seq2seq入门详解：从RNN到Attention/" itemprop="url">seq2seq入门详解：从RNN到Attention</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-10-03T23:09:18+08:00">
+                2020-10-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Deep Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>[TOC]</p>
+<h1 id="1-前馈神经网络的缺点"><a href="#1-前馈神经网络的缺点" class="headerlink" title="1. 前馈神经网络的缺点"></a>1. 前馈神经网络的缺点</h1><p>对于输入向量中个分量的位置信息不感知，也即无法利用序列型输入特征向量中的位置信息（将个分量调换顺序最后训练出的模型是等价的），但是在实际的任务中，各分量是有先后关系的。例如，我们在理解一段文本时，孤立地理解每个字或者词是不够的，还要将它们作为一个整体的序列来理解。</p>
+<h1 id="2-循环神经网络RNN"><a href="#2-循环神经网络RNN" class="headerlink" title="2. 循环神经网络RNN"></a>2. 循环神经网络RNN</h1><h2 id="2-1-RNN的基本结构与数学定义"><a href="#2-1-RNN的基本结构与数学定义" class="headerlink" title="2.1. RNN的基本结构与数学定义"></a>2.1. RNN的基本结构与数学定义</h2><p>输入层的维数是$(n_x,m,T_x)$,其中$n_x$是每个训练样本的维数，例如输入词one-hot向量的大小，也即词典大小；$m$是一个batch的大小；$T_x$是输入序列的长度。</p>
+<p>输出层的维数是$(n_y,m,T_y)$,其中$n_y$是输出预测向量的维数；$m$是一个batch的大小；$T_y$是输出序列的长度。</p>
+<p>我们先研究输入向量和输出向量相等，即$n_x=n_y$的情况，结构图如下所示（图片来源<a href="https://www.coursera.org/learn/nlp-sequence-models/notebook/X20PE/building-a-recurrent-neural-network-step-by-step）。" target="_blank" rel="noopener">https://www.coursera.org/learn/nlp-sequence-models/notebook/X20PE/building-a-recurrent-neural-network-step-by-step）。</a><br><img src="index_files/_u6807_u51C6RNN_u6A21_u578B-_u8.png" alt="RNN的基本结构" title="RNN的基本结构-输入输出维数相等"></p>
+<center>图2.1 RNN基本结构</center>
+
+
+<p>上下标说明举例：$a_5^{(2)[3]<4>}$表示第2个训练样本，第3层，第4个时刻，激活函数输出向量的第5维。<br>每个RNN-Cell的内部结构见下图<br><img src="index_files/RNN_u7684_u4E00_u4E2A_u57FA_u672C_u5355_u5143.png" alt="RNN的一个基本单元" title="RNN的一个基本单元"></4></p>
+<center>图2.2 RNN的一个基本单元</center>
+
+<p>注意，输出$\hat y$是状态向量$a$经过线性变换再经过softmax变换得到的。</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+a^{\langle t\rangle}&=tanh\left(W_{ax}x^{\langle t\rangle}+W_{aa}a^{\langle t-1\rangle}+b_a\right)\\
+\hat y^{\langle t\rangle}&=softmax\left(W_{ya}a^{\langle t\rangle}+b_y\right)\\
+\tag{2-1}
+\end{align*}</script><p>需要注意的是，在不同的RNN-Cell中，上述公式里面的参数$W,b$都是共享的。</p>
+<h2 id="2-2-输入输出长度的讨论"><a href="#2-2-输入输出长度的讨论" class="headerlink" title="2.2. 输入输出长度的讨论"></a>2.2. 输入输出长度的讨论</h2><h3 id="2-2-1-n-x-n-y-n"><a href="#2-2-1-n-x-n-y-n" class="headerlink" title="2.2.1. $n_x=n_y=n$"></a>2.2.1. $n_x=n_y=n$</h3><p>第一种情况是输入输出长度相等的情况，如下图所示（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="index_files/RNN-_u8F93_u5165_u8F93_u51FA_u7.jpg" alt="RNN-输入输出长度相等" title="RNN-输入输出长度相等"></p>
+<center>图2.3 RNN-输入输出长度相等</center>
+
+<p>常用于序列标注模型，例如命名实体识别模型中。</p>
+<h3 id="2-2-2-n-x-n-n-y-1"><a href="#2-2-2-n-x-n-n-y-1" class="headerlink" title="2.2.2. $n_x=n,n_y=1$"></a>2.2.2. $n_x=n,n_y=1$</h3><p>第二种情况是输入长度为N，输出长度为1（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="index_files/RNN-_u8F93_u51FA_u7EF4_u6570_u4E3A1.jpg" alt="RNN-输出长度为1" title="RNN-输出长度为1"></p>
+<center>图2.4 RNN-输出长度为1</center>
+
+<p>模型只在最后一个时刻输出，常用于文本分类模型</p>
+<h3 id="2-2-3-n-x-1-n-y-n"><a href="#2-2-3-n-x-1-n-y-n" class="headerlink" title="2.2.3. $n_x=1,n_y=n$"></a>2.2.3. $n_x=1,n_y=n$</h3><p>第三种情况是输入长度为1，输出长度为N。uti实现时，可以将输入作为最开始时刻的输入，也可以作为所有时刻的输入（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="index_files/RNN-_u8F93_u5165_u957F_u5EA6_u4E3A1.jpg" alt="RNN-输入长度为1" title="RNN-输入长度为1"></p>
+<center>图2.5 RNN-输入长度为1</center>
+![RNN-输入长度为1（输入特征在所有时刻重复使用）](index_files/RNN-_u8F93_u5165_u957F_u5EA6_u4.jpg "RNN-输入长度为1（输入特征在所有时刻重复使用）")
+<center>图2.6 RNN-输入长度为1（输入特征在所有时刻重复使用）</center>
+常用于文字生成模型中。
+
+### 2.2.4. $n_x=n,n_y=m$，Encoder-Decoder模型
+第四种情况是输入长度为N,输出长度为M的情况，也即Encoder-Decoder模型（图片来源[https://www.jianshu.com/p/c5723c3bb921](https://www.jianshu.com/p/c5723c3bb921)）
+![Encoder-Decoder模型](index_files/RNN-_u8F93_u5165_u8F93_u51FA_u9.png "Encoder-Decoder模型")
+<center>图2.7 Encoder-Decoder模型，输入输出长度为一般情况的RNN</center>
+
+<p>常用于语音识别、机器翻译等场景。在后面的章节中我们会详细介绍Encoder-Decoder模型</p>
+<h1 id="3-RNN的复杂变种"><a href="#3-RNN的复杂变种" class="headerlink" title="3. RNN的复杂变种"></a>3. RNN的复杂变种</h1><h2 id="3-1-GRU-Gated-Recurrent-Unit"><a href="#3-1-GRU-Gated-Recurrent-Unit" class="headerlink" title="3.1. GRU(Gated Recurrent Unit)"></a>3.1. GRU(Gated Recurrent Unit)</h2><p>GRU的提出是为了解决RNN难以学习到输入序列中的长距离信息的问题。<br>GRU引入一个新的变量——记忆单元，简称$C$。$C^{\langle t\rangle}$其实就是$a^{\langle t\rangle}$<br>$C$的表达式不是一步到位的，首先定义$C$的候选值$\tilde C$:</p>
+<script type="math/tex; mode=display">
+\tilde C^{\langle t\rangle}=tanh\left(W_c[C^{\langle t-1\rangle},x^{\langle t\rangle}]+b_c\right)</script><p>更新门：</p>
+<script type="math/tex; mode=display">
+\Gamma_u=\sigma\left(W_u[C^{\langle t-1\rangle},x^{\langle t\rangle}]+b_u\right)</script><p>在实际训练好的网络中$\Gamma$要么很接近1要么很接近0，对应着输入序列里面有些元素起作用有些元素不起作用。</p>
+<script type="math/tex; mode=display">
+C^{\langle t\rangle}=\Gamma_u*\tilde C^{\langle t\rangle}+（1-\Gamma_u）* C^{\langle t-1\rangle}</script><p>也即输入序列的有些元素，记忆单元不需要更新，有些元素需要更新。</p>
+<blockquote>
+<p>The cat, which already ate …, was full</p>
+</blockquote>
+<p>cat后面的词直到was之前，都不需要更新$C$,直接等于cat对应的$C$<br>可以解决梯度消失的问题.输出层的梯度可以传播到cat处</p>
+<p>注：$C$和$\Gamma$都可以是想聊，它们在相乘时采用的是element-wise的乘法。当为向量时，与cat的单复数无关的词对应的$\Gamma$可能有些维度为零，有些维度不为零。为零的维度，是用来保留cat的单复数信息的；不为零的维度可能是保留其他语义信息的，比如是不是food呀之类的<br>目前讨论的是简化版的GRU，结构图如下<br><img src="index_files/bdf3da45-1e40-42e1-b483-40dd514d51e7.png" alt=""></p>
+<center>图3.1GRU的一个基本单元</center>
+
+<p>完整的GRU：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+\tilde C^{\langle t\rangle}&=tanh\left(W_c[\Gamma_r*C^{\langle t-1\rangle},x^{\langle t\rangle}]+b_c\right)\\
+\Gamma_u&=\sigma\left(W_u[C^{\langle t-1\rangle},x^{\langle t\rangle}]+b_u\right)\\
+\Gamma_r&=\sigma\left(W_r[C^{\langle t-1\rangle},x^{\langle t\rangle}]+b_r\right)\\
+C^{\langle t\rangle}&=\Gamma_u*\tilde C^{\langle t\rangle}+（1-\Gamma_u）* C^{\langle t-1\rangle}\\
+a^{\langle t\rangle}&=C^{\langle t\rangle}\\
+\tag{3-1}
+\end{align*}</script><p>$\Gamma_r$表示了$\tilde C^{\langle t\rangle}$和$C^{\langle t-1\rangle}$之间的相关程度</p>
+<h2 id="3-2-LSTM-Long-Short-Term-Memory"><a href="#3-2-LSTM-Long-Short-Term-Memory" class="headerlink" title="3.2. LSTM(Long Short-Term Memory)"></a>3.2. LSTM(Long Short-Term Memory)</h2><p>没有了$\Gamma_r$，将$1-\Gamma_u$用$\Gamma_f$代替</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+\tilde C^{\langle t\rangle}&=tanh\left(W_c[a^{\langle t-1\rangle},x^{\langle t\rangle}]+b_c\right)\\
+\Gamma_u&=\sigma\left(W_u[a^{\langle t-1\rangle},x^{\langle t\rangle}]+b_u\right)\\
+\Gamma_f&=\sigma\left(W_f[a^{\langle t-1\rangle},x^{\langle t\rangle}]+b_f\right)\\
+\Gamma_o&=\sigma\left(W_o[a^{\langle t-1\rangle},x^{\langle t\rangle}]+b_o\right)\\
+C^{\langle t\rangle}&=\Gamma_u*\tilde C^{\langle t\rangle}+\Gamma_f* C^{\langle t-1\rangle}\\
+a^{\langle t\rangle}&=\Gamma_o*tanh\left(C^{\langle t\rangle}\right)\\
+\tilde y^{\langle t\rangle}&=softmax(a^{\langle t\rangle})\\
+\tag{3-2}
+\end{align*}</script><p>(注意公式里面的$\Gamma_u$等价于图片中的$\Gamma_i$)</p>
+<p><img src="index_files/LSTM__u57FA_u672C_u5355_u5143.png" alt="LSTM基本单元" title="LSTM基本单元"></p>
+<center>图3.2 LSTM的一个基本单元</center>
+
+<p><img src="index_files/_u6807_u51C6LSTM_u6A21_u578B-_u.png" alt="标准LSTM模型-输入维数等于输出维数" title="标准LSTM模型-输入维数等于输出维数"></p>
+<center>图3.3 标准LSTM模型-输入维数等于输出维数</center>
+
+<h3 id="3-2-1-peephole连接"><a href="#3-2-1-peephole连接" class="headerlink" title="3.2.1. peephole连接"></a>3.2.1. peephole连接</h3><p><img src="index_files/LSTM_u53D8_u79CD-peephole.png" alt="LSTM-peephole" title="LSTM-peephole"></p>
+<center>图3.4 LSTM的一个基本单元</center>
+
+<script type="math/tex; mode=display">
+\begin{align*}
+\tilde C^{\langle t\rangle}&=tanh\left(W_c[a^{\langle t-1\rangle},a^{\langle t-1\rangle},x^{\langle t\rangle}]+b_c\right)\\
+\Gamma_u&=\sigma\left(W_u[c^{\langle t-1\rangle},a^{\langle t-1\rangle},x^{\langle t\rangle}]+b_u\right)\\
+\Gamma_f&=\sigma\left(W_f[c^{\langle t-1\rangle},a^{\langle t-1\rangle},x^{\langle t\rangle}]+b_f\right)\\
+\Gamma_o&=\sigma\left(W_o[c^{\langle t\rangle},a^{\langle t-1\rangle},x^{\langle t\rangle}]+b_o\right)\\
+C^{\langle t\rangle}&=\Gamma_u*\tilde C^{\langle t\rangle}+\Gamma_f* C^{\langle t-1\rangle}\\
+a^{\langle t\rangle}&=\Gamma_o*tanh\left(C^{\langle t\rangle}\right)\\
+\tilde y^{\langle t\rangle}&=softmax(a^{\langle t\rangle})\\
+\tag{3-3}
+\end{align*}</script><h3 id="3-2-2-projection"><a href="#3-2-2-projection" class="headerlink" title="3.2.2 projection"></a>3.2.2 projection</h3><p>对隐藏层状态a进行一次线性变换，降低其维数</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+\tilde C^{\langle t\rangle}&=tanh\left(W_c[a^{\langle t-1\rangle},a^{\langle t-1\rangle},x^{\langle t\rangle}]+b_c\right)\\
+\Gamma_u&=\sigma\left(W_u[c^{\langle t-1\rangle},a^{\langle t-1\rangle},x^{\langle t\rangle}]+b_u\right)\\
+\Gamma_f&=\sigma\left(W_f[c^{\langle t-1\rangle},a^{\langle t-1\rangle},x^{\langle t\rangle}]+b_f\right)\\
+\Gamma_o&=\sigma\left(W_o[c^{\langle t\rangle},a^{\langle t-1\rangle},x^{\langle t\rangle}]+b_o\right)\\
+C^{\langle t\rangle}&=\Gamma_u*\tilde C^{\langle t\rangle}+\Gamma_f* C^{\langle t-1\rangle}\\
+a_0^{\langle t\rangle}&=\Gamma_o*tanh\left(C^{\langle t\rangle}\right)\\
+a^{\langle t\rangle}&=W_{proj}a_0^{\langle t\rangle}+b_{proj}\\
+\tilde y^{\langle t\rangle}&=softmax(a^{\langle t\rangle})\\
+\tag{3-4}
+\end{align*}</script><h1 id="4-Encoder-Decoder模型"><a href="#4-Encoder-Decoder模型" class="headerlink" title="4. Encoder-Decoder模型"></a>4. Encoder-Decoder模型</h1><p>由前面的章节我们知道，Encoder-Decoder模型就是输入输出长度为一般情况的RNN模型，示意图如下：<br><img src="index_files/Encoder-Decoder.png" alt="Encoder-Decoder" title="Encoder-Decoder"></p>
+<center>图4.1 Encoder-Decoder</center>
+
+<p>其中Encoder负责将输入进行编码，得到语义编码向量C；Decoder负责将语义编码向量C进行解码，得到输出。以机器翻译为例，英文作为输入，输出为中文。可以用如下的数学模型来表示：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+input&=&lt x_1,x_2,\cdots,x_n &gt\\
+C&=f(input)\\
+y_i&=g( C,y_1,y_2,\cdots,y_{i-1} ),i=1,2,\cdots,m\\
+output&=&lt y_1,y_2,\cdots,y_m &gt\\
+\tag{4-1}
+\end{align*}</script><p>从Encoder得到C的方式有多种，可以将Encoder最后一个时刻的隐藏状态作为C，也可以将所有的隐藏状态进行某种变换得到C。<br>语义编码C在Decoder中的作用当时有多种，常见的有如下两种<br>（1） C作为Decoder的初始状态$h_0$。<br><img src="index_files/C_u4F5C_u4E3ADecoder_u7684_u521.png" alt="C作为Decoder的初始状态h0" title="C作为Decoder的初始状态h0"></p>
+<center>图4.2 C作为Decoder的初始状态h0</center>
+
+<p>（2） C作为Decoder的每一步输入。<br><img src="index_files/C_u4F5C_u4E3ADecoder_u7684_u6BC.png" alt="C作为Decoder的每一步输入" title="C作为Decoder的每一步输入"></p>
+<center>图4.2 C作为Decoder的每一步输入</center>
+
+<p>具体公式和应用场景见下一小节。</p>
+<h2 id="4-1-几种典型的encoder-decoder"><a href="#4-1-几种典型的encoder-decoder" class="headerlink" title="4.1. 几种典型的encoder-decoder"></a>4.1. 几种典型的encoder-decoder</h2><p>参考<a href="https://zhuanlan.zhihu.com/p/70880679" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/70880679</a></p>
+<h3 id="4-1-1-第一种-语义编码C作为Decoder的初始输入"><a href="#4-1-1-第一种-语义编码C作为Decoder的初始输入" class="headerlink" title="4.1.1. 第一种:语义编码C作为Decoder的初始输入"></a>4.1.1. 第一种:语义编码C作为Decoder的初始输入</h3><p><a href="https://arxiv.org/abs/1409.3215" target="_blank" rel="noopener">https://arxiv.org/abs/1409.3215</a> Sequence to Sequence Learning with Neural Networks<br><img src="index_files/encoder-decoder-_u6846_u67B62.jpg" alt=""></p>
+<center>图4.3 Encoder-Decoder框架1-C作为Decoder的初始输入</center>
+
+<p>Encoder：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+h_t&=tanh(W[h_{t-1},x_t]+b)\\
+c&=h_T\\
+\tag{4-2}
+\end{align*}</script><p>Decoder:</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+h_t&=tanh(W[h_{t-1},y_{t-1}]+b),h_0=c\\
+o_t&=softmax(Vh_t+d)\\
+\tag{4-3}
+\end{align*}</script><h3 id="4-1-2-第一种-语义编码C作为Decoder的每一步输入"><a href="#4-1-2-第一种-语义编码C作为Decoder的每一步输入" class="headerlink" title="4.1.2. 第一种:语义编码C作为Decoder的每一步输入"></a>4.1.2. 第一种:语义编码C作为Decoder的每一步输入</h3><p><a href="https://arxiv.org/pdf/1406.1078" target="_blank" rel="noopener">https://arxiv.org/pdf/1406.1078</a> Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation<br><img src="index_files/encoder-decoder-_u6846_u67B611600961291202.jpg" alt=""></p>
+<center>图4.4 Encoder-Decoder框架1-C作为Decoder的每一步输入</center>
+
+<p>Encoder：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+h_t&=tanh(W[h_{t-1},x_t]+b)\\
+c&=(Vh_T)\\
+\tag{4-4}
+\end{align*}</script><p>Decoder:</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+h_t&=tanh(W[h_{t-1},y_{t-1},c]+b)\\
+o_t&=softmax(Vh_t+c)\\
+\tag{4-5}
+\end{align*}</script><h2 id="4-2-Encoder-Decoder的缺点"><a href="#4-2-Encoder-Decoder的缺点" class="headerlink" title="4.2. Encoder-Decoder的缺点"></a>4.2. Encoder-Decoder的缺点</h2><ol>
+<li>对于输入序列的每个分量的重要程度没有区分，这和人的思考过程是不相符的，例如人在翻译的时候，对于某个一词多义的词，可能会结合上下文中某些关键词进行辅助判断。</li>
+<li>如果在Decoder阶段，仅仅将C作为初始状态，随着时间往后推进，C的作用会越来越微弱。</li>
+</ol>
+<p>事实上，Attention机制的提出，主要就是为了解决上述问题。</p>
+<h1 id="5-Attention机制详解"><a href="#5-Attention机制详解" class="headerlink" title="5. Attention机制详解"></a>5. Attention机制详解</h1><p>前面讲到，在一般形式的encoder-decoder中，输入信息先经过encoder编码保存在C中，C再被decoder使用。这种“直接粗暴”的方式，可能会导致输入信息没有被合理的利用，尤其是当输入信息过长的时候。为了解决这个问题，Attention机制被提出，解决的思路是：在decoder阶段，每个时间点输入的C是不同的(示意图如下图所示)，需要根据当前时刻要输出的y去合理地选择输入x中的上下文信息。<br><img src="index_files/attention_u673A_u5236_u793A_u610F_u56FE.png" alt="Attention机制示意图" title="Attention机制示意图"></p>
+<center>图5.1 Attention机制示意图</center>
+
+<p>具体来讲，就是对encoder的隐藏状态进行加权求和，以便得到不同的C，以中文翻译英文为例，示意图如下（图片来源<a href="https://www.jianshu.com/p/d2ae158fc9e5" target="_blank" rel="noopener">https://www.jianshu.com/p/d2ae158fc9e5</a>）：<br><img src="index_files/Attention-_u5BF9encoder_u9690_u.png" alt="Attention-对encoder隐藏状态进行加权求和得到不同的C" title="Attention-对encoder隐藏状态进行加权求和得到不同的C"></p>
+<center>图5.2 Attention-对encoder隐藏状态进行加权求和得到不同的C</center>
+
+<p>记$a_{ij}$为encoder中第$j$个隐藏状态$h_j$到decoder中第$i$个隐藏状态$h_i’$对应的$c_i$的权重，可以通过训练确定的，具体计算方法见后文。attention机制的核心思想可以概括为”对输入信息加权求和得到编码信息c”，也即如下公式：</p>
+<script type="math/tex; mode=display">
+c_i=\sum_{j=1}^{n_x}a_{ij}h_j\tag{5-1}</script><h2 id="5-1-attention机制中权重系数的计算过程"><a href="#5-1-attention机制中权重系数的计算过程" class="headerlink" title="5.1. attention机制中权重系数的计算过程"></a>5.1. attention机制中权重系数的计算过程</h2><p>attention机制中权重系数有多种计算过程，对应于不同种类的attention机制。但是大部分的attention机制，都能表示为下文提到的三个抽象阶段。这里先引入几个概念。<br>我们将模型输入内容记为source，输出内容记为target。<br>source可以表示为一个一个的（key,value），target则表示为一个一个的query。在机器翻译中，key和value合并为一个，就是输入句子中每个单词对应的隐藏层状态。<br>通过计算Query和各个Key的相似性或者相关性（需要进行softmax归一化），得到每个Key对应Value的权重系数，然后对Value进行加权求和，即得到了最终的Attention数值。</p>
+<script type="math/tex; mode=display">
+Attention(Query_i,Source)=\sum_{j=1}^{L_x}Similarity(Query,key_j)*value_j\tag{5-2}</script><p>具体来说可以分为三个阶段，如下图所示：</p>
+<p><img src="index_files/attention_u4E2D_u6743_u91CD_u7C1599923586930.jpg" alt="attention机制中计算权重系数的三个阶段"></p>
+<center>图5.3 attention机制中计算权重系数的三个阶段</center>
+
+<p>其中第一阶段计算相似性时有多种方法，例如向量点积、余弦相似度，甚至可以用一个小的神经网络来通过学习的方式计算。<br>第二阶段softmax归一化的公式如下：</p>
+<script type="math/tex; mode=display">
+a_{ij}=softmax(S_{ij})=\frac{exp(Sim_{ij})}{\sum_{j=1}^{L_x}exp(Sim_{ij})}\tag{5-3}</script><h2 id="5-2-几种典型的attention机制"><a href="#5-2-几种典型的attention机制" class="headerlink" title="5.2. 几种典型的attention机制"></a>5.2. 几种典型的attention机制</h2><p><a href="https://zhuanlan.zhihu.com/p/70905983" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/70905983</a></p>
+<h3 id="5-2-1-第一种-Bahdanau-Attention"><a href="#5-2-1-第一种-Bahdanau-Attention" class="headerlink" title="5.2.1. 第一种:Bahdanau Attention"></a>5.2.1. 第一种:<strong>Bahdanau Attention</strong></h3><p><a href="https://arxiv.org/abs/1409.0473" target="_blank" rel="noopener">https://arxiv.org/abs/1409.0473</a><br><img src="index_files/attention_u6846_u67B61.JPG" alt="attention机制框架1" title="attention机制框架1"></p>
+<center>图5.4 attention机制框架1</center>
+
+<p>Encoder：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+h_i&=tanh(W[h_{i-1},x_i]+b)\\
+\tag{5-4}
+\end{align*}</script><p>语义向量：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+e_{ti}&=v_a^T tanh(W_a [s_{i-1,h_i}])\\
+\alpha_{it}&=\frac{exp(e_{ti})}{\sum_{k=1}^Texp(e_{tk})}\\
+c_t&=\sum_{i=1}^T\alpha_{ti}h_i\\
+\tag{5-5}
+\end{align*}</script><p>其中$e_{ti}$是Encoder中$i$时刻隐藏层状态$h_i$对Decoder中$t$时刻以仓储状态$s_t$的影响程度；$\alpha_{ti}$是对$e_{ti}$进行softmax归一化成的概率，也即前文提到的$a_{ij}$或者叫attention权重；$c_t$是$t$时刻的语义向量。<br>Decoder:</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+s_t&=tanh(W[s_{t-1},y_{t-1},c_t])\\
+o_t&=softmax(Vs_t)\\
+\tag{5-6}
+\end{align*}</script><h3 id="5-2-2-第二种：-Global-attentional-model"><a href="#5-2-2-第二种：-Global-attentional-model" class="headerlink" title="5.2.2. 第二种： Global attentional model"></a>5.2.2. 第二种： <strong>Global attentional model</strong></h3><p><img src="index_files/attention_u6846_u67B62-global-attention.JPG" alt="attention框架2-global-attention" title="attention框架2-global-attention"></p>
+<center>图5.5 attention框架2-global attention</center>
+
+<p>Encoder与第一种attention是一样的。<br>语义向量：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+s_t&=tanh(W[s_{t-1},y_{t-1}])\\
+e_{ti}&=s_t^TW_ah_i\\
+\alpha_{it}&=\frac{exp(e_{ti})}{\sum_{k=1}^Texp(e_{tk})}\\
+c_t&=\sum_{i=1}^T\alpha_{ti}h_i\\
+\tag{5-7}
+\end{align*}</script><p>Decoder：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+\tilde s_t&=tanh(W[s_t,c_t])\\
+o_t&=softmax(V\tilde s_t)\\
+\tag{5-8}
+\end{align*}</script><p>第一种attention机制和第二种的区别主要在于计算影响程度$e_{ti}$的函数（一般称之为对齐函数）不同，第一种依赖于$h_i$和$s_{t-1}$，第二种依赖于$h_i$和$s_t$。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2020/08/16/统计学之t检验详解/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1864,248 +2221,6 @@ a&=g(z) \\  &=\frac{e^{z}-e^{-z}}{e^{z}+e^{-z}}\\  \tag{2-1}  \end{align*}</scri
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2018/06/05/从logistic回归到神经网络/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Guoxing Lan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Guoxing Lan">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="2018/06/05/从logistic回归到神经网络/" itemprop="url">从logistic回归到神经网络</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-05T23:59:23+08:00">
-                2018-06-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Tutorials of Deep Learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>有任何问题请联系 <a href="mailto:languoxing@126.com" target="_blank" rel="noopener">languoxing@126.com</a></p>
-<p>本文是深度学习入门教程序列的第一篇，通过介绍logistic回归的原理，进而引入一层神经网络的前向传播和后向传播公式，并提供了示例代码。</p>
-<h2 id="1-logistic回归详解"><a href="#1-logistic回归详解" class="headerlink" title="1.logistic回归详解"></a>1.logistic回归详解</h2><p>logistic回归模型是用来解决二分类问题的，因此我们将首先在概率的框架下描述什么是分类问题。分类问题的一般描述如下图所示：</p>
-<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0.png" width="500" height="150" alt="分类问题的一般描述"></center></p>
-<p><center>图1.1 分类问题的一般描述</center><br>用X代表输入空间，是输入向量的所有可能取值的集合，也叫特征空间；Y代表输出空间，是输出的所有可能取值的集合。$x^{(i)}\in X$代表特征空间的一个样本，$y^{(i)}\in Y$代表其类别（标签）。分类问题的一般描述可总结为：利用已知标签的训练集$X_{train}$训练出一个模型，该模型包含一个映射关系$h:X\rightarrow Y$，$h$应该能够对新的数据点$x^{(m+1)}$预测其类别$y^{(m+1)}$，并且预测结果应该尽可能好。通常情况下，这种“好”的标准为正确率尽可能高。</p>
-<p>以二分类问题为例，用0和1代表可能的类别，也即$Y=\{0,1\}$。我们从概率的框架下来讨论二分类问题：给定输入特征向量$x$，我们希望估计出它分别属于两类的概率$P(y=0|x;\theta)$和$P(y=1|x;\theta)$。因为现在讨论的是二分类问题，可令$\hat y=P(y=1|x;\theta)$，那么只要估计出$\hat y$就可以了。在估计之前，需要选择合适形式的函数对各类别的后验概率建模，一种最简单也是最笨的方法就是令$\hat y=w ^T x+b$，也即线性回归。但是这样可能会导致$\hat y$的值大于1或者大于0，这和概率的定义相违背。因此，我们可以在线性回归的表达式前面加上一层sigmoid函数，也即$\hat y=\sigma\left(\omega ^T x+b\right)$。sigmoid函数的表达式为：</p>
-<script type="math/tex; mode=display">\sigma (z)=\frac{1}{1+e^{-z}}\\ \tag{1-1}</script><p>其函数图像为：</p>
-<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/600px-Logistic-curve.png" width="300" height="200" alt="sigmoid函数图像"></center></p>
-<p><center>图1.2 logistic函数图像</center><br>到此，我们得到了logistic回归模型：</p>
-<script type="math/tex; mode=display">\hat y=\frac{1}{1+e^{(-\theta^Tx)}} \tag{1-2}</script><p>注意，在$(1-2)$中，我们将参数项b用$x_0$表示，这样能够写成更紧凑的形式。为了突出参数$\theta$，我们用$h_\theta$表示公式$(2)$中的函数，它代表了在已知特征$x$的情况下，类别为$y=1$的概率，也即$P(y=1|x;\theta)=h_\theta$；显然,$P(y=0|x;\theta)=1-h_\theta$<br>假设我们的目标是让分类的错误率最小（即最小错误率决策准则，这是最普遍的一种分类准则）。不难证明，最小化错误等价于最大化各类的后验概率。因此，若$(1-2)$的值大于0.5，则判定为类别1；否则判定为类别0。</p>
-<p>注意，logistic模型仍然是一个线性分类模型，因为它的决策面是$0=w ^T x+b$，我一个线性决策面。 </p>
-<h2 id="2-损失函数的选取"><a href="#2-损失函数的选取" class="headerlink" title="2.损失函数的选取"></a>2.损失函数的选取</h2><p>选取好了模型后，接下来要选取损失函数（Loss function），然后在训练集上利用一定的算法（例如梯度下降法）最小化损失函数，从而确定$h_{\theta}$中的参数$\theta$。一种很自然的想法是选取$L\left(\hat y,y\right)=\frac{1}{2}\left(\hat y-y\right)^2$作为损失函数，但是这会导致在后面学习参数的过程中，最优问题不是一个凸问题。我们在这里采用极大似然估计的方法来推导出一个更合理的损失函数，并且该损失函数是凸函数。</p>
-<h3 id="2-1-最大化后验概率与极大似然估计"><a href="#2-1-最大化后验概率与极大似然估计" class="headerlink" title="2.1.最大化后验概率与极大似然估计"></a>2.1.最大化后验概率与极大似然估计</h3><p>回忆一下极大似然估计的思想：对于可观测的样本$X$及其观测值$Y$，写出该观测值的概率表达式（记为$L\left(\theta\right)$)，该概率表达式一般依赖于参数$\theta$，极大似然估计的目标是寻找$\theta$的估计值$\hat \theta$使得$L\left(\theta\right)$最大。<br>对于某一个观测样本$x^{(i)}$和观测值$y^{(i)}$,有：</p>
-<script type="math/tex; mode=display">
-\begin{align*}
-L(\theta)&=P(y^{(i)}|x;\theta)\\
-&=(h_\theta(x))^{1\left(y^{(i)}=1\right)}(1-h_\theta(x))^{1\left(y^{(i)}=0\right)}\\
-&=(h_\theta(x))^y(1-h_\theta(x))^{1-y}\\
-\tag{2-1}  
-\end{align*}</script><p>$L(\theta)$也叫似然函数。<br>对数似然函数为：</p>
-<script type="math/tex; mode=display">
-\begin{align*} l(\theta) &=\log L(\theta) \\  
-&=y\log\left(h_\theta(x)\right)+(1-y)\log (1-h_\theta(x)) \tag{2-2} \end{align*}</script><p>$(2-2)$就是单个样本的损失函数。下面讨论训练集上的代价函数（cost function）。<br>对于多个观测样本$X$和观测值$Y$，似然函数可写成：</p>
-<script type="math/tex; mode=display">
-\begin{align*} L(\theta) &=P(\boldsymbol{Y}|\boldsymbol{X};\theta) \\ &=\prod_{i=1}^{m}P(y^{(i)}|x^{(i)};\theta) \\ &=\prod_{i=1}^{m}(h_\theta(x^{(i)}))^{y^{(i)}}(1-h_\theta(x^{(i)}))^{1-y^{(i)}}\\ \tag{2-3}  
-\end{align*}</script><p>对数似然函数为：</p>
-<script type="math/tex; mode=display">
-\begin{align*} l(\theta) &=\log L(\theta) \\ &=\sum_{i=1}^{m}y^{(i)}\log h_\theta(x^{(i)})+(1-y^{(i)})\log (1-h_\theta(x^{(i)}))\\ \tag{2-4} \end{align*}</script><p>因为对数似然函数需要最大化，而损失函数需要最小化，因此我们选择如下表达式作为损失函数：</p>
-<script type="math/tex; mode=display">J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}y^{(i)}\log h_\theta(x^{(i)})+(1-y^{(i)})\log (1-h_\theta(x^{(i)}))\right] \tag{2-5}</script><p>$(2-5)$就是代价函数（cost function），它等价于对所有的$(2-2)$取平均。<br>损失函数（loss function）是定义在单个样本上的，代价函数（cost function）是定义在多个样本上的。</p>
-<h2 id="3-梯度下降方法求解最优的参数-w-和-b-（一层神经网络）"><a href="#3-梯度下降方法求解最优的参数-w-和-b-（一层神经网络）" class="headerlink" title="3.梯度下降方法求解最优的参数$w$和$b$（一层神经网络）"></a>3.梯度下降方法求解最优的参数$w$和$b$（一层神经网络）</h2><p>下面我们讨论只有输入层和输出层（激活函数为sigmoid函数）的简单神经网络的前向传播和反向传播过程，也即logistic回归。</p>
-<h3 id="3-1-前向传播"><a href="#3-1-前向传播" class="headerlink" title="3.1.前向传播"></a>3.1.前向传播</h3><script type="math/tex; mode=display">
-\begin{align*}  X&=\left[x^{(1)},x^{(2)},\cdots,x^{(m)}\right]\\  Z&=\left[z^{(1)},z^{(2)},\cdots,z^{(m)}\right]\\  
-&=[w^Tx^{(1)}+b,w^Tx^{(2)}+b,\cdots,w^Tx^{(m)}+b]\\  A&=\left[a^{(1)},a^{(2)},\cdots,a^{(m)}\right]\\
-&=\left[\sigma\left(a^{(1)}\right),\sigma\left(a^{(2)}\right),\cdots,\sigma\left(a^{(m)}\right)\right]\\
-Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{3-2}  \end{align*}</script><p>$(3-2)$中从上到下的顺序可以代表前向传播过程。</p>
-<h3 id="3-2-反向传播"><a href="#3-2-反向传播" class="headerlink" title="3.2.反向传播"></a>3.2.反向传播</h3><p>先对求导公式进行一些化简：</p>
-<script type="math/tex; mode=display">
-\begin{align*}  
-\rm d\it a  &= \frac{\rm{d}\it{L(a,y)}}{\rm{d}\it{a}}\\  
-&= -\frac{y}{a}+\frac{1-y}{1-a}\\  
-\tag{3-3}  
-\end{align*}</script><script type="math/tex; mode=display">
-\begin{align*}  
-\rm d\it z&= \frac{\rm{d}\it{L(a,y)}}{\rm{d}\it{z}}\\  
-&= \frac{\rm{d}\it{L(a,y)}}{\rm{d}\it{a}}\cdot  
-\frac{\rm d \it a}{\rm d \it z}\\  &= \left(-\frac{y}{a}+\frac{1-y}{1-a}\right)\cdot a(1-a)\\  
-&=a-y \\  
-\tag{3-4}  
-\end{align*}</script><p>有了$(3-4)$，我们就能得到$\rm{d}\it{Z}=A-Y$。因此反向传播过程如下：</p>
-<script type="math/tex; mode=display">
-\begin{align*} 
-\rm{d}\it{Z}&=A-Y\\
-\rm d\it w&= \frac{1}{m}\cdot X\cdot \rm{d}\it{Z}^T\\  &=\frac{1}{m}X\left(A-Y\right)^T \\  \rm d\it b&= \frac{1}{m}\cdot\sum_{i=1}^{m}\left(\rm{d}\it{Z^{(i)}}\right) \\  \tag{3-5}  \end{align*}</script><p>注意，$(3-5)$的流程可以理解为先对每一个样本求损失函数关于$z$的梯度，并对每个样本求出$\rm{d}\it{w}$，在对所有样本的$\rm{d}\it{w}$球平均，因此有$1/m$。</p>
-<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/logistic%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D.JPG" alt="logistic回归梯度下降"></center></p>
-<p><center>图3.2 logistic回归梯度下降</center><br>也可以对$m$个样本的代价函数一次性直接求偏导，这需要一定的向量微分和复合函数微分的知识。这样的话，在$\rm{d}\it{Z}$中就会有一个$1/m$，那么在求$\rm{d}\it{w}$时就不用另外再加一个$1/m$了，并且形状可能互为转置，最终的结果是一样的。具体过程这里省略，有兴趣的读者可以自行推导。</p>
-<h2 id="4-单层神经网络示例代码"><a href="#4-单层神经网络示例代码" class="headerlink" title="4.单层神经网络示例代码"></a>4.单层神经网络示例代码</h2><p>网络结构见图3.1<br>请点击下面的超链接跳转至github页面：<br><a href="https://github.com/lankuohsing/Coursera-Deep-Learning-Specialization/tree/master/Neural%20Networs%20and%20Deep%20Learning" target="_blank" rel="noopener">用logistic回归实现一层神经网络用来识别猫的图片</a><br>其中Logistic_Regression_with_a_Neural_Network_mindset.ipynb文件包含详细的注释和图示，但需要在jupyternotebook中运行；Logistic_Regression_with_a_Neural_Network_mindset.py文件可直接用“python”命令运行，两者的功能是一样的。</p>
-<h2 id="5-两层神经网络"><a href="#5-两层神经网络" class="headerlink" title="5.两层神经网络"></a>5.两层神经网络</h2><h3 id="5-1-前向传播"><a href="#5-1-前向传播" class="headerlink" title="5.1.前向传播"></a>5.1.前向传播</h3><script type="math/tex; mode=display">
-\begin{align*}  X&=\left[x^{(1)},x^{(2)},\cdots,x^{(m)}\right]\\  
-W^{[1]}&=\left[w_1^{[1]},w_2^{[1]},\cdots,w_{n_1}^{[1]}\right]^{T}\\
-b^{[1]}&=\left[b_1^{[1]},b_2^{[1]},\cdots,b_{n_1}^{[1]}\right]\\
-Z^{[1]}&=W^{[1]}X+b^{[1]}\\
-A^{[1]}&=g^{[1]}\left(Z^{[1]}\right)\\
-W^{[2]}&=\left[w_1^{[2]},w_2^{[2]},\cdots,w_{n_2}^{[2]}\right]^{T}\\
-b^{[2]}&=\left[b_1^{[2]},b_2^{[2]},\cdots,b_{n_2}^{[2]}\right]\\
-Z^{[2]}&=W^{[2]}A^{[1]}+b^{[2]}\\
-A^{[2]}&=g^{[2]}\left(Z^{[2]}\right)\\
-Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{5-1}  \end{align*}</script><p>$(5-1)$中从上到下的顺序可以代表前向传播过程。</p>
-<h3 id="5-2-反向传播"><a href="#5-2-反向传播" class="headerlink" title="5.2.反向传播"></a>5.2.反向传播</h3><script type="math/tex; mode=display">
-\begin{align*} 
-{\rm d}Z^{[2]}&=A^{[2]}-Y\\
-{\rm d}W^{[2]}&=\frac{1}{m}{\rm d}Z^{[2]}A^{[1]\ T}\\  
-{\rm d}b^{[2]}&=\frac{1}{m}np.sum\left({\rm d}Z^{[2]},axis=1,keepdims=True\right)\\  
-{\rm d}A^{[1]}&={W^{[2]}}^T{\rm d}Z^{[2]}\\
-{\rm d}Z^{[1]}&={\rm d}A^{[1]}*{g^{[1]}}'\left(Z^{[1]}\right)\\
-{\rm d}W^{[1]}&=\frac{1}{m}{\rm d}Z^{[1]}A^{[0]\ T}\\  
-{\rm d}b^{[1]}&=\frac{1}{m}np.sum\left({\rm d}Z^{[1]},axis=1,keepdims=True\right)\\  \tag{5-2}
-\end{align*}</script><p>$(5-2)$中从上到下的顺序可以代表前向传播过程。</p>
-<h3 id="5-3-关于参数的初始化"><a href="#5-3-关于参数的初始化" class="headerlink" title="5.3.关于参数的初始化"></a>5.3.关于参数的初始化</h3><p>在单层神经网络（logistic回归）中，可以将参数初始化wie全零值；但是在多层神经网络中，$W$不能初始化为0，否则每一层的各个节点对应的$W$会训练成一样的值；$b$可以初始化为0  $W$不能初始化为特别大，浅层网络一般是0.01量级；因为太大了的话，激活函数的自变量要么正向很大，要么负向很大，导致斜率趋近于0 ，收敛速度很慢。尤其是你使用$sigmoid$或$tanh$激活函数。如果不使用这些激活函数，但是你是二分类问题（输出层是sigmoid函数），也会出现这个问题.</p>
-<h3 id="5-4-2层神经网络示例代码"><a href="#5-4-2层神经网络示例代码" class="headerlink" title="5.4.2层神经网络示例代码"></a>5.4.2层神经网络示例代码</h3><p>对如下二维平面上的点进行分类：</p>
-<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/planar.png"></center></p>
-<p><center>图5.1 二维平面上的非线性二分类数据集例子</center><br>网络结构如下：</p>
-<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/2_layer_NN.png"></center></p>
-<p><center>图5.2 2层神经网络结构例子</center><br>点击下面的超链接查看完整代码：<br><a href="https://github.com/lankuohsing/Coursera-Deep-Learning-Specialization/tree/master/Neural%20Networs%20and%20Deep%20Learning" target="_blank" rel="noopener">2层神经网络的示例代码</a><br>其中Palnar_data_clf_with_one_hidden_layer.ipynb文件包含详细的注释和图示，但需要在jupyternotebook中运行；Palnar_data_clf_with_one_hidden_layer.py文件可直接用“python”命令运行，两者的功能是一样的。</p>
-<h2 id="6-深层神经网络"><a href="#6-深层神经网络" class="headerlink" title="6.深层神经网络"></a>6.深层神经网络</h2><h3 id="6-1-每层的参数及变量的尺寸"><a href="#6-1-每层的参数及变量的尺寸" class="headerlink" title="6.1.每层的参数及变量的尺寸"></a>6.1.每层的参数及变量的尺寸</h3><script type="math/tex; mode=display">\begin{align*}  z^{[l]}&:\left(n^{[l]},1\right)\\  a^{[l]}&:\left(n^{[l]},1\right)\\  W^{[l]}&:\left(n^{[l]},n^{[l-1]}\right)\\  b^{[l]}&:\left(n^{[l]},1\right)\\  dW^{[l]}&:\left(n^{[l]},n^{[l-1]}\right)\\  db^{[l]}&:\left(n^{[l]},1\right)\\  \tag{6-1}
-\end{align*}</script><h3 id="6-2-前向传播递推公式"><a href="#6-2-前向传播递推公式" class="headerlink" title="6.2.前向传播递推公式"></a>6.2.前向传播递推公式</h3><script type="math/tex; mode=display">
-\begin{align*}  X&=\left[x^{(1)},x^{(2)},\cdots,x^{(m)}\right]\\  
-W^{[l]}&=\left[w_1^{[l]},w_2^{[l]},\cdots,w_{n_l}^{[l]}\right]^{T}\\
-b^{[l]}&=\left[b_1^{[l]},b_2^{[l]},\cdots,b_{n_l}^{[l]}\right]\\
-Z^{[l]}&=W^{[l]}A^{[l-1]}+b^{[l]}\\
-A^{[l]}&=g^{[l]}\left(Z^{[l]}\right)\\
-W^{[l+1]}&=\left[w_1^{[l+1]},w_2^{[l+1]},\cdots,w_{n_l+1}^{[l+1]}\right]^{T}\\
-b^{[l+1]}&=\left[b_1^{[l+1]},b_2^{[l+1]},\cdots,b_{n_2}^{[l+1]}\right]\\
-Z^{[l+1]}&=W^{[l+1]}A^{[l]}+b^{[l+1]}\\
-A^{[l+1]}&=g^{[l+1]}\left(Z^{[l+1]}\right)\\
-Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</script><h3 id="6-3-反向传播递推公式"><a href="#6-3-反向传播递推公式" class="headerlink" title="6.3.反向传播递推公式"></a>6.3.反向传播递推公式</h3><script type="math/tex; mode=display">
-\begin{align*} {\rm d}Z^{[l]}&={\rm d}A^{[l]}*{g^{[l]}}'\left(Z^{[l]}\right)\\  
-{\rm d}W^{[l]}&=\frac{1}{m}{\rm d}Z^{[l]}A^{[l-1]\ T}\\  
-{\rm d}b^{[l]}&=\frac{1}{m}np.sum\left({\rm d}Z^{[l]},axis=1,keepdims=True\right)\\  
-{\rm d}A^{[l-1]}&={W^{[l]}}^T{\rm d}Z^{[l]}\\  
-\tag{6-3}
-\end{align*}</script><h3 id="6-4-多层神经网络的示例代码"><a href="#6-4-多层神经网络的示例代码" class="headerlink" title="6.4.多层神经网络的示例代码"></a>6.4.多层神经网络的示例代码</h3><p>点击如下超链接。<br><a href="https://github.com/lankuohsing/Coursera-Deep-Learning-Specialization/tree/master/Neural%20Networs%20and%20Deep%20Learning" target="_blank" rel="noopener">对比了2层神经网络和5层神经网络在对猫分类时的性能</a><br>Deep Neural Network - Application.py<br>Deep Neural Network - Application.ipynb</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2160,7 +2275,7 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</scr
               
                 <a href="https://lankuohsing.github.io/blog/archives">
               
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
