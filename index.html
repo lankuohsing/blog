@@ -389,13 +389,13 @@ min\ \ &f_0(x)\\
 s.t.\ \ &f_i(x)\leq 0,i=1,2,\cdots,m\\
 &h_i(x)=0,i=1,2,\cdots,p\\
 \tag{3-1}
-\end{align*}</script><p>我们称$x\in R^n$为<strong>优化变量</strong>，称函数$f_0:R^n\rightarrow R$为为<strong>目标函数</strong>或代价函数；不等式$f_i(x)\leq 0$称为不等式约束，$h_i:R^n\rightarrow R$称为等式约束。优化问题的定义域是目标函数和约束函数的定义域的交集。满足约束条件的定义域中的点称为可行点；所有可行点的集合称为可行集。<br>问题$(3-1)$的最优值$p^*$定义为:</p>
+\end{align*}</script><p>我们称$x\in R^n$为<strong>优化变量</strong>，称函数$f_0:R^n\rightarrow R$为为<strong>目标函数</strong>或代价函数；不等式$f_i(x)\leq 0$称为不等式约束，$h_i:R^n\rightarrow R$称为等式约束。优化问题的定义域是目标函数和约束函数的定义域的交集。满足约束条件的定义域中的点称为可行点；所有可行点的集合称为可行集。<br>问题$(3-1)$的最优值$p^{\star}$定义为:</p>
 <script type="math/tex; mode=display">
 \begin{align*}
 p=\inf\{&f_0(x)|\\
 &f_i(x)\leq 0,i=1,2,\cdots,m,h_i(x)=0,i=1,2,\cdots,p\}\\
 \tag{3-2}
-\end{align*}</script><p>如果问题不可行，则$p^*=\infty$</p>
+\end{align*}</script><p>如果问题不可行，则$p^{\star}=\infty$</p>
 <p><strong>凸优化问题</strong>的标准形式</p>
 <script type="math/tex; mode=display">
 \begin{align*}
@@ -444,21 +444,21 @@ g(\theta \mu_1+(1-\theta)\mu_2)&=\mathop{min}\limits_{x}L(x,\theta \mu_1+(1-\the
 \end{align*}</script><p>得证！<br>注意，第一步到第二步是因为$L(x,\mu)$是关于$u$的仿射函数；第二步到第三步是因为，地二步中取得最小值时，括号中两项中的$x$是取相同的值的，而第三步中两项分别取最小值不要求$x$一定取相同值（也即能够比第二步涵盖更多情况），因此第三步可能取到的最小值肯定小于或等于第二步的最小值。<br><strong>几何解释</strong>如下：<br>由于$L(x,\mu)$是关于$u$的仿射函数，我们将$\mu$退化为1维来形象地解释。$L(x,\mu)$可以看成是许多的直线簇组成。$g(x,\mu)$可以理解成：当$\mu$取某一个值时，取曲线簇在这个值上的最小值，遍历所有$\mu$，将曲线簇的一些最小值作为$g(x,\mu)$的值域。因此，$g(x,\mu)$可以看成下图中黄色区域的边界线，显然是一个凹函数。<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E4%BC%98%E5%8C%96%E7%90%86%E8%AE%BA/%E5%87%B8%E4%BC%98%E5%8C%96/%E9%80%90%E7%82%B9%E4%B8%8B%E7%A1%AE%E7%95%8C%E5%87%A0%E4%BD%95%E8%A7%A3%E9%87%8A.JPG" alt="逐点下确界几何解释"></p>
 <p>此外，Lagrange对偶函数还有如下性质：<br>$\forall \lambda \succeq 0$(每一维都大于0)和$\nu$，都有</p>
 <script type="math/tex; mode=display">
-g(\lambda,\nu)\leq p^*\\
-\tag{4-6}</script><p>其中$p^*$是原问题的最优值。也即，对偶函数构成了原问题的最优值的下界。</p>
-<h2 id="4-2-共轭函数"><a href="#4-2-共轭函数" class="headerlink" title="4.2. 共轭函数"></a>4.2. 共轭函数</h2><p>设函数$f:R^n\rightarrow R$，定义$f^*:R^n\rightarrow R$为：</p>
+g(\lambda,\nu)\leq p^{\star}\\
+\tag{4-6}</script><p>其中$p^{\star}$是原问题的最优值。也即，对偶函数构成了原问题的最优值的下界。</p>
+<h2 id="4-2-共轭函数"><a href="#4-2-共轭函数" class="headerlink" title="4.2. 共轭函数"></a>4.2. 共轭函数</h2><p>设函数$f:R^n\rightarrow R$，定义$f^{\star}:R^n\rightarrow R$为：</p>
 <script type="math/tex; mode=display">
-f^*(y)=\mathop{sup}\limits_{x\in dom\ f}\left(y^Tx-f(x)\right)\\
-\tag{4-7}</script><p>此函数成为函数$f$的共轭函数。共轭函数是一系列仿射函数的逐点上确界，所以必然是一个凸函数。<br>对于负熵函数$xlog{x}$，它的共轭函数不难推导出是$f^*(y)=e^{y-1}$,这在后面会用到</p>
-<h2 id="4-3-Lagrange对偶问题"><a href="#4-3-Lagrange对偶问题" class="headerlink" title="4.3. Lagrange对偶问题"></a>4.3. Lagrange对偶问题</h2><p>由$(4-6)$可以看到，对于任意一组$(\lambda,\nu)$，其中$\lambda \succeq0$,Lagrange对偶函数给出了优化问题$(4-1)$的最优值$p^<em>$的一个下界。我们来看一下从Lagrange函数得到的<em>*最好下界</em></em>。该问题可以表述为如下优化问题：</p>
+f^{\star}(y)=\mathop{sup}\limits_{x\in dom\ f}\left(y^Tx-f(x)\right)\\
+\tag{4-7}</script><p>此函数成为函数$f$的共轭函数。共轭函数是一系列仿射函数的逐点上确界，所以必然是一个凸函数。<br>对于负熵函数$xlog{x}$，它的共轭函数不难推导出是$f^{\star}(y)=e^{y-1}$,这在后面会用到</p>
+<h2 id="4-3-Lagrange对偶问题"><a href="#4-3-Lagrange对偶问题" class="headerlink" title="4.3. Lagrange对偶问题"></a>4.3. Lagrange对偶问题</h2><p>由$(4-6)$可以看到，对于任意一组$(\lambda,\nu)$，其中$\lambda \succeq0$,Lagrange对偶函数给出了优化问题$(4-1)$的最优值$p^{\star}$的一个下界。我们来看一下从Lagrange函数得到的<strong>最好下界</strong>。该问题可以表述为如下优化问题：</p>
 <script type="math/tex; mode=display">
 \begin{align*}
 maximize\ \ g(\lambda,\nu)\\
 subject\ to\ \ \lambda\succeq 0
 \tag{4-8}
-\end{align*}</script><p>上述问题被称为<strong>原问题</strong>的<strong>Lagrange对偶问题</strong>。<br>满足$\lambda \succeq 0$和$g(\lambda,\nu)&gt;0$的一组$(\lambda,\nu)$被称为一组<strong>对偶可行解</strong>。如果一组$(\lambda^<em>,\nu^</em>)$是对偶问题的最优解，那么称它是<strong>对偶最优解</strong>或者<strong>最优Lagrange乘子</strong>。<br>由于$g(\lambda,\nu)&gt;0$必然是凹函数，且约束条件是凸函数，所以问题$(4-8)$必然是一个凸优化问题。<br>因此<strong>Lagrange对偶问题是一个凸优化问题，与原问题的凸性无关</strong></p>
-<p>记Lagrange对偶问题的最优值为$d^<em>$，原问题的最优值为$p^</em>$。显然有$d^<em>\leq p^</em>$，这个性质称为<strong>弱对偶性</strong>。</p>
-<h2 id="4-4-强对偶性与Slater约束准则"><a href="#4-4-强对偶性与Slater约束准则" class="headerlink" title="4.4. 强对偶性与Slater约束准则"></a>4.4. 强对偶性与Slater约束准则</h2><p>如果前面的有$d^<em>=p^</em>$，则<strong>强对偶性</strong>成立。<br>强对偶性成立的一个简单的约束条件是：存在一点$x\in relint\ D$使得下式成立：</p>
+\end{align*}</script><p>上述问题被称为<strong>原问题</strong>的<strong>Lagrange对偶问题</strong>。<br>满足$\lambda \succeq 0$和$g(\lambda,\nu)&gt;0$的一组$(\lambda,\nu)$被称为一组<strong>对偶可行解</strong>。如果一组$(\lambda^{\star},\nu^{\star})$是对偶问题的最优解，那么称它是<strong>对偶最优解</strong>或者<strong>最优Lagrange乘子</strong>。<br>由于$g(\lambda,\nu)&gt;0$必然是凹函数，且约束条件是凸函数，所以问题$(4-8)$必然是一个凸优化问题。<br>因此<strong>Lagrange对偶问题是一个凸优化问题，与原问题的凸性无关</strong></p>
+<p>记Lagrange对偶问题的最优值为$d^{\star}$，原问题的最优值为$p^{\star}$。显然有$d^{\star}\leq p^{\star}$，这个性质称为<strong>弱对偶性</strong>。</p>
+<h2 id="4-4-强对偶性与Slater约束准则"><a href="#4-4-强对偶性与Slater约束准则" class="headerlink" title="4.4. 强对偶性与Slater约束准则"></a>4.4. 强对偶性与Slater约束准则</h2><p>如果前面的有$d^{\star}=p^{\star}$，则<strong>强对偶性</strong>成立。<br>强对偶性成立的一个简单的约束条件是：存在一点$x\in relint\ D$使得下式成立：</p>
 <script type="math/tex; mode=display">
 f_i(x)< 0,i1,\cdots,m,Ax=b\\
 \tag{4-9}</script><p>如果不等式约束函数中有一些是仿射函数时，Slater条件可以进一步改进为：不是仿射函数的那些不等式约束函数需要满足$(4-9)$。换言之，仿射不等式不需要严格成立。<br>由此可以得到一个推论：当所有约束条件是线性等式或线性不等式且$dom\ f_0$是开集时，改进的Slater条件就是可行性条件。也即只要问题是可行的，强对偶性就成立。<br>Boyd的《Convex Optimization》一书中，证明了<strong>当原问题是凸问题且Slater条件成立时，强对偶性成立。</strong></p>
@@ -466,34 +466,34 @@ f_i(x)< 0,i1,\cdots,m,Ax=b\\
 <h3 id="4-5-1-互补松弛性"><a href="#4-5-1-互补松弛性" class="headerlink" title="4.5.1. 互补松弛性"></a>4.5.1. 互补松弛性</h3><p>如果强对偶性成立，则有：</p>
 <script type="math/tex; mode=display">
 \begin{align*}
-f_0(x^*)&=g(\lambda^*,\nu^*)\\
-&=\mathop{inf}\limits_{x}\left(f_0(x)+\sum_{i=1}^{m}{\lambda _i^*f_i(x)} + \sum_{i=1}^{p}{\nu _i^*h_i(x)}\right))\\
-&\leq f_0(x^*)+\sum_{i=1}^{m}{\lambda _i^*f_i(x^*)} + \sum_{i=1}^{p}{\nu _i^*h_i(x^*)}\\
-&\leq f_0(x^*)\\
+f_0(x^{\star})&=g(\lambda^{\star},\nu^{\star})\\
+&=\mathop{inf}\limits_{x}\left(f_0(x)+\sum_{i=1}^{m}{\lambda _i^{\star}f_i(x)} + \sum_{i=1}^{p}{\nu _i^{\star}h_i(x)}\right))\\
+&\leq f_0(x^{\star})+\sum_{i=1}^{m}{\lambda _i^{\star}f_i(x^{\star})} + \sum_{i=1}^{p}{\nu _i^{\star}h_i(x^{\star})}\\
+&\leq f_0(x^{\star})\\
 \tag{4-10}
 \end{align*}</script><p>上式可以得到几个有用的结论：</p>
 <ul>
-<li>由于第三个不等式取等号，说明$L(x,\lambda^<em>,\nu^</em>)$在$x^*$处取得局部最小值，也即该点处导数为0</li>
-<li>$\lambda_i^<em>f_i(x^</em>)=0,i=1,2,\cdots,m$，这个称为<strong>互补松弛条件</strong>，意味着在最优点处，不等式约束要么取等号$(f_i(x^<em>)=0)$，要么它对应的Lagrange乘子为零$\lambda_i^</em>=0$</li>
+<li>由于第三个不等式取等号，说明$L(x,\lambda^{\star},\nu^{\star})$在$x^{\star}$处取得局部最小值，也即该点处导数为0</li>
+<li>$\lambda_i^{\star}f_i(x^{\star})=0,i=1,2,\cdots,m$，这个称为<strong>互补松弛条件</strong>，意味着在最优点处，不等式约束要么取等号$(f_i(x^{\star})=0)$，要么它对应的Lagrange乘子为零$\lambda_i^{\star}=0$</li>
 </ul>
 <h3 id="4-5-2-KKT最优性条件"><a href="#4-5-2-KKT最优性条件" class="headerlink" title="4.5.2. KKT最优性条件"></a>4.5.2. KKT最优性条件</h3><p>这小节讨论的目标函数$f_0$和约束函数$f_1,f_2,\cdots,f_m,h_1,h_2,\cdots,h_p$是可微的，但并不要求它们都是凸函数。<br>结合上一小节的内容，我们可以推出，对于目标函数和约束函数可微的任意优化问题，如果强对偶性成立，则任一对偶问题的最优解和对偶问题的最优解必须满足下列的式子：</p>
 <script type="math/tex; mode=display">
 \begin{align*}
-f_i(x^*)&\leq 0 ,i=1,2,\cdots,m\\
-h_i(x^*)&=0,i=1,2,\cdots,p\\
-\lambda_i^*&\geq 0,i=1,2,\cdots,m\\
-\lambda_i^*f_i(x^*)&=0,i=1,2,\cdots,m\\
-\nabla f_0(x^*)+\sum_{i=1}^{m}{\lambda _i^*\nabla f_i(x^*)} + \sum_{i=1}^{p}{\nu _i^*\nabla h_i(x^*)}&=0\\
+f_i(x^{\star})&\leq 0 ,i=1,2,\cdots,m\\
+h_i(x^{\star})&=0,i=1,2,\cdots,p\\
+\lambda_i^{\star}&\geq 0,i=1,2,\cdots,m\\
+\lambda_i^{\star}f_i(x^{\star})&=0,i=1,2,\cdots,m\\
+\nabla f_0(x^{\star})+\sum_{i=1}^{m}{\lambda _i^{\star}\nabla f_i(x^{\star})} + \sum_{i=1}^{p}{\nu _i^{\star}\nabla h_i(x^{\star})}&=0\\
 \tag{4-9}
-\end{align*}</script><p>上式被称为<strong>非凸问题的KKT条件</strong>：<br><strong>如果原问题是凸问题，则满足KKT条件的点也是原、对偶问题的最优解</strong>。这个定理很重要！<br>上述定理的证明：前面两个条件说明了$x^<em>$是原问题的可行解；因为$\lambda^</em>\geq 0$，所以$L(x,\lambda^<em>,\nu^</em>)$是x的凸函数；最优一个条件说明了Lagrange函数在$x^*$处导数为零，也即Lagrange函数取得全局最小值，因此此时有：</p>
+\end{align*}</script><p>上式被称为<strong>非凸问题的KKT条件</strong>：<br><strong>如果原问题是凸问题，则满足KKT条件的点也是原、对偶问题的最优解</strong>。这个定理很重要！<br>上述定理的证明：前面两个条件说明了$x^{\star}$是原问题的可行解；因为$\lambda^{\star}\geq 0$，所以$L(x,\lambda^{\star},\nu^{\star})$是x的凸函数；最优一个条件说明了Lagrange函数在$x^{\star}$处导数为零，也即Lagrange函数取得全局最小值，因此此时有：</p>
 <script type="math/tex; mode=display">
 \begin{align*}
-g(\lambda^*,\nu^*)&=L(x^*,\lambda^*,\nu^*)\\
-&=f_0(x^*)+\sum_{i=1}^{m}{\lambda _i^*f_i(x^*)} + \sum_{i=1}^{p}{\nu _i^*h_i(x^*)}\\
-&=f_0(x^*)\\
+g(\lambda^{\star},\nu^{\star})&=L(x^{\star},\lambda^{\star},\nu^{\star})\\
+&=f_0(x^{\star})+\sum_{i=1}^{m}{\lambda _i^{\star}f_i(x^{\star})} + \sum_{i=1}^{p}{\nu _i^{\star}h_i(x^{\star})}\\
+&=f_0(x^{\star})\\
 \tag{4-10}
 \end{align*}</script><p>上述意味着对偶间隙为0，强对偶性成立，因此得证。</p>
-<h3 id="4-5-3-通过解对偶问题求解原问题"><a href="#4-5-3-通过解对偶问题求解原问题" class="headerlink" title="4.5.3. 通过解对偶问题求解原问题"></a>4.5.3. 通过解对偶问题求解原问题</h3><p>由前面可知，如果强对偶性成立，且存在一个对偶最优解$(\lambda^<em>,\nu^</em>)$，那么任意原问题最优点也是$L(x,\lambda^<em>,\nu^</em>)$的最优解。利用这个性质，我们可以从对偶最优方程中去求解原问题最优解。确切的讲，如果强对偶性成立，对偶最优解$(\lambda^<em>,\nu^</em>)$已知，并且下列问题的解唯一：</p>
+<h3 id="4-5-3-通过解对偶问题求解原问题"><a href="#4-5-3-通过解对偶问题求解原问题" class="headerlink" title="4.5.3. 通过解对偶问题求解原问题"></a>4.5.3. 通过解对偶问题求解原问题</h3><p>由前面可知，如果强对偶性成立，且存在一个对偶最优解$(\lambda^{\star},\nu^{\star})$，那么任意原问题最优点也是$L(x,\lambda^{\star},\nu^{\star})$的最优解。利用这个性质，我们可以从对偶最优方程中去求解原问题最优解。确切的讲，如果强对偶性成立，对偶最优解$(\lambda^{\star},\nu^{\star})$已知，并且下列问题的解唯一：</p>
 <script type="math/tex; mode=display">
 min\ f_0(x)+\sum_{i=1}^{m}{\lambda _if_i(x)} + \sum_{i=1}^{p}{\nu _ih_i(x)}\tag{4-11}</script><p>（Lagrange函数是严格凸函数时上述最优化问题的解是唯一的），如果上式问题的解是原问题的可行解，那么它就是原问题的最优解；如果它不是原问题的可行解，那么原问题不存在最优解（或者无法达到）。当对偶问题比原问题更容易求解时，上述方法很有意义。</p>
 <h1 id="5-利用Lagrange对偶求解最优化问题的例子"><a href="#5-利用Lagrange对偶求解最优化问题的例子" class="headerlink" title="5. 利用Lagrange对偶求解最优化问题的例子"></a>5. 利用Lagrange对偶求解最优化问题的例子</h1><h2 id="5-1-熵的最大化问题"><a href="#5-1-熵的最大化问题" class="headerlink" title="5.1. 熵的最大化问题"></a>5.1. 熵的最大化问题</h2><p>这个例子在机器学习中可能会经常遇到。问题描述如下：</p>
@@ -514,9 +514,9 @@ L(x,\lambda,\nu)=f_0(x)+\lambda^T(Ax-b)+\nu(\vec 1^Tx-1)\\
 g(\lambda,\nu)&=\mathop{inf}\limits_{x}\ \left(f_0(x)+\lambda^T(Ax-b)+\nu(1^Tx-1)\right)\\
 &=-b^T\lambda-\nu+\mathop{inf}\limits_{x}\ \left(f_0(x)+(A^T\lambda+\vec 1\nu)^Tx\right)\\
 &=-b^T\lambda-\nu-\mathop{sup}\limits_{x}\ \left(-f_0(x)-(A^T\lambda+\vec 1\nu)^Tx\right)\\
-&=-b^T\lambda-\nu-f_0^*\left(-(A^T\lambda+\vec 1\nu)\right)\\
+&=-b^T\lambda-\nu-f_0^{\star}\left(-(A^T\lambda+\vec 1\nu)\right)\\
 \tag{5-3}
-\end{align*}</script><p>其中$f_0^<em>$是$f_0$的共轭函数。对于负熵函数$xlog{x}$，它的共轭函数不难推导出是$f^</em>(y)=e^{y-1}$，因此不难得出$(5-3)$可进一步化为：</p>
+\end{align*}</script><p>其中$f_0^{\star}$是$f_0$的共轭函数。对于负熵函数$xlog{x}$，它的共轭函数不难推导出是$f^{\star}(y)=e^{y-1}$，因此不难得出$(5-3)$可进一步化为：</p>
 <script type="math/tex; mode=display">
 \begin{align*}
 g(\lambda,\nu)&=\mathop{inf}\limits_{x}\ \left(f_0(x)+\lambda^T(Ax-b)+\nu(1^Tx-1)\right)\\
@@ -524,8 +524,8 @@ g(\lambda,\nu)&=\mathop{inf}\limits_{x}\ \left(f_0(x)+\lambda^T(Ax-b)+\nu(1^Tx-1
 \tag{5-3}
 \end{align*}</script><p>假设原问题可行，也即Slater条件成立（注意这里的约束条件都是仿射函数），那么此时强对偶性成立。因此对Lagrange函数求最小值即可求得原问题的最小值解。注意到Lagrange函数是严格凸函数，很容易求得最小值点</p>
 <script type="math/tex; mode=display">
-x_i^*=exp\left(-(a_i^T\lambda^*+\nu^*+1)\right),i=1,2,\cdots,n\\
-\tag{5-4}</script><p>其中$a_i$是$A$的列向量，如果$x^*$是原问题的可行解，则必定是原问题的最优解。</p>
+x_i^{\star}=exp\left(-(a_i^T\lambda^{\star}+\nu^{\star}+1)\right),i=1,2,\cdots,n\\
+\tag{5-4}</script><p>其中$a_i$是$A$的列向量，如果$x^{\star}$是原问题的可行解，则必定是原问题的最优解。</p>
 
           
         
