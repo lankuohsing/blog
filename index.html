@@ -262,6 +262,170 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2021/02/03/TensorFlow-PyTorch中张量-Tensor-的底层存储方式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guoxing Lan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Guoxing Lan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="2021/02/03/TensorFlow-PyTorch中张量-Tensor-的底层存储方式/" itemprop="url">TensorFlow/PyTorch中张量(Tensor)的底层存储方式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-02-03T00:39:25+08:00">
+                2021-02-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Deep Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>@[toc]</p>
+<h1 id="0-张量（Tensor）基本概念回顾"><a href="#0-张量（Tensor）基本概念回顾" class="headerlink" title="0. 张量（Tensor）基本概念回顾"></a>0. 张量（Tensor）基本概念回顾</h1><p>张量（Tensor）其实就是多维数组，类似于NumPy里面的np.array。<br>这里的维度，更准确的讲法应该叫阶（rank），这是为了跟向量（vector）的维度区分开的。vector其实就是rank为1的张量，我们说一个vector是n维的其实是说它有n个分量（标量）。而如果张量的维度（阶）是n维的，并不是说它有n个标量分量，而是说在表示这个张量时需要用n个坐标轴。每个轴上都可以有多个分量。为了表示每个轴上的分量个数，引入形状（shape）的概念。<br>例如，一个三阶的张量，可以理解为是一个立方体。假设它的shape是$[3,2,5]$,那么下图就是一个具体的例子（下面两张图的来源均为<a href="https://www.tensorflow.org/guide/tensor" target="_blank" rel="noopener">https://www.tensorflow.org/guide/tensor</a>）：<br><img src="https://img-blog.csdnimg.cn/20210203231202217.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<center>图0.1 一个rank为3的tensor的例子</center>
+
+<p>而一个四阶张量的例子则用下图表示：<br><img src="https://img-blog.csdnimg.cn/20210203231212171.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<center>图0.2 一个rank为4的tensor的例子</center>
+
+<p>TensorFlow/PyTorch中使用比较多的tensor的阶为4，shape为$[Batch, Height, Weight, Features]$.</p>
+<p>n阶张量的排列规律如下图所示（图片来源<a href="https://syborg.dev/posts/understanding-tensors-in-pytorch" target="_blank" rel="noopener">https://syborg.dev/posts/understanding-tensors-in-pytorch</a>）：<br><img src="https://img-blog.csdnimg.cn/20210203231222692.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<center>图0.3 1-6阶tensor的shape规律</center>
+
+<p>可以将规律总结为：从shape列表的最右边往左遍历，最开始三个阶按照“下-右-里”的顺序排列，然后打包成一个group，再将整个group按照“下-右-里”的顺序排列，满三次后再打包成一个group，如此往复循环。。</p>
+<h1 id="1-tensor在计算机内存中的存储方式"><a href="#1-tensor在计算机内存中的存储方式" class="headerlink" title="1. tensor在计算机内存中的存储方式"></a>1. tensor在计算机内存中的存储方式</h1><p>前面提到的rank和shape，都是数学上的定义，实际在内存中是一维存储的。<br>排列规律为：</p>
+<ol>
+<li>假设rank为n，即shape列表的size为n.</li>
+<li>初始位置为原点</li>
+<li>将shape[n-1]方向上的元素按照这个方向上的坐标递增的顺序进行线性排列。</li>
+<li>shape[n-1]方向上的元素排完后再将shape[n-2]上的坐标递增，继续排shape[n-1]方向上的元素，直到shape[n-2]方向上的坐标到了最大值，并且排完了这个坐标上的shape[n-1]方向的元素，此时shape[n-2]方向上坐标归零。</li>
+<li>将shape[n-3]上的坐标递增，继续3,4，直到shape[n-3]方向上的坐标和shape[n-2]方向上的坐标到了最大值，并且排完了这个坐标上的shape[n-1]方向的元素，此时shape[n-3]和shape[n-2]方向上坐标归零</li>
+<li>对shape[n-i] (i=4,5,…,n)上的坐标递增,并重复前面的过程。</li>
+</ol>
+<p>一般情况下，假设高阶tensor的下标为coordinates, 则转换为一维向量的下标index过程如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">index = coordinates[0];</span><br><span class="line">for(int i=0; i&lt;coordinates.size(); i++)&#123;</span><br><span class="line">index = index * shape[i] + coordinates[i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2020/10/21/凸优化基础知识笔记-凸集、凸函数、凸优化问题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2204,171 +2368,6 @@ b&:=b-\alpha \frac{V_{db}^{corrected}}{\sqrt{ S_{db}^{corrected}}}\\
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2018/06/12/神经网络中的正则化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Guoxing Lan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Guoxing Lan">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="2018/06/12/神经网络中的正则化/" itemprop="url">神经网络中的正则化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-12T21:39:58+08:00">
-                2018-06-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Tutorials of Deep Learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Adding regularization will often help To prevent overfitting problem (high variance problem ).  </p>
-<h2 id="1-Logistic-regression"><a href="#1-Logistic-regression" class="headerlink" title="1. Logistic regression"></a>1. Logistic regression</h2><p>回忆一下训练时的优化目标函数</p>
-<script type="math/tex; mode=display">
-\min \limits_{w,b}J\left(w,b\right), \ \ \ \ w\in\mathbb{R}^{n_x},b\in\mathbb{R} \tag{1-1}</script><p>其中</p>
-<script type="math/tex; mode=display">
-J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)\\  \tag{1-2}</script><p>$L_2 \ \ regularization $ (most commonly used)：  </p>
-<script type="math/tex; mode=display">J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{2m}\left\lVert w \right\rVert_2^2\\  \tag{1-3}</script><p>其中</p>
-<script type="math/tex; mode=display">\left\lVert w \right\rVert_2^2=\sum_{j=1}^{n_x}w_j^2=w^Tw\tag{1-4}</script><p>Why do we regularize just the parameter w? Because w Is usually a high dimensional parameter vector while b is A scalar. Almost all The parameters are in w rather than b.<br>$L_1 \ \ regularization $  </p>
-<script type="math/tex; mode=display">
-J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{m}\left\lvert w \right\rvert_1\tag{1-5}</script><p>其中</p>
-<script type="math/tex; mode=display">
-\left\lvert w \right\rvert_1=\sum_j^{n_x}\left\lvert w_j \right\rvert \tag{1-6}</script><p>w will end up being sparse. In other words the w vector will have a lot of zeros in it. This can help with compressing the model a little.  </p>
-<h2 id="2-Neural-network-“Frobenius-norm”"><a href="#2-Neural-network-“Frobenius-norm”" class="headerlink" title="2. Neural network “Frobenius norm”"></a>2. Neural network “Frobenius norm”</h2><script type="math/tex; mode=display">J\left(w^{[1]},b^{[1]},\cdots,w^{[L]},b^{[L]}\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{2m}\sum_{l=1}^{L}{\left\lVert w \right\rVert_2^2 }\tag{2-1}</script><p>其中</p>
-<script type="math/tex; mode=display">
-\left\lVert w^{[l]} \right\rVert_F^2=\sum_i^{n^{[l-1]}}\sum_j^{n^{[l]}}\left(w_{ij}\right)^2  \tag{2-2}</script><p>$L_2$ regulation is also called <strong>Weight decay</strong>:  </p>
-<script type="math/tex; mode=display">
-\begin{align*} dw^{[l]}&=\left(from\ backprop\right)+\frac{\lambda}{m}w^{[l]}\\  w^{l}:&=w^{[l]}-\alpha dw^{[l]}\\  &=\left(1-\frac{\alpha\lambda}{m}\right)w^{[l]}-\alpha(from\ backprop)\\
-\tag{2-3}
-\end{align*}</script><p>能够防止权重$w$过大，从而避免过拟合</p>
-<h2 id="3-inverted-dropout"><a href="#3-inverted-dropout" class="headerlink" title="3. inverted dropout"></a>3. inverted dropout</h2><p>对于不同的训练样本都可以随机消除一部分结点<br><strong>反向随机失活</strong>（前向和后向都需要dropout）：</p>
-<script type="math/tex; mode=display">
-\begin{align*}  d^3&=np.random.rand(a_3.shape[0],a_3.shape[1]) < keep.prob\\  a^3&=np.multiply(a_3,d_3)\ \ \ \#a3*d3, element\ wise\ multiplication\\  a^3/&=keep.prob\ \ \ \#in\ order\ to\ not\ reduce\ the\ expected\ value\ of\ a^3\ \ inverted\ dropout\\  z^{[4]}&=w^{[4]}a^{[3]}+b^{[4]}\\  z^{[4]}/&=keep.prob\\
-\tag{3-1}
-\end{align*}</script><p>this inverted dropout technique by dividing by the keep.prob, it ensures that the expected value of a3 remains the same. This makes test time easier because you have less of a scaling problem.<br><strong>测试时不需要使用drop out</strong></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2423,7 +2422,7 @@ J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\f
               
                 <a href="https://lankuohsing.github.io/blog/archives">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2487,7 +2486,7 @@ J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\f
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

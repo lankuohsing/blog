@@ -262,6 +262,171 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog../../2018/06/12/神经网络中的正则化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guoxing Lan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="../../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Guoxing Lan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="../../2018/06/12/神经网络中的正则化/" itemprop="url">神经网络中的正则化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-12T21:39:58+08:00">
+                2018-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Deep Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Adding regularization will often help To prevent overfitting problem (high variance problem ).  </p>
+<h2 id="1-Logistic-regression"><a href="#1-Logistic-regression" class="headerlink" title="1. Logistic regression"></a>1. Logistic regression</h2><p>回忆一下训练时的优化目标函数</p>
+<script type="math/tex; mode=display">
+\min \limits_{w,b}J\left(w,b\right), \ \ \ \ w\in\mathbb{R}^{n_x},b\in\mathbb{R} \tag{1-1}</script><p>其中</p>
+<script type="math/tex; mode=display">
+J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)\\  \tag{1-2}</script><p>$L_2 \ \ regularization $ (most commonly used)：  </p>
+<script type="math/tex; mode=display">J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{2m}\left\lVert w \right\rVert_2^2\\  \tag{1-3}</script><p>其中</p>
+<script type="math/tex; mode=display">\left\lVert w \right\rVert_2^2=\sum_{j=1}^{n_x}w_j^2=w^Tw\tag{1-4}</script><p>Why do we regularize just the parameter w? Because w Is usually a high dimensional parameter vector while b is A scalar. Almost all The parameters are in w rather than b.<br>$L_1 \ \ regularization $  </p>
+<script type="math/tex; mode=display">
+J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{m}\left\lvert w \right\rvert_1\tag{1-5}</script><p>其中</p>
+<script type="math/tex; mode=display">
+\left\lvert w \right\rvert_1=\sum_j^{n_x}\left\lvert w_j \right\rvert \tag{1-6}</script><p>w will end up being sparse. In other words the w vector will have a lot of zeros in it. This can help with compressing the model a little.  </p>
+<h2 id="2-Neural-network-“Frobenius-norm”"><a href="#2-Neural-network-“Frobenius-norm”" class="headerlink" title="2. Neural network “Frobenius norm”"></a>2. Neural network “Frobenius norm”</h2><script type="math/tex; mode=display">J\left(w^{[1]},b^{[1]},\cdots,w^{[L]},b^{[L]}\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat y^{(i)},y^{(i)}\right)+\frac{\lambda}{2m}\sum_{l=1}^{L}{\left\lVert w \right\rVert_2^2 }\tag{2-1}</script><p>其中</p>
+<script type="math/tex; mode=display">
+\left\lVert w^{[l]} \right\rVert_F^2=\sum_i^{n^{[l-1]}}\sum_j^{n^{[l]}}\left(w_{ij}\right)^2  \tag{2-2}</script><p>$L_2$ regulation is also called <strong>Weight decay</strong>:  </p>
+<script type="math/tex; mode=display">
+\begin{align*} dw^{[l]}&=\left(from\ backprop\right)+\frac{\lambda}{m}w^{[l]}\\  w^{l}:&=w^{[l]}-\alpha dw^{[l]}\\  &=\left(1-\frac{\alpha\lambda}{m}\right)w^{[l]}-\alpha(from\ backprop)\\
+\tag{2-3}
+\end{align*}</script><p>能够防止权重$w$过大，从而避免过拟合</p>
+<h2 id="3-inverted-dropout"><a href="#3-inverted-dropout" class="headerlink" title="3. inverted dropout"></a>3. inverted dropout</h2><p>对于不同的训练样本都可以随机消除一部分结点<br><strong>反向随机失活</strong>（前向和后向都需要dropout）：</p>
+<script type="math/tex; mode=display">
+\begin{align*}  d^3&=np.random.rand(a_3.shape[0],a_3.shape[1]) < keep.prob\\  a^3&=np.multiply(a_3,d_3)\ \ \ \#a3*d3, element\ wise\ multiplication\\  a^3/&=keep.prob\ \ \ \#in\ order\ to\ not\ reduce\ the\ expected\ value\ of\ a^3\ \ inverted\ dropout\\  z^{[4]}&=w^{[4]}a^{[3]}+b^{[4]}\\  z^{[4]}/&=keep.prob\\
+\tag{3-1}
+\end{align*}</script><p>this inverted dropout technique by dividing by the keep.prob, it ensures that the expected value of a3 remains the same. This makes test time easier because you have less of a scaling problem.<br><strong>测试时不需要使用drop out</strong></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog../../2018/06/12/神经网络中的激活函数/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -850,7 +1015,7 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</scr
               
                 <a href="https://lankuohsing.github.io/blog/archives">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -914,7 +1079,7 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</scr
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
