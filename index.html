@@ -598,7 +598,7 @@ x_2\\
 w_{11}x_1+w_{12}x_2\\
 w_{21}x_1+w_{22}x_2\\
 \end{bmatrix}\tag{2-6}</script><script type="math/tex; mode=display">
-\begin{aligned}
+\begin{align*}
 s&=\begin{bmatrix}  
 s_1\\
 s_2\\
@@ -615,8 +615,8 @@ z_2\\
 u_{11}(w_{11}x_1+w_{12}x_2)+u_{12}(w_{21}x_1+w_{22}x_2)\\
 u_{21}(w_{11}x_1+w_{12}x_2)+u_{22}(w_{21}x_1+w_{22}x_2)\\
 \end{bmatrix}\tag{2-7}
-\end{aligned}</script><script type="math/tex; mode=display">
-\begin{aligned}
+\end{align*}</script><script type="math/tex; mode=display">
+\begin{align*}
 y&=
 [v_1,v_2]\begin{bmatrix}  
 s_1\\
@@ -626,9 +626,9 @@ s_2\\
 &+(v_1u_{11}x_2+v_2u_{21}x_2)w_{12}\\
 &+(v_1u_{12}x_1+v_2u_{22}x_1)w_{21}\\
 &+(v_1u_{12}x_2+v_2u_{22}x_2)w_{22}
-\end{aligned}\tag{2-8}</script><p>损失函数为$L=(y-\hat y)^2/2$<br>则损失函数关于权重参数$w_1$的导数为：</p>
+\end{align*}\tag{2-8}</script><p>损失函数为$L=(y-\hat y)^2/2$<br>则损失函数关于权重参数$w_1$的导数为：</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
+\begin{align*}
 \frac{dL}{dw_1}&=(y-\hat y)\frac{dy}{dx}\\
 &=(y-\hat y)\frac{ds^T}{dx}\frac{dy}{ds}\\
 &=(y-\hat y)\frac{dz^T}{dx}\frac{ds^T}{dz}\frac{dy}{ds}\\
@@ -648,7 +648,7 @@ v_2
 v_1x_1u_{11}+v_2x_1u_{21}\\
 v_1x_2u_{11}+v_2x_2u_{21}
 \end{bmatrix}\\
-\end{aligned}\tag{2-9}</script><p>可以验证$(2-9)$和前面$(2-8)$中直接求得的导数值是一样的。<br>这里发现了一个小彩蛋：<br>假设在pytorch的底层实现中，如果从左往右计算，则需要进行进行大量的矩阵乘法。如果有n个$2\times 2$的方阵相乘，那么需要进行$4\times (n-1)$次内积。如果从又往左计算，只需要进行$2\times n$次内积。</p>
+\end{align*}\tag{2-9}</script><p>可以验证$(2-9)$和前面$(2-8)$中直接求得的导数值是一样的。<br>这里发现了一个小彩蛋：<br>假设在pytorch的底层实现中，如果从左往右计算，则需要进行进行大量的矩阵乘法。如果有n个$2\times 2$的方阵相乘，那么需要进行$4\times (n-1)$次内积。如果从又往左计算，只需要进行$2\times n$次内积。</p>
 
           
         
