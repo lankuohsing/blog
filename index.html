@@ -262,6 +262,170 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2021/02/15/神经网络量化压缩笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guoxing Lan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Guoxing Lan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="2021/02/15/神经网络量化压缩笔记/" itemprop="url">神经网络量化压缩笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-02-15T22:32:00+08:00">
+                2021-02-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Deep Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>@[toc]<br><a href="https://jackwish.net/2019/neural-network-quantization-introduction-chn.html" target="_blank" rel="noopener">https://jackwish.net/2019/neural-network-quantization-introduction-chn.html</a><br><a href="https://zhuanlan.zhihu.com/p/149659607" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/149659607</a></p>
+<h1 id="0-前言"><a href="#0-前言" class="headerlink" title="0. 前言"></a>0. 前言</h1><p>近年来，基于神经网络的深度学习在图像处理、自然语言处理、语音识别等领域取得了显著效果。一般情况下，一个神经网络模型越大（一般指参数量越大），模型的拟合能力更强，准确度越高。这将进一步导致运行模型时需要的内存（包内存容量和内存带宽）、磁盘存储消耗增大，推理时延和功耗也会变大，从而限制模型的工业化落地。<br>为了解决这个问题，可以从两方面来下手：</p>
+<ul>
+<li>从原理上设计更高效地网络结构，即参数量更少的模型，并保持精度下降可以接受。</li>
+<li>不改变原有模型结构，而是对已有的模型进行参数压缩。</li>
+</ul>
+<h1 id="1-量化压缩方法简介"><a href="#1-量化压缩方法简介" class="headerlink" title="1. 量化压缩方法简介"></a>1. 量化压缩方法简介</h1><p>量化压缩就是上一章节中的第二种解决方案，即对已有的模型进行参数压缩。所谓量化，就是用精度更低的类型来存储权重参数。例如，通常情况下模型默认以float32类型变量来存储权重，低精度就是以float16，int8甚至更低精度的类型来存储。最极端的情况下，可以采用一个bit来存储，也即二值神经网络。工业界中常采用的是int8类型。<br>在训练过程中，一般还是全精度（float32）类型，到了推理阶段，则有两种方案：一种是所有算子都支持量化后的类型的数据运算（以int8为例），因此模型的全过程中数据流都是int8；另一种是数据流仍是float32，每个算子前后分别有quantize层和dequantize层用以将float32转换为int8或者反过来。</p>
+<h1 id="2-量化压缩原理"><a href="#2-量化压缩原理" class="headerlink" title="2. 量化压缩原理"></a>2. 量化压缩原理</h1><h2 id="2-1-定点数与浮点数"><a href="#2-1-定点数与浮点数" class="headerlink" title="2.1. 定点数与浮点数"></a>2.1. 定点数与浮点数</h2><p>在计算机的存储中，int属于定点数，float和double属于浮点数。定点数与浮点数的介绍见<a href="https://www.jianshu.com/p/d39fb5792ac8" target="_blank" rel="noopener">https://www.jianshu.com/p/d39fb5792ac8</a><br>浮点数的存储与转换方式详解见<a href="https://www.cnblogs.com/lan0725/p/11515584.html" target="_blank" rel="noopener">https://www.cnblogs.com/lan0725/p/11515584.html</a><br>int8的值域为[-128,127],取值个数为$2^{8};$float32的值域为$[(2-2^{-23})\times 2^{127},(2^{-23}-2)\times 2^{127}]$,取值个数约为$2^{32}$。int8在整个值域上的精度分布是均匀的，而float32不是均匀的,0附近的精度越高，越往值域区间两边精度越低。这是因为，在给定指数时，float32在此指数对应的区间内数值个数是一定的，如下图所示（图片来源<a href="https://jackwish.net/2019/neural-network-quantization-introduction-chn.html" target="_blank" rel="noopener">https://jackwish.net/2019/neural-network-quantization-introduction-chn.html</a>）<br><img src="https://img-blog.csdnimg.cn/20210215223213448.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><center>图2.1 float类型的数值个数分布</center></p>
+<h2 id="2-2-将浮点数量化为定点数"><a href="#2-2-将浮点数量化为定点数" class="headerlink" title="2.2. 将浮点数量化为定点数"></a>2.2. 将浮点数量化为定点数</h2><p>量化压缩的过程本质上是一个一个区间放缩到另一个区间的过程，这里仅讨论线性放缩:</p>
+<script type="math/tex; mode=display">
+x_{quantized}=round(x_{float}/x_{scale}+x_{zero\_point})\tag{2-1}</script><p>round表示取整<br>首先确定放缩因子：</p>
+<script type="math/tex; mode=display">
+x_{scale}=\frac{x_{float}^{max}-x_{float}^{min}}{x_{quantized}^{max}-x_{quantized}^{min}}\tag{2-2}</script><p>而</p>
+<script type="math/tex; mode=display">
+(x_{quantized}^{max}-x_{quantized})\times x_{scale}=(x_{float}^{max}-x_{float})\tag{2-3}</script><p>所以：</p>
+<script type="math/tex; mode=display">
+x_{quantized}=x_{float}/x_{scale}+x_{quantized}^{max}-x_{float}^{max}/x_{scale}\tag{2-4}</script><p>也即：</p>
+<script type="math/tex; mode=display">
+x_{zero\_point}=x_{quantized}^{max}-x_{float}^{max}/x_{scale}\tag{2-5}</script><p>在工程中，int8可能会取[0,255] (无符号整数)</p>
+<p>有时float类型的极大值和极小值会太极端，从而使得放缩因子太大，导致最后量化后的结果太集中于某一个小的子区间，浪费了其他部分的值域空间。这时，可以读float类型的极大值极小值进行clip。例如，认为设为-1.0和1.0.</p>
+<p>这里留一个小彩蛋，为什么（2-3)里面不用$x-x^{min}$来计算缩放因子，而是采用$x-x^{max}$呢？虽然从数学上是等价的，但是工程实现上的效果会有点不一样</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2021/02/03/TensorFlow-PyTorch中张量-Tensor-的底层存储方式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2265,171 +2429,6 @@ J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2018/06/25/创建机器学习项目的注意事项/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Guoxing Lan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Guoxing Lan">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="2018/06/25/创建机器学习项目的注意事项/" itemprop="url">创建机器学习项目的注意事项</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-25T14:48:06+08:00">
-                2018-06-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Tutorials of Deep Learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="1-Orthogonalization-正交化"><a href="#1-Orthogonalization-正交化" class="headerlink" title="1. Orthogonalization(正交化)"></a>1. Orthogonalization(正交化)</h2><p>正交化的思想就是，每个输入单独控制一个属性，不要让一个输入同时控制多个属性。不同属性的控制是独立的，这样便于调试。<br>如果模型在training set上表现好，在dev set上表现不好，则可以正则化；<br>如果在dev set上表现好，在test set上表现不好，则可以增大dev set的规模；<br>如果在test set上表现好，在真实世界表现不好，则可以改变dev set或者cost function。<br>在神经网络中一般不用early stopping</p>
-<h2 id="2-使用单一的量化评价指标"><a href="#2-使用单一的量化评价指标" class="headerlink" title="2. 使用单一的量化评价指标"></a>2. 使用单一的量化评价指标</h2><h3 id="2-1-状态与决策"><a href="#2-1-状态与决策" class="headerlink" title="2.1. 状态与决策"></a>2.1. 状态与决策</h3><ul>
-<li>True: 预测正确的样本数  </li>
-<li>False: 预测错误的样本数  </li>
-<li>Positive: 预测为正样本的样本数  </li>
-<li>Negative: 预测为负样本的样本数  <h3 id="2-2-状态与决策的组合"><a href="#2-2-状态与决策的组合" class="headerlink" title="2.2. 状态与决策的组合"></a>2.2. 状态与决策的组合</h3></li>
-<li>TP: 将正样本预测为正样本的样本数 （真阳性）  </li>
-<li>FP: 将负样本预测为正样本的样本数 （假阳性）  </li>
-<li>TN: 将负样本预测为负样本的样本数 （真阴性)  </li>
-<li>FN: 将负样本预测为负样本的样本数 （假阳性）<h3 id="2-3-评价指标"><a href="#2-3-评价指标" class="headerlink" title="2.3. 评价指标"></a>2.3. 评价指标</h3></li>
-<li>Precision（精确率）：P=TP/(TP+FP)，反映了被分类器判定的正例中，真正的正例样本的比重；</li>
-<li>Accuracy（准确率）：A=(TP+TN)/(P+N)=(TP+TN)/(TP+FN+FP+TN)，反映了分类器对整个样本集的判定能力——能将正的判定为正，负的判定为负的能力；</li>
-<li>Recall（召回率）：R=TP(TP+FN)=1-FN/T，反映了呗正确判定的正例占总的正例的比重；<br>在实际中， 一般同时用Precision和Recall来综合评价一个分类器，我们希望分类器的这两个指标都很高。<br>采用$F_1$ score来衡量分类器的性能，可以兼顾Precision和Recall。它是Precision和Recall的调和平均数：<script type="math/tex; mode=display">
-\begin{align*}
-F_1&=\frac{2}{\frac{1}{P}+\frac{1}{R}}\\
-&=2\cdot \frac{P\cdot R}{P+R}\\
-\tag{2-1}
-\end{align*}</script>更为一般地，定义$F_{\beta}$ score：<script type="math/tex; mode=display">
-F_{\beta}=(1+\beta^2)\cdot \frac{P\cdot R}{(\beta^2\cdot P)+R} \tag{2-2}</script>一个好的验证机和单一量化评估指标可以提高迭代的效率<br>如果有多个指标（例如准确率和运行时间），选择其中一个加以优化，并使其他指标满足一个阈值，有时候是一个合理的策略。<h3 id="2-3-关于train-dec-test-set"><a href="#2-3-关于train-dec-test-set" class="headerlink" title="2.3. 关于train/dec/test set"></a>2.3. 关于train/dec/test set</h3>三者的分布应该一样，并且都应该对未来的实际数据的分布基本一样。<br>关于三者的尺寸，在传统的机器学习时代，尤其是数据规模不大（万级以下的时候，如果只有train和test，则70%：30%比较合适；如果三者都有，则60%：20%：20%比较合适。在现代机器学习中，数据规模很大，一般都是百万级，那么98%：1%：1%比较合适。<h3 id="2-4-与人类表现比较"><a href="#2-4-与人类表现比较" class="headerlink" title="2.4. 与人类表现比较"></a>2.4. 与人类表现比较</h3>当训练集准确率与人类表现相差比较大时（高偏差），应该优先考虑消除偏差；当偏差小，但是测试集与训练集准确率相差大（高方差）时，应该优先考虑消除高方差。<br>贝叶斯误差是理论上的最小误差，人类表的误差略大于贝叶斯误差，一把可以用人类误差来估计贝叶斯误差。除非过拟合，否则机器学习模型在训练集上的误差不会小于人类误差（贝叶斯误差）<h2 id="3-错误分析"><a href="#3-错误分析" class="headerlink" title="3. 错误分析"></a>3. 错误分析</h2>在实际应用中，人工对分类错误的样本进行统计（记录错误的类别），然后制定相应的改进策略，能够提高模型迭代效率。<br>训练集比较大时，有少量标签错误的样本影响不大，因为深度学习算法对随机错误很稳健，但是对系统误差不那么稳健；在开发集（dev set）中，如果由于标签错误导致的错误率占比较大，则应该考虑去纠正标签错误。<br>dev set和test set必须严格服从相同的分布，而train set的分布可以有稍微的不同。<br>如果你要构建机器学习应用系统，一般可以先建立一个简单的系统，然后采取前面提到的各种方法进行迭代，除非是你经验特别丰富的领域或者学术界有很多参考文献的领域（这个时候你可以直接建立一个复杂的系统）<h2 id="4-train-set和dev-test-set不匹配的问题"><a href="#4-train-set和dev-test-set不匹配的问题" class="headerlink" title="4. train set和dev/test set不匹配的问题"></a>4. train set和dev/test set不匹配的问题</h2>如果你获得了两个分布不同的数据集，一种看似可行的方案是可以把它们混合后随即排列，再用来进行train/dev/test划分。这种方案可能会出现问题，例如当我们关心的那个分布的数据集（记为A，相应地不太关心的数据集记为B）比较小时，会出现dev set中A的比例很小的情况。而dev set是用来选择、迭代模型的，应该对我们关心的数据集更加侧重。因此可以考虑，train set中包含所有的B以及少量的A，而dev set和test set包含剩余的A。<br>当train set与dev set的分布不一样，而两者的错误率相差很大时，不能贸然地下结论说模型的variance很大。此时可以将train set进一步划分为train set和train-dev set，这两个set分布一样，可以用来检验模型的泛化能力。<h2 id="5-从多个任务中学习"><a href="#5-从多个任务中学习" class="headerlink" title="5. 从多个任务中学习"></a>5. 从多个任务中学习</h2>如果你训练好了一个识别猫的网络，想用这个网络进一步得到识别医学影像的网络，可以用少量医学影像的数据来训练该网络的最后一层和输出层，或者用很多医学影像的数据训练网络的所有参数，此时训练识别猫的阶段成为预训练（pre-training），更新网络参数的阶段叫做微调（fine tuning）。<br>迁移学习（transfer learning）可以把一个拥有大量数据的问题模型，迁移到一个先对之下仅有很少数据的问题模型中。<br>迁移学习是有先后顺序的，而多任务学习（multi-task learning）在一开始就尝试让一个神经网络同时做几件事。比如在一张图片中识别是否有车、行人、红绿灯、交通标示牌等。这要比训练多个单独的网络（每个网络解决一个问题）的效果要好。损失函数的形式：<script type="math/tex; mode=display">
-\begin{align*}
-\frac{1}{m}\sum_{i=1}^m\sum_{j=1}^4L(\hat y_j^{(i)},y_j^{(i)})\\
-\tag{5-1}
-\end{align*}</script>而且你在标注图片的时候，哪怕图片里面只标了部分任务的标签,多任务学习也可以正常进行下去，因为$(5-1)$只对0或者1的标签进行统计，没有标记的任务可以不统计。<br>目标检测就是多任务学习的一个例子。总体而言，多任务学习比迁移学习的场景要少一些。<h2 id="6-端到端（end-to-end-学习"><a href="#6-端到端（end-to-end-学习" class="headerlink" title="6. 端到端（end-to-end)学习"></a>6. 端到端（end-to-end)学习</h2>端到端学习就是省略了传统的多阶段过程，但是需要大量的数据。如果只有中等的数据，可以考虑折中一下，分阶段进行。</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2484,7 +2483,7 @@ F_{\beta}=(1+\beta^2)\cdot \frac{P\cdot R}{(\beta^2\cdot P)+R} \tag{2-2}</script
               
                 <a href="https://lankuohsing.github.io/blog/archives">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

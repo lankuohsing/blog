@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Deep Learning,Neural Networks," />
 
 
 
@@ -79,17 +79,20 @@
 
 
 
-<meta name="description" content="Hi! I am Guoxing Lan(兰国兴)! I’m a master student majoring in Control Science and Engineering in Tsinghua University, Beijing, China. My interests are in theories and applications of Machine Learning an">
+<meta name="description" content="@[toc]https://jackwish.net/2019/neural-network-quantization-introduction-chn.htmlhttps://zhuanlan.zhihu.com/p/149659607 0. 前言近年来，基于神经网络的深度学习在图像处理、自然语言处理、语音识别等领域取得了显著效果。一般情况下，一个神经网络模型越大（一般指参数量越大），模型的拟">
+<meta name="keywords" content="Deep Learning,Neural Networks">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://lankuohsing.github.io/blog/2018/01/27/Hello-World/index.html">
+<meta property="og:title" content="神经网络量化压缩笔记">
+<meta property="og:url" content="https://lankuohsing.github.io/blog/2021/02/15/神经网络量化压缩笔记/index.html">
 <meta property="og:site_name" content="Guoxing Lan">
-<meta property="og:description" content="Hi! I am Guoxing Lan(兰国兴)! I’m a master student majoring in Control Science and Engineering in Tsinghua University, Beijing, China. My interests are in theories and applications of Machine Learning an">
+<meta property="og:description" content="@[toc]https://jackwish.net/2019/neural-network-quantization-introduction-chn.htmlhttps://zhuanlan.zhihu.com/p/149659607 0. 前言近年来，基于神经网络的深度学习在图像处理、自然语言处理、语音识别等领域取得了显著效果。一般情况下，一个神经网络模型越大（一般指参数量越大），模型的拟">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-05-31T15:51:51.858Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210215223213448.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:updated_time" content="2021-02-15T14:32:21.177Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Hi! I am Guoxing Lan(兰国兴)! I’m a master student majoring in Control Science and Engineering in Tsinghua University, Beijing, China. My interests are in theories and applications of Machine Learning an">
+<meta name="twitter:title" content="神经网络量化压缩笔记">
+<meta name="twitter:description" content="@[toc]https://jackwish.net/2019/neural-network-quantization-introduction-chn.htmlhttps://zhuanlan.zhihu.com/p/149659607 0. 前言近年来，基于神经网络的深度学习在图像处理、自然语言处理、语音识别等领域取得了显著效果。一般情况下，一个神经网络模型越大（一般指参数量越大），模型的拟">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20210215223213448.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center">
 
 
 
@@ -119,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://lankuohsing.github.io/blog/2018/01/27/Hello-World/"/>
+  <link rel="canonical" href="https://lankuohsing.github.io/blog/2021/02/15/神经网络量化压缩笔记/"/>
 
 
 
 
 
-  <title>Hello World | Guoxing Lan</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>神经网络量化压缩笔记 | Guoxing Lan</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -279,7 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">神经网络量化压缩笔记</h1>
         
 
         <div class="post-meta">
@@ -291,8 +294,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-27T15:11:17+08:00">
-                2018-01-27
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-02-15T22:32:00+08:00">
+                2021-02-15
               </time>
             
 
@@ -314,8 +317,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../../../categories/About-Me/" itemprop="url" rel="index">
-                    <span itemprop="name">About Me</span>
+                  <a href="../../../../categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Deep Learning</span>
                   </a>
                 </span>
 
@@ -356,7 +359,29 @@
       
 
       
-        <p>Hi! I am Guoxing Lan(兰国兴)! I’m a master student majoring in Control Science and Engineering in Tsinghua University, Beijing, China. My interests are in theories and applications of Machine Learning and Deep Learning. My research work during my Master’s Program is focused on Data-driven Fault Diagnosis and Remaining Useful Estimation of Aircraft Engine. I am going to record and share my journey of studying Artificial Intelligence here. You are also welcome to visit my other Blog on CSDN—<a href="https://blog.csdn.net/thuchina" target="_blank" rel="noopener"><strong>lankuohsing的博客</strong></a> to find things not only restrict to AI. Click <a href="https://github.com/lankuohsing" target="_blank" rel="noopener"><strong>here</strong></a> to visit my GitHub! I hope we can enjoy the joy of sharing knowledge !</p>
+        <hr>
+<p>@[toc]<br><a href="https://jackwish.net/2019/neural-network-quantization-introduction-chn.html" target="_blank" rel="noopener">https://jackwish.net/2019/neural-network-quantization-introduction-chn.html</a><br><a href="https://zhuanlan.zhihu.com/p/149659607" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/149659607</a></p>
+<h1 id="0-前言"><a href="#0-前言" class="headerlink" title="0. 前言"></a>0. 前言</h1><p>近年来，基于神经网络的深度学习在图像处理、自然语言处理、语音识别等领域取得了显著效果。一般情况下，一个神经网络模型越大（一般指参数量越大），模型的拟合能力更强，准确度越高。这将进一步导致运行模型时需要的内存（包内存容量和内存带宽）、磁盘存储消耗增大，推理时延和功耗也会变大，从而限制模型的工业化落地。<br>为了解决这个问题，可以从两方面来下手：</p>
+<ul>
+<li>从原理上设计更高效地网络结构，即参数量更少的模型，并保持精度下降可以接受。</li>
+<li>不改变原有模型结构，而是对已有的模型进行参数压缩。</li>
+</ul>
+<h1 id="1-量化压缩方法简介"><a href="#1-量化压缩方法简介" class="headerlink" title="1. 量化压缩方法简介"></a>1. 量化压缩方法简介</h1><p>量化压缩就是上一章节中的第二种解决方案，即对已有的模型进行参数压缩。所谓量化，就是用精度更低的类型来存储权重参数。例如，通常情况下模型默认以float32类型变量来存储权重，低精度就是以float16，int8甚至更低精度的类型来存储。最极端的情况下，可以采用一个bit来存储，也即二值神经网络。工业界中常采用的是int8类型。<br>在训练过程中，一般还是全精度（float32）类型，到了推理阶段，则有两种方案：一种是所有算子都支持量化后的类型的数据运算（以int8为例），因此模型的全过程中数据流都是int8；另一种是数据流仍是float32，每个算子前后分别有quantize层和dequantize层用以将float32转换为int8或者反过来。</p>
+<h1 id="2-量化压缩原理"><a href="#2-量化压缩原理" class="headerlink" title="2. 量化压缩原理"></a>2. 量化压缩原理</h1><h2 id="2-1-定点数与浮点数"><a href="#2-1-定点数与浮点数" class="headerlink" title="2.1. 定点数与浮点数"></a>2.1. 定点数与浮点数</h2><p>在计算机的存储中，int属于定点数，float和double属于浮点数。定点数与浮点数的介绍见<a href="https://www.jianshu.com/p/d39fb5792ac8" target="_blank" rel="noopener">https://www.jianshu.com/p/d39fb5792ac8</a><br>浮点数的存储与转换方式详解见<a href="https://www.cnblogs.com/lan0725/p/11515584.html" target="_blank" rel="noopener">https://www.cnblogs.com/lan0725/p/11515584.html</a><br>int8的值域为[-128,127],取值个数为$2^{8};$float32的值域为$[(2-2^{-23})\times 2^{127},(2^{-23}-2)\times 2^{127}]$,取值个数约为$2^{32}$。int8在整个值域上的精度分布是均匀的，而float32不是均匀的,0附近的精度越高，越往值域区间两边精度越低。这是因为，在给定指数时，float32在此指数对应的区间内数值个数是一定的，如下图所示（图片来源<a href="https://jackwish.net/2019/neural-network-quantization-introduction-chn.html" target="_blank" rel="noopener">https://jackwish.net/2019/neural-network-quantization-introduction-chn.html</a>）<br><img src="https://img-blog.csdnimg.cn/20210215223213448.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><center>图2.1 float类型的数值个数分布</center></p>
+<h2 id="2-2-将浮点数量化为定点数"><a href="#2-2-将浮点数量化为定点数" class="headerlink" title="2.2. 将浮点数量化为定点数"></a>2.2. 将浮点数量化为定点数</h2><p>量化压缩的过程本质上是一个一个区间放缩到另一个区间的过程，这里仅讨论线性放缩:</p>
+<script type="math/tex; mode=display">
+x_{quantized}=round(x_{float}/x_{scale}+x_{zero\_point})\tag{2-1}</script><p>round表示取整<br>首先确定放缩因子：</p>
+<script type="math/tex; mode=display">
+x_{scale}=\frac{x_{float}^{max}-x_{float}^{min}}{x_{quantized}^{max}-x_{quantized}^{min}}\tag{2-2}</script><p>而</p>
+<script type="math/tex; mode=display">
+(x_{quantized}^{max}-x_{quantized})\times x_{scale}=(x_{float}^{max}-x_{float})\tag{2-3}</script><p>所以：</p>
+<script type="math/tex; mode=display">
+x_{quantized}=x_{float}/x_{scale}+x_{quantized}^{max}-x_{float}^{max}/x_{scale}\tag{2-4}</script><p>也即：</p>
+<script type="math/tex; mode=display">
+x_{zero\_point}=x_{quantized}^{max}-x_{float}^{max}/x_{scale}\tag{2-5}</script><p>在工程中，int8可能会取[0,255] (无符号整数)</p>
+<p>有时float类型的极大值和极小值会太极端，从而使得放缩因子太大，导致最后量化后的结果太集中于某一个小的子区间，浪费了其他部分的值域空间。这时，可以读float类型的极大值极小值进行clip。例如，认为设为-1.0和1.0.</p>
+<p>这里留一个小彩蛋，为什么（2-3)里面不用$x-x^{min}$来计算缩放因子，而是采用$x-x^{max}$呢？虽然从数学上是等价的，但是工程实现上的效果会有点不一样</p>
 
       
     </div>
@@ -372,6 +397,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="../../../../tags/Deep-Learning/" rel="tag"># Deep Learning</a>
+          
+            <a href="../../../../tags/Neural-Networks/" rel="tag"># Neural Networks</a>
+          
+        </div>
+      
 
       
       
@@ -381,15 +414,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="../../03/TensorFlow-PyTorch中张量-Tensor-的底层存储方式/" rel="next" title="TensorFlow/PyTorch中张量(Tensor)的底层存储方式">
+                <i class="fa fa-chevron-left"></i> TensorFlow/PyTorch中张量(Tensor)的底层存储方式
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="../../../06/05/从logistic回归到神经网络/" rel="prev" title="从logistic回归到神经网络">
-                从logistic回归到神经网络 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -441,8 +474,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -506,6 +548,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0-前言"><span class="nav-number">1.</span> <span class="nav-text">0. 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-量化压缩方法简介"><span class="nav-number">2.</span> <span class="nav-text">1. 量化压缩方法简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-量化压缩原理"><span class="nav-number">3.</span> <span class="nav-text">2. 量化压缩原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-定点数与浮点数"><span class="nav-number">3.1.</span> <span class="nav-text">2.1. 定点数与浮点数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-将浮点数量化为定点数"><span class="nav-number">3.2.</span> <span class="nav-text">2.2. 将浮点数量化为定点数</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -740,13 +798,33 @@
     var s = document.getElementsByTagName("script")[0];
     s.parentNode.insertBefore(bp, s);
 })();
-</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</script>
 
 
   
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
