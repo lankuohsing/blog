@@ -79,23 +79,18 @@
 
 
 
-<meta name="description" content="$tanh(z)=\frac{e^z-e^{-z}}{e^z+e^{-z}}$效果严格地比$sigmoid$函数好，因为该函数的对称中心在$(0,0)$，具有将数据归一化为0均值的效果。当然，二分类的输出层的激活函数还是一般用$sigmoid(z)$，因为$sigmod$函数能将输出值映射到$0\sim1$之间（概率值）$Relu(z)=max(0,z)$出现后，神经网络默认都用$Relu$函数（">
+<meta name="description" content="@[toc] 1. 梯度和Jacobian矩阵设$f(x)\in R^1$是关于向量$x\in R^n$的函数，则它关于$x$的导数定义为：  \frac{df(x)}{dx}:=\left[\frac{\partial f(x)}{\partial x_i}\right]\in R^{n}\tag{1-1}函数$f(x)\in R^1$关于向量$x\in R^n$的导数是一个列向量，称之为$f">
 <meta name="keywords" content="Deep Learning,Neural Networks">
 <meta property="og:type" content="article">
-<meta property="og:title" content="神经网络中的激活函数">
-<meta property="og:url" content="https://lankuohsing.github.io/blog/2018/06/12/神经网络中的激活函数/index.html">
+<meta property="og:title" content="pytorch教程之自动求导机制(AUTOGRAD)-从梯度和Jacobian矩阵讲起">
+<meta property="og:url" content="https://lankuohsing.github.io/blog/2021/01/13/pytorch教程之自动求导机制-AUTOGRAD-从梯度和Jacobian矩阵讲起/index.html">
 <meta property="og:site_name" content="Guoxing Lan">
-<meta property="og:description" content="$tanh(z)=\frac{e^z-e^{-z}}{e^z+e^{-z}}$效果严格地比$sigmoid$函数好，因为该函数的对称中心在$(0,0)$，具有将数据归一化为0均值的效果。当然，二分类的输出层的激活函数还是一般用$sigmoid(z)$，因为$sigmod$函数能将输出值映射到$0\sim1$之间（概率值）$Relu(z)=max(0,z)$出现后，神经网络默认都用$Relu$函数（">
+<meta property="og:description" content="@[toc] 1. 梯度和Jacobian矩阵设$f(x)\in R^1$是关于向量$x\in R^n$的函数，则它关于$x$的导数定义为：  \frac{df(x)}{dx}:=\left[\frac{\partial f(x)}{\partial x_i}\right]\in R^{n}\tag{1-1}函数$f(x)\in R^1$关于向量$x\in R^n$的导数是一个列向量，称之为$f">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/sigmoid.png">
-<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/tanh.png">
-<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/ReLU.png">
-<meta property="og:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/Leaky-ReLU.png">
-<meta property="og:updated_time" content="2018-06-12T13:48:59.830Z">
+<meta property="og:updated_time" content="2021-02-15T13:44:22.310Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="神经网络中的激活函数">
-<meta name="twitter:description" content="$tanh(z)=\frac{e^z-e^{-z}}{e^z+e^{-z}}$效果严格地比$sigmoid$函数好，因为该函数的对称中心在$(0,0)$，具有将数据归一化为0均值的效果。当然，二分类的输出层的激活函数还是一般用$sigmoid(z)$，因为$sigmod$函数能将输出值映射到$0\sim1$之间（概率值）$Relu(z)=max(0,z)$出现后，神经网络默认都用$Relu$函数（">
-<meta name="twitter:image" content="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/sigmoid.png">
+<meta name="twitter:title" content="pytorch教程之自动求导机制(AUTOGRAD)-从梯度和Jacobian矩阵讲起">
+<meta name="twitter:description" content="@[toc] 1. 梯度和Jacobian矩阵设$f(x)\in R^1$是关于向量$x\in R^n$的函数，则它关于$x$的导数定义为：  \frac{df(x)}{dx}:=\left[\frac{\partial f(x)}{\partial x_i}\right]\in R^{n}\tag{1-1}函数$f(x)\in R^1$关于向量$x\in R^n$的导数是一个列向量，称之为$f">
 
 
 
@@ -125,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://lankuohsing.github.io/blog/2018/06/12/神经网络中的激活函数/"/>
+  <link rel="canonical" href="https://lankuohsing.github.io/blog/2021/01/13/pytorch教程之自动求导机制-AUTOGRAD-从梯度和Jacobian矩阵讲起/"/>
 
 
 
 
 
-  <title>神经网络中的激活函数 | Guoxing Lan</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>pytorch教程之自动求导机制(AUTOGRAD)-从梯度和Jacobian矩阵讲起 | Guoxing Lan</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -285,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">神经网络中的激活函数</h1>
+          <h1 class="post-title" itemprop="name headline">pytorch教程之自动求导机制(AUTOGRAD)-从梯度和Jacobian矩阵讲起</h1>
         
 
         <div class="post-meta">
@@ -297,8 +292,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-12T21:37:51+08:00">
-                2018-06-12
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-01-13T23:48:46+08:00">
+                2021-01-13
               </time>
             
 
@@ -362,28 +357,136 @@
       
 
       
-        <p>$tanh(z)=\frac{e^z-e^{-z}}{e^z+e^{-z}}$效果严格地比$sigmoid$函数好，因为该函数的对称中心在$(0,0)$，具有将数据归一化为0均值的效果。当然，二分类的输出层的激活函数还是一般用$sigmoid(z)$，因为$sigmod$函数能将输出值映射到$0\sim1$之间（概率值）<br>$Relu(z)=max(0,z)$出现后，神经网络默认都用$Relu$函数（rectified linear）来作为激活函数。此时一般默认$z&gt;0$<br>$leaky(z)=max(0.01z,z)$可以避免$z&lt;0$时斜率为零的情况  输出层有时也用线性激活函数（房价预测）  </p>
-<h2 id="1-Sigmoid-activation-function"><a href="#1-Sigmoid-activation-function" class="headerlink" title="1. Sigmoid activation function"></a>1. Sigmoid activation function</h2><p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/sigmoid.png"></center></p>
-<p><center>图1.1 激活函数-sigmoid</center></p>
+        <hr>
+<p>@[toc]</p>
+<h1 id="1-梯度和Jacobian矩阵"><a href="#1-梯度和Jacobian矩阵" class="headerlink" title="1. 梯度和Jacobian矩阵"></a>1. 梯度和Jacobian矩阵</h1><p>设$f(x)\in R^1$是关于向量$x\in R^n$的函数，则它关于$x$的导数定义为：</p>
 <script type="math/tex; mode=display">
-\begin{align*}  a&=g(z) \\  &=\frac{1}{1+e^{-z}}\\  \tag{1-1}  \end{align*}</script><script type="math/tex; mode=display">
-\begin{align*}  g'(z)&=\frac{d}{dz}g(z)\\  &=\frac{e^{-z}}{1+e^{-z}}\\  &=\frac{1}{1+e^{-z}}\left(1-\frac{1}{1+e^{-z}}\right)\\  &=g(z)\left(1-g(z)\right)\\  &=a(1-a)\\  \tag{1-2}  \end{align*}</script><h2 id="2-Tanh-activation-function"><a href="#2-Tanh-activation-function" class="headerlink" title="2. Tanh activation function"></a>2. Tanh activation function</h2><p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/tanh.png"></center></p>
-<p><center>图2.1 激活函数-tanh</center></p>
+\frac{df(x)}{dx}:=\left[\frac{\partial f(x)}{\partial x_i}\right]\in R^{n}\tag{1-1}</script><p>函数$f(x)\in R^1$关于向量$x\in R^n$的导数是一个列向量，称之为$f(x)$关于$x$的梯度。</p>
 <script type="math/tex; mode=display">
-\begin{align*}  
-a&=g(z) \\  &=\frac{e^{z}-e^{-z}}{e^{z}+e^{-z}}\\  \tag{2-1}  \end{align*}</script><script type="math/tex; mode=display">
-\begin{align*}  g'(z)&=\frac{d}{dz}g(z)\\  &=\frac{e^{-z}}{1+e^{-z}}\\  &=\frac{\left(e^{z}+e^{-z}\right)^2-\left(e^z-e^{-z}\right)^2}{\left(e^z+e^{-z}\right)^2}\\  &=1-\left(g(z)\right)^2\\  &=1-a^2\\  \tag{2-2}  \end{align*}</script><h2 id="3-ReLU-and-Leaky-ReLU"><a href="#3-ReLU-and-Leaky-ReLU" class="headerlink" title="3. ReLU and Leaky ReLU"></a>3. ReLU and Leaky ReLU</h2><p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/ReLU.png"></center></p>
-<p><center>图3.1 激活函数-ReLU</center><br><strong>ReLU:</strong>  </p>
+\frac{df(x)^T}{dx}:=\left(\frac{df(x)}{dx}\right)^T=\left[\frac{\partial f(x)}{\partial x_i}\right]^T\in R^{1\times n}\tag{1-2}</script><p>如果$f(x)\in R^M$是关于向量$x\in R^n$的函数向量，则$f(x)$关于$x$的导数定义为：</p>
 <script type="math/tex; mode=display">
-\begin{align*}  a&=g(z) \\  &=max(0,z)\\  \tag{3-1}  \end{align*}</script><script type="math/tex; mode=display">
-\begin{align*}  g'(z)&=\frac{d}{dz}g(z)\\  &=\left\{  \begin{aligned}  0\quad if\ z<0\\  1\quad if\ z\geq0  \end{aligned}  \right.  \tag{3-2}  \end{align*}</script><p><strong>Leaky ReLU:</strong>  </p>
-<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/Leaky-ReLU.png"></center></p>
-<p><center>图3.2 激活函数-Leaky ReLU</center></p>
+\frac{df(x)}{dx}:=\frac{df(x)}{dx^T}=\left[\frac{\partial f(x)}{\partial x_1},\frac{\partial f(x)}{\partial x_2},\cdots,\frac{\partial f(x)}{\partial x_n}\right]\in R^{m\times n}\tag{1-3}</script><p>称上述矩阵为Jacobian矩阵。<br>一些常用推论：</p>
+<ol>
+<li>假设$v,x\in R^n$:<script type="math/tex; mode=display">
+\frac{d}{dx}(v^Tx)=\frac{d}{dx}(x^Tv)=v\tag{1-4}</script></li>
+<li>假设$y\in R^1$,$z\in R^m$,$x\in R^n$,$z=g(x)$,y=f(z)：<script type="math/tex; mode=display">
+\frac{dy}{dx}=\left(\frac{dz}{dx}\right)^T\frac{dy}{dz}\tag{1-5}</script>可以从向量矩阵的维度适配上去理解和记忆，因为$\frac{dy}{dx}\in R^n$,$\frac{dy}{dz}\in R^m$,$\frac{dz}{dx}\in R^{m\times n}$，所以必须有上述的公式才能适配。</li>
+<li>假设$y\in R^k$,$z\in R^m$,$x\in R^1$,$z=g(x)$,y=f(z)：<script type="math/tex; mode=display">
+\frac{dy}{dx}=\frac{dy}{dz}\frac{dz}{dx}\tag{1-6}</script></li>
+<li>假设$y\in R^k$,$z\in R^m$,$x\in R^n$,$z=g(x)$,y=f(z)：<script type="math/tex; mode=display">
+\frac{dy}{dx}=\frac{dy}{dz}\frac{dz}{dx}\tag{1-7}</script><h1 id="2-pytorch求变量导数的过程"><a href="#2-pytorch求变量导数的过程" class="headerlink" title="2. pytorch求变量导数的过程"></a>2. pytorch求变量导数的过程</h1>在pytorch和TensorFlow中，是不支持张量对张量的求导。这不是因为数学上没法求，而是因为工程实现上比较麻烦。因为向量对向量求导是个矩阵，二阶张量（矩阵）对二阶张量（矩阵）求导得到一个四阶张量，这样很容易会产生阶数爆炸。所以pytorch和TensorFlow（猜测其他深度学习框架也是这样）对外的接口干脆不支持张量对张量求导。如果遇到张量对张量求导的情况，例如向量对向量求导的情况，需要对因变量乘以一个维度一样的向量，转换为标量对向量的求导，这样可以大大减少计算量（具体见后文）。并且，因为pytorch和TensorFlow是为了机器学习/深度学习模型设计的，机器学习/深度模型的求导基本上都是损失函数(标量)对参数的求导，很少直接用到向量对向量求导，因此上述过程是有实际意义和需求的。</li>
+</ol>
+<p>假设有一个三维tensor $x=[x_1,x_2,x_3]^T=[1,2,3]^T$,另一个三维tensor y:</p>
 <script type="math/tex; mode=display">
-\begin{align*}  a&=g(z) \\  &=max(0.01z,z)\\  \tag{3-3}  \end{align*}</script><script type="math/tex; mode=display">
-\begin{align*}  g'(z)&=\frac{d}{dz}g(z)\\  &=\left\{  \begin{aligned}  0.01\quad if\ z<0\\  1\quad if\ z\geq0  \end{aligned}  \right.  \tag{3-4}  \end{align*}</script><h2 id="4-选择激活函数的准则"><a href="#4-选择激活函数的准则" class="headerlink" title="4.选择激活函数的准则"></a>4.选择激活函数的准则</h2><ul>
-<li>如果处理的问题是二分类问题，输出为0和1，那么输出层选择sigmoid函数，其他神经元选择ReLU(有时也可用tanh)，理论上Leaky ReLU比ReLU好，但是实践中差不多。</li>
-</ul>
+y=f(x)=
+\begin{bmatrix}  
+{x_1}^3+2{x_2}^2+3x_3 \\  
+3x_1+2{x_2}^2+{x_3}^3\\  
+2x_1+{x_2}^3+3{x_3}^2  
+\end{bmatrix} \tag{2-1}</script><p>那么在计算y相对于x的导数时，</p>
+<script type="math/tex; mode=display">
+\frac{dy}{dx}=
+\begin{bmatrix}  
+&3{x_1}^2,&4x_2,&3 \\  
+&3,&4{x_2},&3{x_3}^2\\  
+&2,&3{x_2}^2,&6{x_3}
+\end{bmatrix} \tag{2-2}</script><p>在pytorch中实际计算时，不能直接用y对x求导，需要先用一个向量$w$左乘y，再转置。例如，$w^T=[3,2,1]$。因此，pytorch算的其实是：</p>
+<script type="math/tex; mode=display">
+\frac{dy^T}{dx}w=
+\left(w^T\frac{dy}{dx}\right)^T
+=\begin{bmatrix}  
+17\\
+52\\  
+81\\
+\end{bmatrix} \tag{2-3}</script><p>$w$可以理解为是对$[\frac{\partial y_1}{\partial x},\frac{\partial y_2}{\partial x},\frac{\partial y_3}{\partial x}]^T$的权重参数。因此我们得到的是y的各个分量的导数的加权求和。</p>
+<p>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">x1=torch.tensor(1, requires_grad=True, dtype = torch.float)</span><br><span class="line">x2=torch.tensor(2, requires_grad=True, dtype = torch.float)</span><br><span class="line">x3=torch.tensor(3, requires_grad=True, dtype = torch.float)</span><br><span class="line">y=torch.randn(3)</span><br><span class="line">y[0]=x1**3+2*x2**2+3*x3</span><br><span class="line">y[1]=3*x1+2*x2**2+x3**3</span><br><span class="line">y[2]=2*x1+x2**3+3*x3**2</span><br><span class="line">v=torch.tensor([3,2,1],dtype=torch.float)</span><br><span class="line">y.backward(v)</span><br><span class="line">print(x1.grad)</span><br><span class="line">print(x2.grad)</span><br><span class="line">print(x3.grad)</span><br></pre></td></tr></table></figure></p>
+<p>利用链式求导的原理来理解，可以理解为$w$是（远方）某个标量对$y$的导数。pytorch之所以要这么设计，是因为在机器学习/深度学习模型中，求导的最终目的一般是为了让损失函数最小。损失函数一般都是一个标量，因此无论链式求导的过程多么复杂，中间过程也许有很多向量对向量求导的子过程，但是最开始一定会有一个标量（损失函数）对向量的求导过程，这个导数就是前面的$w$。</p>
+<p>下面看一个带两个隐藏层的神经网络解决线性回归问题的例子，来进一步说明这点。<br>为了简单起见，考虑batch_size=1的情况。设输入数据为$x=[x_1,x_2]^T$,输入层到第一个隐藏层的权重矩阵为</p>
+<script type="math/tex; mode=display">
+W=\begin{bmatrix}  
+w_1^T\\
+w_2^T
+\end{bmatrix} =
+\begin{bmatrix}  
+w_{11},w_{12}\\
+w_{21},w_{22}\\
+\end{bmatrix} \tag{2-4}</script><p>第一个隐藏层的值为$z=[z_1,z_2]^T$,<br>第一个隐藏层到第二个隐藏层的权重矩阵为</p>
+<script type="math/tex; mode=display">
+U=\begin{bmatrix}  
+u_1^T\\
+u_2^T
+\end{bmatrix} =
+\begin{bmatrix}  
+u_{11},u_{12}\\
+u_{21},u_{22}\\
+\end{bmatrix} \tag{2-5}</script><p>第二个隐藏层的值为$s=[s_1,s_2]^T$,<br>输出层的值为$y$,隐藏层到输出层的权重参数为$v=[v_1,v_2]^T$。则有：</p>
+<script type="math/tex; mode=display">
+z=\begin{bmatrix}  
+z_1\\
+z_2\\
+\end{bmatrix}=
+\begin{bmatrix}  
+w_{11},w_{12}\\
+w_{21},w_{22}\\
+\end{bmatrix}\begin{bmatrix}  
+x_1\\
+x_2\\
+\end{bmatrix}=
+\begin{bmatrix}  
+w_{11}x_1+w_{12}x_2\\
+w_{21}x_1+w_{22}x_2\\
+\end{bmatrix}\tag{2-6}</script><script type="math/tex; mode=display">
+\begin{aligned}
+s&=\begin{bmatrix}  
+s_1\\
+s_2\\
+\end{bmatrix}=
+\begin{bmatrix}  
+u_{11},u_{12}\\
+u_{21},u_{22}\\
+\end{bmatrix}\begin{bmatrix}  
+z_1\\
+z_2\\
+\end{bmatrix}\\
+&=
+\begin{bmatrix}  
+u_{11}(w_{11}x_1+w_{12}x_2)+u_{12}(w_{21}x_1+w_{22}x_2)\\
+u_{21}(w_{11}x_1+w_{12}x_2)+u_{22}(w_{21}x_1+w_{22}x_2)\\
+\end{bmatrix}\tag{2-7}
+\end{aligned}</script><script type="math/tex; mode=display">
+\begin{aligned}
+y&=
+[v_1,v_2]\begin{bmatrix}  
+s_1\\
+s_2\\
+\end{bmatrix}\\
+&=(v_1u_{11}x_1+v_2u_{21}x_1)w_{11}\\
+&+(v_1u_{11}x_2+v_2u_{21}x_2)w_{12}\\
+&+(v_1u_{12}x_1+v_2u_{22}x_1)w_{21}\\
+&+(v_1u_{12}x_2+v_2u_{22}x_2)w_{22}
+\end{aligned}\tag{2-8}</script><p>损失函数为$L=(y-\hat y)^2/2$<br>则损失函数关于权重参数$w_1$的导数为：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\frac{dL}{dw_1}&=(y-\hat y)\frac{dy}{dx}\\
+&=(y-\hat y)\frac{ds^T}{dx}\frac{dy}{ds}\\
+&=(y-\hat y)\frac{dz^T}{dx}\frac{ds^T}{dz}\frac{dy}{ds}\\
+&=(y-\hat y)\begin{bmatrix}  
+x_1,0\\
+x_2,0\\
+\end{bmatrix}
+\begin{bmatrix}  
+u_{11},u_{21}\\
+u_{12},u_{22}\\
+\end{bmatrix}
+\begin{bmatrix}  
+v_1\\
+v_2
+\end{bmatrix}\\
+&=(y-\hat y)\begin{bmatrix}  
+v_1x_1u_{11}+v_2x_1u_{21}\\
+v_1x_2u_{11}+v_2x_2u_{21}
+\end{bmatrix}\\
+\end{aligned}\tag{2-9}</script><p>可以验证$(2-9)$和前面$(2-8)$中直接求得的导数值是一样的。<br>这里发现了一个小彩蛋：<br>假设在pytorch的底层实现中，如果从左往右计算，则需要进行进行大量的矩阵乘法。如果有n个$2\times 2$的方阵相乘，那么需要进行$4\times (n-1)$次内积。如果从又往左计算，只需要进行$2\times n$次内积。</p>
 
       
     </div>
@@ -416,8 +519,8 @@ a&=g(z) \\  &=\frac{e^{z}-e^{-z}}{e^{z}+e^{-z}}\\  \tag{2-1}  \end{align*}</scri
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="../../05/从logistic回归到神经网络/" rel="next" title="从logistic回归到神经网络">
-                <i class="fa fa-chevron-left"></i> 从logistic回归到神经网络
+              <a href="../../../../2020/10/21/凸优化基础知识笔记-凸集、凸函数、凸优化问题/" rel="next" title="凸优化基础知识笔记-凸集、凸函数、凸优化问题">
+                <i class="fa fa-chevron-left"></i> 凸优化基础知识笔记-凸集、凸函数、凸优化问题
               </a>
             
           </div>
@@ -426,8 +529,8 @@ a&=g(z) \\  &=\frac{e^{z}-e^{-z}}{e^{z}+e^{-z}}\\  \tag{2-1}  \end{align*}</scri
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="../神经网络中的正则化/" rel="prev" title="神经网络中的正则化">
-                神经网络中的正则化 <i class="fa fa-chevron-right"></i>
+              <a href="../../../02/03/TensorFlow-PyTorch中张量-Tensor-的底层存储方式/" rel="prev" title="TensorFlow/PyTorch中张量(Tensor)的底层存储方式">
+                TensorFlow/PyTorch中张量(Tensor)的底层存储方式 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -564,7 +667,7 @@ a&=g(z) \\  &=\frac{e^{z}-e^{-z}}{e^{z}+e^{-z}}\\  \tag{2-1}  \end{align*}</scri
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Sigmoid-activation-function"><span class="nav-number">1.</span> <span class="nav-text">1. Sigmoid activation function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Tanh-activation-function"><span class="nav-number">2.</span> <span class="nav-text">2. Tanh activation function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-ReLU-and-Leaky-ReLU"><span class="nav-number">3.</span> <span class="nav-text">3. ReLU and Leaky ReLU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-选择激活函数的准则"><span class="nav-number">4.</span> <span class="nav-text">4.选择激活函数的准则</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-梯度和Jacobian矩阵"><span class="nav-number">1.</span> <span class="nav-text">1. 梯度和Jacobian矩阵</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-pytorch求变量导数的过程"><span class="nav-number">2.</span> <span class="nav-text">2. pytorch求变量导数的过程</span></a></li></ol></div>
             
 
           </div>
