@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Neural Networks,Deep Learning," />
+  <meta name="keywords" content="Natural Language Processing,Neural Networks," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="@[toc] 将神经网络应用到多类分类问题中时，输出层的形式不能用logistic函数（sigmoid激活函数），而应该推广到softmax函数。二分类问题与多分类问题的神经网络模型的最大区别就是输出层。因此下面重点讲解softmax函数的原理。 1. Softmax回归详解在softmax回归中，我们解决的是多分类问题（相对于logistic回归解决的二分类问题），标记$y$可以取$k$个不同">
-<meta name="keywords" content="Neural Networks,Deep Learning">
+<meta name="description" content="[TOC] 1. IntroductionBefore feeding our text data into a model, we need firstly transformed it to a numerical format that the model can understand. That is called text representation, and it is a nec">
+<meta name="keywords" content="Natural Language Processing,Neural Networks">
 <meta property="og:type" content="article">
-<meta property="og:title" content="神经网络之将二分类问题推广到多分类问题">
-<meta property="og:url" content="https://lankuohsing.github.io/blog/2018/06/25/神经网络之将二分类问题推广到多分类问题/index.html">
+<meta property="og:title" content="An Introduction to Text Representation">
+<meta property="og:url" content="https://lankuohsing.github.io/blog/2020/12/13/An-Introduction-to-Text-Representation/index.html">
 <meta property="og:site_name" content="Guoxing Lan">
-<meta property="og:description" content="@[toc] 将神经网络应用到多类分类问题中时，输出层的形式不能用logistic函数（sigmoid激活函数），而应该推广到softmax函数。二分类问题与多分类问题的神经网络模型的最大区别就是输出层。因此下面重点讲解softmax函数的原理。 1. Softmax回归详解在softmax回归中，我们解决的是多分类问题（相对于logistic回归解决的二分类问题），标记$y$可以取$k$个不同">
+<meta property="og:description" content="[TOC] 1. IntroductionBefore feeding our text data into a model, we need firstly transformed it to a numerical format that the model can understand. That is called text representation, and it is a nec">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2021-02-28T06:34:52.018Z">
+<meta property="og:updated_time" content="2021-02-28T16:04:39.553Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="神经网络之将二分类问题推广到多分类问题">
-<meta name="twitter:description" content="@[toc] 将神经网络应用到多类分类问题中时，输出层的形式不能用logistic函数（sigmoid激活函数），而应该推广到softmax函数。二分类问题与多分类问题的神经网络模型的最大区别就是输出层。因此下面重点讲解softmax函数的原理。 1. Softmax回归详解在softmax回归中，我们解决的是多分类问题（相对于logistic回归解决的二分类问题），标记$y$可以取$k$个不同">
+<meta name="twitter:title" content="An Introduction to Text Representation">
+<meta name="twitter:description" content="[TOC] 1. IntroductionBefore feeding our text data into a model, we need firstly transformed it to a numerical format that the model can understand. That is called text representation, and it is a nec">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://lankuohsing.github.io/blog/2018/06/25/神经网络之将二分类问题推广到多分类问题/"/>
+  <link rel="canonical" href="https://lankuohsing.github.io/blog/2020/12/13/An-Introduction-to-Text-Representation/"/>
 
 
 
 
 
-  <title>神经网络之将二分类问题推广到多分类问题 | Guoxing Lan</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>An Introduction to Text Representation | Guoxing Lan</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">神经网络之将二分类问题推广到多分类问题</h1>
+          <h1 class="post-title" itemprop="name headline">An Introduction to Text Representation</h1>
         
 
         <div class="post-meta">
@@ -292,8 +292,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-25T16:03:52+08:00">
-                2018-06-25
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-12-13T23:39:11+08:00">
+                2020-12-13
               </time>
             
 
@@ -315,8 +315,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../../../categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Tutorials of Deep Learning</span>
+                  <a href="../../../../categories/Tutorials-of-Natural-Language-Processing/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Natural Language Processing</span>
                   </a>
                 </span>
 
@@ -358,29 +358,32 @@
 
       
         <hr>
-<p>@[toc]</p>
-<p>将神经网络应用到多类分类问题中时，输出层的形式不能用logistic函数（sigmoid激活函数），而应该推广到softmax函数。二分类问题与多分类问题的神经网络模型的最大区别就是输出层。因此下面重点讲解softmax函数的原理。</p>
-<h2 id="1-Softmax回归详解"><a href="#1-Softmax回归详解" class="headerlink" title="1. Softmax回归详解"></a>1. Softmax回归详解</h2><p>在softmax回归中，我们解决的是多分类问题（相对于logistic回归解决的二分类问题），标记$y$可以取$k$个不同的值。对于训练集$\{(x^{(1)},y^{(1)}),\cdots,(x^{(m)},y^{(m)})\}$，我们有$y^{(j)}\in \{1,2,\cdots,k\}$。<br>对于给定的测试输入$x$，我们想用假设函数针对每一个类别$j$估算出概率值$P(y=j|x)$。因此，我们的假设函数要输出一个$k$维的向量（向量元素的和为1）来表示$k$个估计的概率值。我们采用如下形式的假设函数$h_{\theta}(x)$：  </p>
+<p>[TOC]</p>
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h1><p>Before feeding our text data into a model, we need firstly transformed it to a numerical format that the model can understand. That is called text representation, and it is a necessary data pre-processing procedure for almost every kind of nlp task. </p>
+<p>From the view of language granularity, text representation can be divided into word representation, sentence representation and document representation. Word representation is the fundamental of the other two and we’ll introduce it first. Then we will introduce sentence representation in details. Documentation representation can be simiplified to sentence representation in many situations, so we won’t spend too much time on it.</p>
+<h1 id="2-Word-Representation"><a href="#2-Word-Representation" class="headerlink" title="2. Word Representation"></a>2. Word Representation</h1><p>Word representation includes two categories of models: discrete word representation and distributed word representation. The major difference between discrete and distributed representation is whether it considers the relationships among words. Discrete representation assumes that words are independent, and it fills in the word vector mainly by extracting features from the properties of the word itself, such as occurrence and frequency. Therefore, the word vector of discrete representation can’t capture the semantic and syntactic information of the word, and it is usually high dimensional and sparse. On the contrary, distributed representation analyzes relationships among the word and other words and learns a dense and low-dimensional feature vector to represent the word vector. We will firstly introduce one-hot encoding, a classical and simple method of discrete representation. Then we’ll discuss word embedding, the most popular frame of distributed representation techniques in recent years. </p>
+<h2 id="2-1-One-hot-Encoding"><a href="#2-1-One-hot-Encoding" class="headerlink" title="2.1. One-hot Encoding"></a>2.1. One-hot Encoding</h2><p>Given a fixed set of vocabulary $V=\{w_1,w_2,\cdots,w_{|V|}\}$, one-hot encoding encodes a word $w_i$ with a $|V|$-dimensional vector $X$, of which the i-th dimension where $w_i$ occurs is 1 and the other dimensions are all zeros.<br>For example, if we have a corpus as follows(This example will also be used in the later chapters, and we mark it as Example 1):<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&quot;I like mathematics.&quot;</span><br><span class="line">&quot;I like science.&quot;</span><br><span class="line">&quot;You like computer science.&quot;</span><br><span class="line">&quot;I like computer and science.&quot;</span><br></pre></td></tr></table></figure></p>
+<p>Then the vocabulary is:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;I, like, mathematics, science, You, computer, and&#125;</span><br></pre></td></tr></table></figure></p>
+<p>For word “mathematics”, its one-hot vector is:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(0,0,1,0,0,0,0)</span><br></pre></td></tr></table></figure></p>
+<p>One-hot encoding only captures the information of the word’s occurrence and position in the vocabulary, neglecting the frequency information and co-occurrence of different words.<br>In practice, one-hot encoding can be transformed into storage of the indexes of words in the vocabulary, so the the characteristics of high dimensionality and sparsity won’t cause computation problems. However, it is seldomly used directly for word representation because of its lack of semantic and syntactic information. Instead, it is used to tokenizing the word in other representation methods.</p>
+<h2 id="2-2-Word-Embedding"><a href="#2-2-Word-Embedding" class="headerlink" title="2.2. Word Embedding"></a>2.2. Word Embedding</h2><p>Generally, the phrase “word embedding” has two meanings: 1. The technique to find a function that maps a word to a multi-dimensional and dense vector. 2. The word vector obtained in 1.<br>As peviously mentioned, one-hot encoding has serval problems: high dimension, sparsity and lack of semantics. The first two problems can be easily solved in word embedding by choosing appropriate dimension number of the result vector. What about the third problem? We haven’t discuss the exact definition of semantics. We won’t discuss too much of it since it is inherited from linguistic, instead we only give some intuitions. Semantics represents the meaning of a word and words with similar meanings should have similar semantics.<br>With the hypothesis of distributional semantics——linguistic items with similar distributions have similar meanings, the problem of learning word semantics can be transformed into modeling the relations among the target word and its context, and that is what statistical language model does. In fact, the earliest word embedding is the by-product of neural networks language model. In the following sections, we will introduce some classical word embedding methods. </p>
+<h3 id="2-2-1-Word2Vec"><a href="#2-2-1-Word2Vec" class="headerlink" title="2.2.1. Word2Vec"></a>2.2.1. Word2Vec</h3><h4 id="2-2-1-1-Continuous-Bag-of-Words-Model-CBOW"><a href="#2-2-1-1-Continuous-Bag-of-Words-Model-CBOW" class="headerlink" title="2.2.1.1. Continuous Bag of Words Model(CBOW)"></a>2.2.1.1. Continuous Bag of Words Model(CBOW)</h4><h4 id="2-2-1-2-Skip-Gram-Model"><a href="#2-2-1-2-Skip-Gram-Model" class="headerlink" title="2.2.1.2. Skip-Gram Model"></a>2.2.1.2. Skip-Gram Model</h4><p>[TODO]</p>
+<h1 id="3-Sentence-Representation"><a href="#3-Sentence-Representation" class="headerlink" title="3. Sentence Representation"></a>3. Sentence Representation</h1><h2 id="3-1-Bag-of-Words"><a href="#3-1-Bag-of-Words" class="headerlink" title="3.1. Bag of Words"></a>3.1. Bag of Words</h2><p>The model of Bag-of-Words represents a sentence as a bag of words, and each word of the sentence is represented by one-hot encoding. Then the sentence vector is the sum of all of the word vector:</p>
 <script type="math/tex; mode=display">
-\begin{align*}
-h_{\theta}(x^{(i)})&=  \begin{bmatrix} P(y^{(i)}=1|x^{(i)};\theta) \\  P(y^{(i)}=2|x^{(i)};\theta) \\  \vdots \\  P(y^{(i)}=10|x^{(i)};\theta)  \end{bmatrix} \\
-&=\frac{1}{\sum_{j=1}^ke^{\theta_j^Tx^{(i)}}}  \begin{bmatrix} e^{\theta_1^Tx^{(i)}} \\  e^{\theta_2^Tx^{(i)}} \\  \vdots \\  e^{\theta_k^Tx^{(i)}}  \end{bmatrix} \\
-\tag{1-1}  
-\end{align*}</script><p>假设输入向量$x$的维数为$n$，则参数$\theta$是一个$k\times (n+1)$的参数矩阵，之所以是$n+1$是因为把截距项$b$表示成了$\theta_0\times x_0$，其中$x_0=1$是一个人工辅助变量。<br>利用极大似然估计的方法，可以得到每一类的后验概率表达式：</p>
-<script type="math/tex; mode=display">P(y^{(i)}|x^{(i)};\theta)=\prod_{j=1}^k\left\{\frac{e^{\theta_j^Tx^{(i)}}}{\sum_{l=1}^ke^{\theta_l^Tx^{(i)}}}\right\}^{1(y^{(i)}=j)} \tag{1-2}</script><p>似然函数为：  </p>
+X(s)=\sum_{w_i\in s}{X(w_i)}</script><p>Where $X(w_i)$ is the one-hot encoding vector of $w_i$ in sentence $s$, and $X(s)$ is the vector of $s$.<br>In example 1, for a sentence “I like computer and science”, its sentence vector is:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1,1,0,1,0,1,1)</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-1-1-Bag-of-Words-weighted-by-term-count"><a href="#3-1-1-Bag-of-Words-weighted-by-term-count" class="headerlink" title="3.1.1. Bag of Words weighted by term count"></a>3.1.1. Bag of Words weighted by term count</h3><p>In one-hot encoding, every word has the same value—1, in the non-zero component of its feature vector, which ignores importance of different words. Thus, it can’t distinguish these two sentences: “I like computer and science” and “I like computer and computer science”.<br>To evalute the importance of a word, a straightforward way is to multiply the one-hot vector by a weight—the count of the word in the sentence. Then, the vector of “I like computer and computer science” can be represented as:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1,1,0,1,0,2,1)</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-1-2-Word-of-Bags-weighted-by-TF-IDF"><a href="#3-1-2-Word-of-Bags-weighted-by-TF-IDF" class="headerlink" title="3.1.2. Word of Bags weighted by TF-IDF"></a>3.1.2. Word of Bags weighted by TF-IDF</h3><p>A better choice is to use TF-IDF(Term Frequency-Inverse Document Frequency. In this section, document is identity with sentence) as the weight, where $TF(t)=\frac{counts\ of\ word\ t\ in\ the\ doc}{num\ of\ words\ in\ the\ doc}$.<br>The original definition of IDF is:</p>
 <script type="math/tex; mode=display">
-\begin{align*} 
-L(\theta) &=P(\boldsymbol{Y}|\boldsymbol{X};\theta) \\ 
-&=\prod_{i=1}^{m}P(y^{(i)}|x^{(i)};\theta) \\ 
-&=\prod_{i=1}^{m}\prod_{j=1}^k\left\{\frac{e^{\theta_j^Tx^{(i)}}}{\sum_{l=1}^ke^{\theta_l^Tx^{(i)}}}\right\}^{1(y^{(i)}=j)}\\
-\tag{1-3}  \end{align*}</script><p>对数似然函数为：  </p>
+IDF(t)=ln\frac{n}{df(t)}
+$$, 
+where $n$ is the number of documents while $df(t)$ is number of documents containing the target word $t$. To avoid division by zero, we can use the smoothing technique: $IDF(t)=ln\frac{1+n}{1+df(t)}$, and it looks like that there is a document containing all the words. What's more, to avoid $IDF=0$, we can add one to IDF:</script><p>IDF(t)=ln\frac{1+n}{1+df(t)}+1</p>
 <script type="math/tex; mode=display">
-\begin{align*} l(\theta) &=\log L(\theta) \\  
-&=\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{\theta_j^Tx^{(i)}}}{\sum_{l=1}^ke^{\theta_l^Tx^{(i)}}}}\\ 
-\tag{1-4}  
-\end{align*}</script><p>上面的$(1-4)$就是loss function。<br>cost function为： </p>
-<script type="math/tex; mode=display">
-J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{\theta_j^Tx^{(i)}}}{\sum_{l=1}^ke^{\theta_l^Tx^{(i)}}}}\right] \tag{1-5}</script><p>多分类问题的目标就是利用训练数据来训练模型参数$\theta$使其能够最小化$(1-5)$。$(1-5)$是一个凸函数，可以利用梯度下降法得到全局最小值。</p>
+Then, TF-IDF$=TF(t)\cdot IDF(t)$
+Finally,</script><p>X(s)=\sum_{w_i\in s}{TF(w_i)\cdot IDF(w_i)\cdot X(w_i)}</p>
+<p>$$</p>
+<p>TF-IDF representation can be easily implemented by calling the following sk-learn functions:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vectorizer=CountVectorizer()</span><br><span class="line">transformer=TfidfTransformer()</span><br><span class="line">tfidf=transformer.fit_transform(vectorizer.fit_transform(corpus))</span><br></pre></td></tr></table></figure></p>
+<p>or<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">transformer=TfidfVectorizer()</span><br><span class="line">tfidf2=transformer.fit_transform(corpus)</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-1-3-Bag-of-Words-with-Word-Embeddings"><a href="#3-1-3-Bag-of-Words-with-Word-Embeddings" class="headerlink" title="3.1.3. Bag of Words with Word Embeddings"></a>3.1.3. Bag of Words with Word Embeddings</h3><p>In this method, each word is represented by word embeddings instead of one-hot encoding. The sentence is then represented by the average or weighted average of all the word vectors, like what we discussed above.</p>
 
       
     </div>
@@ -398,9 +401,9 @@ J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{
       
         <div class="post-tags">
           
-            <a href="../../../../tags/Neural-Networks/" rel="tag"># Neural Networks</a>
+            <a href="../../../../tags/Natural-Language-Processing/" rel="tag"># Natural Language Processing</a>
           
-            <a href="../../../../tags/Deep-Learning/" rel="tag"># Deep Learning</a>
+            <a href="../../../../tags/Neural-Networks/" rel="tag"># Neural Networks</a>
           
         </div>
       
@@ -413,8 +416,8 @@ J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="../创建机器学习项目的注意事项/" rel="next" title="创建机器学习项目的注意事项">
-                <i class="fa fa-chevron-left"></i> 创建机器学习项目的注意事项
+              <a href="../../../10/03/seq2seq入门详解：从RNN到Attention/" rel="next" title="seq2seq入门详解：从RNN到Attention">
+                <i class="fa fa-chevron-left"></i> seq2seq入门详解：从RNN到Attention
               </a>
             
           </div>
@@ -423,8 +426,8 @@ J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="../../28/卷积神经网络入门/" rel="prev" title="卷积神经网络入门">
-                卷积神经网络入门 <i class="fa fa-chevron-right"></i>
+              <a href="../../../../2021/01/13/pytorch教程之自动求导机制-AUTOGRAD-从梯度和Jacobian矩阵讲起/" rel="prev" title="pytorch教程之自动求导机制(AUTOGRAD)-从梯度和Jacobian矩阵讲起">
+                pytorch教程之自动求导机制(AUTOGRAD)-从梯度和Jacobian矩阵讲起 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -561,7 +564,7 @@ J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Softmax回归详解"><span class="nav-number">1.</span> <span class="nav-text">1. Softmax回归详解</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Introduction"><span class="nav-number">1.</span> <span class="nav-text">1. Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Word-Representation"><span class="nav-number">2.</span> <span class="nav-text">2. Word Representation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-One-hot-Encoding"><span class="nav-number">2.1.</span> <span class="nav-text">2.1. One-hot Encoding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-Word-Embedding"><span class="nav-number">2.2.</span> <span class="nav-text">2.2. Word Embedding</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-1-Word2Vec"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.2.1. Word2Vec</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-1-Continuous-Bag-of-Words-Model-CBOW"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">2.2.1.1. Continuous Bag of Words Model(CBOW)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-2-Skip-Gram-Model"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">2.2.1.2. Skip-Gram Model</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Sentence-Representation"><span class="nav-number">3.</span> <span class="nav-text">3. Sentence Representation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-Bag-of-Words"><span class="nav-number">3.1.</span> <span class="nav-text">3.1. Bag of Words</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-1-Bag-of-Words-weighted-by-term-count"><span class="nav-number">3.1.1.</span> <span class="nav-text">3.1.1. Bag of Words weighted by term count</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-2-Word-of-Bags-weighted-by-TF-IDF"><span class="nav-number">3.1.2.</span> <span class="nav-text">3.1.2. Word of Bags weighted by TF-IDF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-3-Bag-of-Words-with-Word-Embeddings"><span class="nav-number">3.1.3.</span> <span class="nav-text">3.1.3. Bag of Words with Word Embeddings</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
