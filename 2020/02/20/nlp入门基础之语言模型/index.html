@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="../../../../lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="../../../../lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="../../../../css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../../images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../../images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="../../../../images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="../../../../images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Neural Networks,Natural Language Processing," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="nlp入门基础之语言模型 @[toc]https://zhuanlan.zhihu.com/p/28080127https://zhuanlan.zhihu.com/p/52061158https://blog.csdn.net/weixin_40056628/article/details/89364456 1. 简介语言模型（language model）是用来计算一个句子的概率的模型，或者预">
+<meta name="keywords" content="Neural Networks,Natural Language Processing">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nlp入门基础之语言模型">
+<meta property="og:url" content="https://lankuohsing.github.io/blog/2020/02/20/nlp入门基础之语言模型/index.html">
+<meta property="og:site_name" content="Guoxing Lan">
+<meta property="og:description" content="nlp入门基础之语言模型 @[toc]https://zhuanlan.zhihu.com/p/28080127https://zhuanlan.zhihu.com/p/52061158https://blog.csdn.net/weixin_40056628/article/details/89364456 1. 简介语言模型（language model）是用来计算一个句子的概率的模型，或者预">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/202007020011489.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200702001205749.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:updated_time" content="2021-02-28T06:33:55.476Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nlp入门基础之语言模型">
+<meta name="twitter:description" content="nlp入门基础之语言模型 @[toc]https://zhuanlan.zhihu.com/p/28080127https://zhuanlan.zhihu.com/p/52061158https://blog.csdn.net/weixin_40056628/article/details/89364456 1. 简介语言模型（language model）是用来计算一个句子的概率的模型，或者预">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/202007020011489.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lankuohsing.github.io/blog/2020/02/20/nlp入门基础之语言模型/"/>
+
+
+
+
+
+  <title>nlp入门基础之语言模型 | Guoxing Lan</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/lankuohsing"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Guoxing Lan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Journey To Truth</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="https://lankuohsing.github.io/blog" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="https://lankuohsing.github.io/blog/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="https://lankuohsing.github.io/blog/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="https://lankuohsing.github.io/blog/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="https://lankuohsing.github.io/blog/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guoxing Lan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="../../../../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Guoxing Lan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">nlp入门基础之语言模型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-02-20T00:52:22+08:00">
+                2020-02-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../../../categories/Tutorials-of-Natural-Language-Processing/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Natural Language Processing</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="nlp入门基础之语言模型"><a href="#nlp入门基础之语言模型" class="headerlink" title="nlp入门基础之语言模型"></a>nlp入门基础之语言模型</h1><hr>
+<p>@[toc]<br><a href="https://zhuanlan.zhihu.com/p/28080127" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/28080127</a><br><a href="https://zhuanlan.zhihu.com/p/52061158" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/52061158</a><br><a href="https://blog.csdn.net/weixin_40056628/article/details/89364456" target="_blank" rel="noopener">https://blog.csdn.net/weixin_40056628/article/details/89364456</a></p>
+<h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>语言模型（language model）是用来计算一个句子的概率的模型，或者预测下一个词出现的概率。通俗地讲，就是用来评估一个句子有多大的可能性是有意义的（是人话而不是一堆杂乱无章的词语组合）。<br>一段自然语言文本可以看做是一个离散时间序列$s=\omega_1,\omega_2,\cdots,\omega_T$，而一个语言模型的作用是构建这个时间序列的概率分布$P(s)$。概率计算公式可以表示为：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+P(s)&=P(\omega_1,\omega_2,\cdots,\omega_T)\\
+&=P(\omega_1)P(\omega_2|\omega_1)P(\omega_3|\omega_1,\omega_2)\cdots P(\omega_T|\omega_1,\omega_2,\cdots,\omega_{T-1})\\
+&=\prod_{t=1}^{T}P(\omega_t|\omega_1,\omega_2,\cdots,\omega_{t-1})\\
+\tag{1-1}
+\end{align*}</script><p>对于$P(\omega_t|\omega_1,\omega_2,\cdots,\omega_{t-1})$，可以在大量娱乐库中采用频率统计的方式来近似估计：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+P(\omega_t|\omega_1,\omega_2,\cdots,\omega_{t-1})&=\frac{C(\omega_1,\omega_2,\cdots,\omega_t)}{\sum_{\omega}C(\omega_1,\omega_2,\cdots,\omega_{t-1},\omega)}\\
+&=\frac{C(\omega_1,\omega_2,\cdots,\omega_t)}{C(\omega_1,\omega_2,\cdots,\omega_{t-1})}\\
+\tag{1-2}
+\end{align*}</script><p>直接计算上式是不现实的。假设词汇表大小为$V$，由上式可以看到，产生第$i$个词$\omega_i$的概率是由已经产生的$i-1$个词$\omega_1,\omega_2,\cdots,\omega_{i-1}$决定的，那么我们必须考虑所有$V^{i-1}$种不同历史情况下，产生第$i$个词的概率。这样模型中就会有$V^i$个自由参数（每个条件概率看成一个参数）。这在实际中几乎是无法从训练数据中估计出这些参数的。并且，很多词的组合可能在语料库中根本不存在，这样会导致最后估计出的概率为零（数据稀疏问题）。<br>因此需要引入语言模型来降低参数个数。语言模型有基于统计模型的，比如n元语法（n-gram），也有基于神经网络的。</p>
+<h1 id="2-n元语法"><a href="#2-n元语法" class="headerlink" title="2. n元语法"></a>2. n元语法</h1><p>n元语法(n-grams)是基于n-1阶马尔科夫链的概率语言模型，也即在n-gram模型中，一个词的出现概率只与前面n-1个词有关：</p>
+<script type="math/tex; mode=display">
+P(\omega_1,\omega_2,\cdots,\omega_T)=\prod_{t=1}^{T}P(\omega_t|\omega_{t-(n-1)},\omega_2,\cdots,\omega_{t-1})\\\tag{2-1}</script><p>每个条件概率需要实现在大量语料库中根据频率近似求得。</p>
+<ul>
+<li>n=1: unigram，每个词独立于历史</li>
+<li>n=2: bigram，每个词只与它前面的一个词有关。实际中常用</li>
+<li>n=3: trigram，每个词只与它前面的两个词有关</li>
+</ul>
+<p>n元语法模型可能的缺陷：</p>
+<ol>
+<li>参数空间过大</li>
+<li>数据稀疏</li>
+</ol>
+<h2 id="2-1-一元模型（unigram）"><a href="#2-1-一元模型（unigram）" class="headerlink" title="2.1. 一元模型（unigram）"></a>2.1. 一元模型（unigram）</h2><p>一元模型假设每句子中的每个每个词都是独立的，也即：</p>
+<script type="math/tex; mode=display">
+p(s)=p(\omega_1)p(\omega_2)\cdots p(\omega_T)\\\tag{2-2}</script><p>需要实现在语料库中统计每个字的频率。</p>
+<h2 id="2-2-二元模型（bigram）"><a href="#2-2-二元模型（bigram）" class="headerlink" title="2.2. 二元模型（bigram）"></a>2.2. 二元模型（bigram）</h2><script type="math/tex; mode=display">
+p(s)=p(\omega_1|start)p(\omega_2|\omega_1)\cdots p(\omega_T|end)\\\tag{2-3}</script><p>注意需要有句子开头和结尾标识符。实践中，需要先统计语料库中词语的两两组合情况的各自频率，再统计每个词的频率，以便得到条件概率。</p>
+<h1 id="3-n-gram模型实践"><a href="#3-n-gram模型实践" class="headerlink" title="3. n-gram模型实践"></a>3. n-gram模型实践</h1><h2 id="3-1-文本分类"><a href="#3-1-文本分类" class="headerlink" title="3.1. 文本分类"></a>3.1. 文本分类</h2><p>假设类别有两类：$Y_1,Y_2$,原始文本为$X$。由贝叶斯公司可知：</p>
+<script type="math/tex; mode=display">
+P(Y_i|X)\propto P(X|Y_i)P(Y_i),i=1,2\tag{2-4}</script><p>$P(Y_i)$就是类别$Y_i$的文本比例；$P(X|Y_i)$就是在类别$Y_i$下句子$X$的概率，可以由n-gram算得</p>
+<p>在上述贝叶斯假设条件下，可以简化过程，直接将训练样本的n-gram特征作为输入去训练一个分类器，得到分类模型。</p>
+<h1 id="4-神经网络语言模型"><a href="#4-神经网络语言模型" class="headerlink" title="4. 神经网络语言模型"></a>4. 神经网络语言模型</h1><h2 id="4-1-基于前馈神经网络的语言模型"><a href="#4-1-基于前馈神经网络的语言模型" class="headerlink" title="4.1. 基于前馈神经网络的语言模型"></a>4.1. 基于前馈神经网络的语言模型</h2><p>Bengio在2003的论文A Neural Probabilistic Language Model。<br><img src="https://img-blog.csdnimg.cn/202007020011489.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<center>图4.1 前馈神经网络语言模型</center>
+
+<p>先给每个词在连续空间中赋予一个向量(词向量)，再通过神经网络去学习这种分布式表征。利用神经网络去建模当前词出现的概率与其前 n-1 个词之间的约束关系。很显然这种方式相比 n-gram 具有更好的<strong>泛化能力</strong>，<strong>只要词表征足够好。</strong>从而很大程度地降低了数据稀疏带来的问题。但是这个结构的明显缺点是仅包含了<strong>有限的前文信息</strong>。<br>该模型利用前n-1个词去预测下一个词，输入层是n-1个词的one-hot向量（每个向量是$1\times V$），再乘以一个$1\times D$的权重矩阵，得到$1\times D$的中间向量，将n-1个中间向量拼接成隐藏层（长度为$D(n-1)$）。隐藏层的激活函数为tanh，输出层为一个全连接层再接一个softmax函数生成概率分布。该模型的副产物就是词向量（输入层到隐藏层的权重矩阵）<br>这篇论文是词向量的鼻祖，后面的cbow和skip-gram都是由这里启发而来。</p>
+<h2 id="4-2-基于循环神经网络的语言模型"><a href="#4-2-基于循环神经网络的语言模型" class="headerlink" title="4.2. 基于循环神经网络的语言模型"></a>4.2. 基于循环神经网络的语言模型</h2><p>为了解决定长信息（只能利用前面n-1个词的信息）的问题，Mikolov在2010的论文 Recurrent neural network based language model。<br><img src="https://img-blog.csdnimg.cn/20200702001205749.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<center>图4.2 RNN语言模型（图片来源见水印）</center>
+
+<p>网络的输入层是”s我想你”，输出层可以看作是分别计算条件概率 P(w|s)、P(w|s我)、P(w|s我想)、P(w|s我想你) 在整个词表V中的值。而我们的目标就是使期望词对应的条件概率尽可能大。</p>
+<p>相比单纯的前馈神经网络，隐状态的传递性使得RNN语言模型原则上可以捕捉前向序列的所有信息(虽然可能比较弱)。通过在整个训练集上优化交叉熵来训练模型，使得网络能够尽可能建模出自然语言序列与后续词之间的内在联系。</p>
+<p>为了解决依赖的信息过长的问题，后续又有LSTM、attention等改进方法</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="../../../../tags/Neural-Networks/" rel="tag"># Neural Networks</a>
+          
+            <a href="../../../../tags/Natural-Language-Processing/" rel="tag"># Natural Language Processing</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="../../../../2019/10/15/SVD分解推导证明/" rel="next" title="SVD分解推导证明">
+                <i class="fa fa-chevron-left"></i> SVD分解推导证明
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="../../../08/15/统计学之假设检验详解/" rel="prev" title="统计学之假设检验详解">
+                统计学之假设检验详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="../../../../images/avatar.jpg"
+                alt="Guoxing Lan" />
+            
+              <p class="site-author-name" itemprop="name">Guoxing Lan</p>
+              <p class="site-description motion-element" itemprop="description">On The Journey To Truth</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="https://lankuohsing.github.io/blog/archives">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="../../../../categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="../../../../tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#nlp入门基础之语言模型"><span class="nav-number">1.</span> <span class="nav-text">nlp入门基础之语言模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-简介"><span class="nav-number">2.</span> <span class="nav-text">1. 简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-n元语法"><span class="nav-number">3.</span> <span class="nav-text">2. n元语法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-一元模型（unigram）"><span class="nav-number">3.1.</span> <span class="nav-text">2.1. 一元模型（unigram）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-二元模型（bigram）"><span class="nav-number">3.2.</span> <span class="nav-text">2.2. 二元模型（bigram）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-n-gram模型实践"><span class="nav-number">4.</span> <span class="nav-text">3. n-gram模型实践</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-文本分类"><span class="nav-number">4.1.</span> <span class="nav-text">3.1. 文本分类</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-神经网络语言模型"><span class="nav-number">5.</span> <span class="nav-text">4. 神经网络语言模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-基于前馈神经网络的语言模型"><span class="nav-number">5.1.</span> <span class="nav-text">4.1. 基于前馈神经网络的语言模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-基于循环神经网络的语言模型"><span class="nav-number">5.2.</span> <span class="nav-text">4.2. 基于循环神经网络的语言模型</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async="" src="busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Guoxing Lan</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="../../../../js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="../../../../js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="../../../../js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="../../../../js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

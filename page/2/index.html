@@ -262,6 +262,400 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog../../2018/06/28/卷积神经网络入门/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guoxing Lan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="../../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Guoxing Lan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="../../2018/06/28/卷积神经网络入门/" itemprop="url">卷积神经网络入门</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-28T22:30:38+08:00">
+                2018-06-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Deep Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="1-计算机视觉（Computer-Vision）领域介绍"><a href="#1-计算机视觉（Computer-Vision）领域介绍" class="headerlink" title="1. 计算机视觉（Computer Vision）领域介绍"></a>1. 计算机视觉（Computer Vision）领域介绍</h2><p>图片分类(Image Classification)、目标检测(Object detection)、神经风格转换(Neural Style Transfer)。<br>计算机视觉的一大挑战就是输入样本的尺寸可以任意大，进一步导致神经网络的参数很多，容易过拟合并且对计算机的内存和运算速度要求极高。为了解决这个问题，可以引入卷积运算。</p>
+<h2 id="2-卷积运算"><a href="#2-卷积运算" class="headerlink" title="2. 卷积运算"></a>2. 卷积运算</h2><h3 id="2-1-一维场合"><a href="#2-1-一维场合" class="headerlink" title="2.1. 一维场合"></a>2.1. 一维场合</h3><p>卷积的一个重要物理意义是：一个函数（如：单位响应）在另一个函数（如：输入信号）上的<strong>加权叠加</strong>。  对于线性时不变系统，如果知道该系统的单位响应，那么将单位响应和输入信号求卷积，就相当于把输入信号的各个时间点的单位响应 加权叠加，就直接得到了输出信号。  形象的物理含义见<a href="https://www.zhihu.com/question/22298352/answer/34267457" target="_blank" rel="noopener">怎样通俗易懂地解释卷积？ - 知乎</a><br>给定一个输入信号序列$x(t), t=1,···,n$，和单位响应序列（有时也称滤波器）$f(t), t=1,···,m$，一般情况下单位响应的长度$m$远小于输入信号长度$n$。  则卷积输出：  </p>
+<script type="math/tex; mode=display">
+\begin{align*} 
+y(t) &=(f*x)(t)\\  &=\sum_{k=1}^{\infty}f(t-k+1)·x(k)) \\ 
+&=\sum_{k=1}^{\infty}f(k)·x(t-k+1)) \\  
+&=\sum_{k=1}^{m}f(k)·x(t-k+1))\\
+\tag{2-1}  
+\end{align*}</script><p>在卷积神经网络中，对于不在$[1,n]$范围之内的$x(t)$用零补齐(zero-padding)，输出长度一般为$n+m-1$。此时也称为<strong>宽卷积</strong>。另一类是<strong>窄卷积</strong>，输出长度为$n-m+1$  </p>
+<h3 id="2-2-二维场合"><a href="#2-2-二维场合" class="headerlink" title="2.2. 二维场合"></a>2.2. 二维场合</h3><p>二维卷积经常用在图像处理中。给定一个图像$x_{ij}, 1\le i\le M,1\le j\le N$，和滤波器$f_{ij}, 1\le i\le m,1\le j\le n$，一般$m &lt;&lt; M,n &lt;&lt; N$。<br>卷积的输出为：  </p>
+<script type="math/tex; mode=display">
+\begin{align*} y_{ij}&=\sum_{u=1}^{+\infty}\sum_{v=1}^{+\infty}f_{i-u+1,i-v+1}·x_{u,v}\\  
+&=\sum_{u=1}^{m}\sum_{v=1}^{n}f_{u,v}·x_{i-u+1,i-v+1}\\
+\tag{2-2}  
+\end{align*}</script><p>在图像处理中，常用的均值滤波（mean filter）就是当前位置的像素值设为滤波器窗口中素有像素的平均值，也就是$f_{uv}=\frac{1}{mn}$。<br>上面的运算是信号与系统里面的定义，在实际的操作中通常要将卷积核进行翻转（水平和竖直方向上分别进行一次翻转）再与输入信号进行逐元素相乘（再相加）。但是在深度学习中，简化了翻转的操作，因此其实不适用于上述的公式。深度学习里面的卷积，更严谨的称呼是交叉相关（cross-correlation），但是由于习惯，还是叫做卷积。</p>
+<h2 id="3-卷积操作的作用和优点"><a href="#3-卷积操作的作用和优点" class="headerlink" title="3. 卷积操作的作用和优点"></a>3. 卷积操作的作用和优点</h2><h3 id="3-1-参数共享和连接的稀疏性"><a href="#3-1-参数共享和连接的稀疏性" class="headerlink" title="3.1. 参数共享和连接的稀疏性"></a>3.1. 参数共享和连接的稀疏性</h3><p>假设输入图像形状为$32\times 32\times 3$，卷积核形状为$5\times 5\times 6$，则卷积后的图像大小为$28\times 28\times 6$。如果是传统的神经网络，那么参数个数为：$3072\times 4704\approx 14M$，而在卷积神经网络中参数个数为$(5\times 5+1)\times 6=156$<br>卷积核在图像上移动时，参数不变（参数共享）<br>输出图像上的每个像素只来源于上一层图像的一个局部（连接的稀疏性）</p>
+<h3 id="3-2-平移不变性"><a href="#3-2-平移不变性" class="headerlink" title="3.2. 平移不变性"></a>3.2. 平移不变性</h3><h3 id="3-2-边缘检测"><a href="#3-2-边缘检测" class="headerlink" title="3.2. 边缘检测"></a>3.2. 边缘检测</h3><h2 id="4-Padding（填充）"><a href="#4-Padding（填充）" class="headerlink" title="4. Padding（填充）"></a>4. Padding（填充）</h2><p>常规卷积操作的后果：  </p>
+<ul>
+<li>shrinking image没经过一次卷积操作，图片都会缩小 </li>
+<li>throw away info from edge（忽视边界信息） ，角落或者边界上的像素被使用的次数比中间的像素少很多</li>
+</ul>
+<p>记输入图片尺寸为$n\times n$，滤波器大小为$f\times f$，填充的数量为$p$，下面是两种常用的填充方式：</p>
+<ul>
+<li>“valid”: no padding $n\times n\ *\ f\times f \rightarrow n-f+1\ \times\ n-f+1$  </li>
+<li>“Same”: Pad so that output size is the same as the input size $(n+2p-f+1)\times (n+2p-f+1)$， 其中$p=\frac{f-1}{2}$。</li>
+</ul>
+<p>在计算机视觉领域，f基本上是奇数。因为如果是偶数，需要不对称的填充。而且奇数的滤波器有一个中心，这样可以描述滤波器的位置。$3\times3$的滤波器最常见</p>
+<h2 id="5-Strided-Convolutions-带步长的卷积"><a href="#5-Strided-Convolutions-带步长的卷积" class="headerlink" title="5. Strided Convolutions(带步长的卷积)"></a>5. Strided Convolutions(带步长的卷积)</h2><p>假设padding p, stride S，则卷积操作的尺寸运算为：$(n\times n)*(f\times f)\ \rightarrow\ \left(\frac{n+2p-f}{S}+1\right)\times \left(\frac{n+2p-f}{S}+1\right)$<br>如果不能整除，则向下取整：$\lfloor\frac{n+2p-f}{S}+1\rfloor\times \lfloor\frac{n+2p-f}{S}+1\rfloor$ ，这意味着滤波器必须全部落在（填充后的）图像上。</p>
+<h2 id="6-对三维图片（RGB）的卷积操作"><a href="#6-对三维图片（RGB）的卷积操作" class="headerlink" title="6. 对三维图片（RGB）的卷积操作"></a>6. 对三维图片（RGB）的卷积操作</h2><p>RGB图像有三个通道（channel），或者叫做深度（depth），因此卷积核也应该有三个通道。卷积核的三个通道分别与RGB图像的三个通道逐元素相乘，再将乘积结果相加，得到卷积后的图像。下图是检测红色垂直边缘（上）和整体图像的垂直边缘（下）的例子：</p>
+<center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Convolutions%20on%20RGB%20image.JPG"></center>
+<center>图6.1 RGB图像卷积操作例子</center>
+有时为了检测多种类型的边缘，可以用同时多个滤波器对图像进行卷积操作，具体的尺寸运算总结如下：
+$n\times n\times n_c\ *\ f\times f\times n_c\ \rightarrow\ n-f+1\times n-f+1\times n_c'$
+其中$n_c$代表通道数，通常图像的通道数与滤波器的通道数相等；$n$和$f$分别代表图像和滤波器每个通道的尺寸；$n_c'$代表滤波器的个数
+<center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Multiple%20Filters.JPG"></center>
+<center>图6.2 同时用多个卷积核对图像进行卷积操作</center>
+
+<h2 id="7-一层卷积层的例子"><a href="#7-一层卷积层的例子" class="headerlink" title="7. 一层卷积层的例子"></a>7. 一层卷积层的例子</h2><p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Example%20of%20a%20convolutional%20layer.JPG"></center></p>
+<p><center>图7.1 一层卷积层的例子</center><br>卷积核相关说明：</p>
+<script type="math/tex; mode=display">
+\begin{align*} f^{[l]}&=filter\ size,\\  
+p^{[l]}&=padding\\  s^{[l]}&=stride\\ 
+\tag{7-1}
+\end{align*}</script><p>卷积核的形状为: </p>
+<script type="math/tex; mode=display">f^{[l]}\times f^{[l]}\times n_c^{[l-1]}\tag{7-2}</script><p>输入输出的形状：</p>
+<script type="math/tex; mode=display">
+\begin{align*} Input&: n_H^{[l-1]}\times n_W^{[l-1]}\times n_c^{[l-1]}\\  
+Output&: n_H^{[l]}\times n_W^{[l]}\times n_c^{[l]}\\  
+\tag{7-3}
+\end{align*}</script><p>其中：</p>
+<script type="math/tex; mode=display">
+\begin{align*} n_H^{[l]}&=\lfloor\frac{n_H^{[l-1]}+2p^{[l]}-f^{l}}{S^{[l]}}+1\rfloor\\  n_W^{[l]}&=\lfloor\frac{n_W^{[l-1]}+2p^{[l]}-f^{l}}{S^{[l]}}+1\rfloor\\  
+\tag{7-4}
+\end{align*}</script><p>Activations: $a^{[l]}=n_H^{[l]}\times n_W^{[l]}\times n_c^{[l]}$<br>Batch or mini batch: $A^{[l]}=m\times n_H^{[l]}\times n_W^{[l]}\times n_c^{[l]}$<br>Weights: $f^{[l]}\times f^{[l]}\times n_c^{[l-1]}\times n_c^{l}$<br>bias: $n_c^{[l]}\rightarrow (1,1,1,n_c^{[l]})$</p>
+<h2 id="8-卷积神经网络的一个完整例子"><a href="#8-卷积神经网络的一个完整例子" class="headerlink" title="8. 卷积神经网络的一个完整例子"></a>8. 卷积神经网络的一个完整例子</h2><p>一个完整的卷积神经网络模型：</p>
+<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Example%20Convnet.JPG"></center></p>
+<p><center>图8.1 一个完整卷积神经网络例子</center><br>在设计卷积神经网络中的许多工作是选择合适的超参数，例如总单元数多少？步长多少？padding多少？使用了多少滤波器等。<br>Types of layer in a convolutional network:  </p>
+<ul>
+<li>Convolution (CONV)  </li>
+<li>Pooling (POOL )  </li>
+<li>Fully connected (FC)</li>
+</ul>
+<h2 id="9-Pooling-layer（池化层）"><a href="#9-Pooling-layer（池化层）" class="headerlink" title="9. Pooling layer（池化层）"></a>9. Pooling layer（池化层）</h2><p>Max pooling  没有参数，因此不需要通过反向传播来学习参数<br>多通道图片时，对每个通道分别进行max pooling<br>pooling层的作用：平移不变性，减少图片尺寸<a href="https://www.zhihu.com/question/36686900/answer/130890492" target="_blank" rel="noopener">pooling层的作用-知乎</a>  </p>
+<p>The pooling (POOL) layer reduces the height and width of the input. It helps reduce computation, as well as helps make feature detectors more invariant to its position in the input.<br>max pooling比较常用，average pooling不常用<br>hyperparameters:  </p>
+<ul>
+<li>f: filter size (f=2,s=2,used quite often)  </li>
+<li>s: stride  </li>
+<li>Max or average pooling<h2 id="10-卷积神经网络经典模型"><a href="#10-卷积神经网络经典模型" class="headerlink" title="10. 卷积神经网络经典模型"></a>10. 卷积神经网络经典模型</h2><h3 id="10-1-Outline"><a href="#10-1-Outline" class="headerlink" title="10.1 Outline"></a>10.1 Outline</h3>经典的网络结构：</li>
+<li>LeNet-5</li>
+<li>AlexNet</li>
+<li>VGG</li>
+<li>ResNet</li>
+<li>Inception<h3 id="10-1-LeNet-5"><a href="#10-1-LeNet-5" class="headerlink" title="10.1 LeNet-5"></a>10.1 LeNet-5</h3>在计算层数时通常把有参数的算作一层，因为pooling层没有参数，因此conv层和pooling层放在一起当作一层.<br>LetNet-5结构图：<center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/LeNet-5.png"></center>
+<center>图10.1 LeNet-5模型结构图</center>
+LetNet-5参数表
+<center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/LeNet-5%E5%8F%82%E6%95%B0.JPG"></center>
+<center>图10.2 LetNet-5参数说明</center></li>
+<li>用的是sigmoid/tanh激活函数</li>
+<li>由于那时的计算机性能比较差，采用了比较复杂的训练技巧<br>注意：</li>
+<li>最大池化没有任何参数</li>
+<li>卷积层趋向于拥有越来越少的参数，多数参数集中在神经网络的全连接层上</li>
+<li>随着神经网络的深入，激活输入大小也逐渐变小。如果减少得太快，通常不利于网络性能<h3 id="10-2-AlexNet"><a href="#10-2-AlexNet" class="headerlink" title="10.2 AlexNet"></a>10.2 AlexNet</h3><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/AlexNet.png"></center>
+<center>图10.3 AlexNet模型结构图</center></li>
+<li>与LSNet-5架构相似，但是规模大许多，约60M个参数</li>
+<li>用了ReLU激活函数</li>
+<li>由于计算机性能仍然不是很好，采用复杂的训练技巧（将不同的层放在两个GPU上分别训练）</li>
+<li>用了Local Response Normalization，但是后面被发现不太有效<h3 id="10-3-VGG-16"><a href="#10-3-VGG-16" class="headerlink" title="10.3 VGG-16"></a>10.3 VGG-16</h3><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/VGG-16.png"></center><br><center>图10.4 VGG-16模型结构图</center><br>138M个参数<br>16是指有16层含有参数的层。<br>前面两层都是64个$3\times 3$的卷积核进行卷积操作。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog../../2018/06/25/神经网络之将二分类问题推广到多分类问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guoxing Lan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="../../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Guoxing Lan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="../../2018/06/25/神经网络之将二分类问题推广到多分类问题/" itemprop="url">神经网络之将二分类问题推广到多分类问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-25T16:03:52+08:00">
+                2018-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Deep Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>@[toc]</p>
+<p>将神经网络应用到多类分类问题中时，输出层的形式不能用logistic函数（sigmoid激活函数），而应该推广到softmax函数。二分类问题与多分类问题的神经网络模型的最大区别就是输出层。因此下面重点讲解softmax函数的原理。</p>
+<h2 id="1-Softmax回归详解"><a href="#1-Softmax回归详解" class="headerlink" title="1. Softmax回归详解"></a>1. Softmax回归详解</h2><p>在softmax回归中，我们解决的是多分类问题（相对于logistic回归解决的二分类问题），标记$y$可以取$k$个不同的值。对于训练集$\{(x^{(1)},y^{(1)}),\cdots,(x^{(m)},y^{(m)})\}$，我们有$y^{(j)}\in \{1,2,\cdots,k\}$。<br>对于给定的测试输入$x$，我们想用假设函数针对每一个类别$j$估算出概率值$P(y=j|x)$。因此，我们的假设函数要输出一个$k$维的向量（向量元素的和为1）来表示$k$个估计的概率值。我们采用如下形式的假设函数$h_{\theta}(x)$：  </p>
+<script type="math/tex; mode=display">
+\begin{align*}
+h_{\theta}(x^{(i)})&=  \begin{bmatrix} P(y^{(i)}=1|x^{(i)};\theta) \\  P(y^{(i)}=2|x^{(i)};\theta) \\  \vdots \\  P(y^{(i)}=10|x^{(i)};\theta)  \end{bmatrix} \\
+&=\frac{1}{\sum_{j=1}^ke^{\theta_j^Tx^{(i)}}}  \begin{bmatrix} e^{\theta_1^Tx^{(i)}} \\  e^{\theta_2^Tx^{(i)}} \\  \vdots \\  e^{\theta_k^Tx^{(i)}}  \end{bmatrix} \\
+\tag{1-1}  
+\end{align*}</script><p>假设输入向量$x$的维数为$n$，则参数$\theta$是一个$k\times (n+1)$的参数矩阵，之所以是$n+1$是因为把截距项$b$表示成了$\theta_0\times x_0$，其中$x_0=1$是一个人工辅助变量。<br>利用极大似然估计的方法，可以得到每一类的后验概率表达式：</p>
+<script type="math/tex; mode=display">P(y^{(i)}|x^{(i)};\theta)=\prod_{j=1}^k\left\{\frac{e^{\theta_j^Tx^{(i)}}}{\sum_{l=1}^ke^{\theta_l^Tx^{(i)}}}\right\}^{1(y^{(i)}=j)} \tag{1-2}</script><p>似然函数为：  </p>
+<script type="math/tex; mode=display">
+\begin{align*} 
+L(\theta) &=P(\boldsymbol{Y}|\boldsymbol{X};\theta) \\ 
+&=\prod_{i=1}^{m}P(y^{(i)}|x^{(i)};\theta) \\ 
+&=\prod_{i=1}^{m}\prod_{j=1}^k\left\{\frac{e^{\theta_j^Tx^{(i)}}}{\sum_{l=1}^ke^{\theta_l^Tx^{(i)}}}\right\}^{1(y^{(i)}=j)}\\
+\tag{1-3}  \end{align*}</script><p>对数似然函数为：  </p>
+<script type="math/tex; mode=display">
+\begin{align*} l(\theta) &=\log L(\theta) \\  
+&=\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{\theta_j^Tx^{(i)}}}{\sum_{l=1}^ke^{\theta_l^Tx^{(i)}}}}\\ 
+\tag{1-4}  
+\end{align*}</script><p>上面的$(1-4)$就是loss function。<br>cost function为： </p>
+<script type="math/tex; mode=display">
+J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{\theta_j^Tx^{(i)}}}{\sum_{l=1}^ke^{\theta_l^Tx^{(i)}}}}\right] \tag{1-5}</script><p>多分类问题的目标就是利用训练数据来训练模型参数$\theta$使其能够最小化$(1-5)$。$(1-5)$是一个凸函数，可以利用梯度下降法得到全局最小值。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog../../2018/06/25/创建机器学习项目的注意事项/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1057,19 +1451,20 @@ a&=g(z) \\  &=\frac{e^{z}-e^{-z}}{e^{z}+e^{-z}}\\  \tag{2-1}  \end{align*}</scri
       
         
           
-            <p>有任何问题请联系 <a href="mailto:languoxing@126.com" target="_blank" rel="noopener">languoxing@126.com</a></p>
+            <p>@[toc]</p>
+<p>参考Andrew NG Coursera课程《Neural Networks and Deep Learning》<br>有任何问题请联系 <a href="mailto:languoxing@126.com" target="_blank" rel="noopener">languoxing@126.com</a></p>
 <p>本文是深度学习入门教程序列的第一篇，通过介绍logistic回归的原理，进而引入一层神经网络的前向传播和后向传播公式，并提供了示例代码。</p>
-<h2 id="1-logistic回归详解"><a href="#1-logistic回归详解" class="headerlink" title="1.logistic回归详解"></a>1.logistic回归详解</h2><p>logistic回归模型是用来解决二分类问题的，因此我们将首先在概率的框架下描述什么是分类问题。分类问题的一般描述如下图所示：</p>
-<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0.png" width="500" height="150" alt="分类问题的一般描述"></center></p>
-<p><center>图1.1 分类问题的一般描述</center><br>用X代表输入空间，是输入向量的所有可能取值的集合，也叫特征空间；Y代表输出空间，是输出的所有可能取值的集合。$x^{(i)}\in X$代表特征空间的一个样本，$y^{(i)}\in Y$代表其类别（标签）。分类问题的一般描述可总结为：利用已知标签的训练集$X_{train}$训练出一个模型，该模型包含一个映射关系$h:X\rightarrow Y$，$h$应该能够对新的数据点$x^{(m+1)}$预测其类别$y^{(m+1)}$，并且预测结果应该尽可能好。通常情况下，这种“好”的标准为正确率尽可能高。</p>
+<h1 id="1-logistic回归详解"><a href="#1-logistic回归详解" class="headerlink" title="1.logistic回归详解"></a>1.logistic回归详解</h1><p>logistic回归模型是用来解决二分类问题的，因此我们将首先在概率的框架下描述什么是分类问题。分类问题的一般描述如下图所示：<br><img src="https://img-blog.csdnimg.cn/20210122192958584.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<center>图1.1 分类问题的一般描述</center>
+
+<p>用X代表输入空间，是输入向量的所有可能取值的集合，也叫特征空间；Y代表输出空间，是输出的所有可能取值的集合。$x^{(i)}\in X$代表特征空间的一个样本，$y^{(i)}\in Y$代表其类别（标签）。分类问题的一般描述可总结为：利用已知标签的训练集$X_{train}$训练出一个模型，该模型包含一个映射关系$h:X\rightarrow Y$，$h$应该能够对新的数据点$x^{(m+1)}$预测其类别$y^{(m+1)}$，并且预测结果应该尽可能好。通常情况下，这种“好”的标准为正确率尽可能高。</p>
 <p>以二分类问题为例，用0和1代表可能的类别，也即$Y=\{0,1\}$。我们从概率的框架下来讨论二分类问题：给定输入特征向量$x$，我们希望估计出它分别属于两类的概率$P(y=0|x;\theta)$和$P(y=1|x;\theta)$。因为现在讨论的是二分类问题，可令$\hat y=P(y=1|x;\theta)$，那么只要估计出$\hat y$就可以了。在估计之前，需要选择合适形式的函数对各类别的后验概率建模，一种最简单也是最笨的方法就是令$\hat y=w ^T x+b$，也即线性回归。但是这样可能会导致$\hat y$的值大于1或者大于0，这和概率的定义相违背。因此，我们可以在线性回归的表达式前面加上一层sigmoid函数，也即$\hat y=\sigma\left(\omega ^T x+b\right)$。sigmoid函数的表达式为：</p>
-<script type="math/tex; mode=display">\sigma (z)=\frac{1}{1+e^{-z}}\\ \tag{1-1}</script><p>其函数图像为：</p>
-<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/600px-Logistic-curve.png" width="300" height="200" alt="sigmoid函数图像"></center></p>
-<p><center>图1.2 logistic函数图像</center><br>到此，我们得到了logistic回归模型：</p>
-<script type="math/tex; mode=display">\hat y=\frac{1}{1+e^{(-\theta^Tx)}} \tag{1-2}</script><p>注意，在$(1-2)$中，我们将参数项b用$x_0$表示，这样能够写成更紧凑的形式。为了突出参数$\theta$，我们用$h_\theta$表示公式$(2)$中的函数，它代表了在已知特征$x$的情况下，类别为$y=1$的概率，也即$P(y=1|x;\theta)=h_\theta$；显然,$P(y=0|x;\theta)=1-h_\theta$<br>假设我们的目标是让分类的错误率最小（即最小错误率决策准则，这是最普遍的一种分类准则）。不难证明，最小化错误等价于最大化各类的后验概率。因此，若$(1-2)$的值大于0.5，则判定为类别1；否则判定为类别0。</p>
-<p>注意，logistic模型仍然是一个线性分类模型，因为它的决策面是$0=w ^T x+b$，我一个线性决策面。 </p>
-<h2 id="2-损失函数的选取"><a href="#2-损失函数的选取" class="headerlink" title="2.损失函数的选取"></a>2.损失函数的选取</h2><p>选取好了模型后，接下来要选取损失函数（Loss function），然后在训练集上利用一定的算法（例如梯度下降法）最小化损失函数，从而确定$h_{\theta}$中的参数$\theta$。一种很自然的想法是选取$L\left(\hat y,y\right)=\frac{1}{2}\left(\hat y-y\right)^2$作为损失函数，但是这会导致在后面学习参数的过程中，最优问题不是一个凸问题。我们在这里采用极大似然估计的方法来推导出一个更合理的损失函数，并且该损失函数是凸函数。</p>
-<h3 id="2-1-最大化后验概率与极大似然估计"><a href="#2-1-最大化后验概率与极大似然估计" class="headerlink" title="2.1.最大化后验概率与极大似然估计"></a>2.1.最大化后验概率与极大似然估计</h3><p>回忆一下极大似然估计的思想：对于可观测的样本$X$及其观测值$Y$，写出该观测值的概率表达式（记为$L\left(\theta\right)$)，该概率表达式一般依赖于参数$\theta$，极大似然估计的目标是寻找$\theta$的估计值$\hat \theta$使得$L\left(\theta\right)$最大。<br>对于某一个观测样本$x^{(i)}$和观测值$y^{(i)}$,有：</p>
+<script type="math/tex; mode=display">\sigma (z)=\frac{1}{1+e^{-z}}\\  \tag{1-1}</script><p>其函数图像为：<br><img src="https://img-blog.csdnimg.cn/2021012219310771.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>到此，我们得到了logistic回归模型：</p>
+<script type="math/tex; mode=display">\hat y=\frac{1}{1+e^{(-\theta^Tx)}}  \tag{1-2}</script><p>注意，在$(1-2)$中，我们将参数项b用$x_0$表示，这样能够写成更紧凑的形式。为了突出参数$\theta$，我们用$h_\theta$表示公式$(2)$中的函数，它代表了在已知特征$x$的情况下，类别为$y=1$的概率，也即$P(y=1|x;\theta)=h_\theta$；显然,$P(y=0|x;\theta)=1-h_\theta$<br>假设我们的目标是让分类的错误率最小（即最小错误率决策准则，这是最普遍的一种分类准则）。不难证明，最小化错误等价于最大化各类的后验概率。因此，若$(1-2)$的值大于0.5，则判定为类别1；否则判定为类别0。</p>
+<p>注意，logistic模型仍然是一个线性分类模型，因为它的决策面是$0=w ^T x+b$，我一个线性决策面。</p>
+<h1 id="2-损失函数的选取"><a href="#2-损失函数的选取" class="headerlink" title="2.损失函数的选取"></a>2.损失函数的选取</h1><p>选取好了模型后，接下来要选取损失函数（Loss function），然后在训练集上利用一定的算法（例如梯度下降法）最小化损失函数，从而确定$h_{\theta}$中的参数$\theta$。一种很自然的想法是选取$L\left(\hat y,y\right)=\frac{1}{2}\left(\hat y-y\right)^2$作为损失函数，但是这会导致在后面学习参数的过程中，最优问题不是一个凸问题。我们在这里采用极大似然估计的方法来推导出一个更合理的损失函数，并且该损失函数是凸函数。</p>
+<h2 id="2-1-最大化后验概率与极大似然估计"><a href="#2-1-最大化后验概率与极大似然估计" class="headerlink" title="2.1.最大化后验概率与极大似然估计"></a>2.1.最大化后验概率与极大似然估计</h2><p>回忆一下极大似然估计的思想：对于可观测的样本$X$及其观测值$Y$，写出该观测值的概率表达式（记为$L\left(\theta\right)$)，该概率表达式一般依赖于参数$\theta$，极大似然估计的目标是寻找$\theta$的估计值$\hat \theta$使得$L\left(\theta\right)$最大。<br>对于某一个观测样本$x^{(i)}$和观测值$y^{(i)}$,有：</p>
 <script type="math/tex; mode=display">
 \begin{align*}
 L(\theta)&=P(y^{(i)}|x;\theta)\\
@@ -1078,16 +1473,25 @@ L(\theta)&=P(y^{(i)}|x;\theta)\\
 \tag{2-1}  
 \end{align*}</script><p>$L(\theta)$也叫似然函数。<br>对数似然函数为：</p>
 <script type="math/tex; mode=display">
-\begin{align*} l(\theta) &=\log L(\theta) \\  
-&=y\log\left(h_\theta(x)\right)+(1-y)\log (1-h_\theta(x)) \tag{2-2} \end{align*}</script><p>$(2-2)$就是单个样本的损失函数。下面讨论训练集上的代价函数（cost function）。<br>对于多个观测样本$X$和观测值$Y$，似然函数可写成：</p>
+\begin{align*}  l(\theta) &=\log L(\theta)  \\  
+&=y\log\left(h_\theta(x)\right)+(1-y)\log  (1-h_\theta(x))  \tag{2-2}  \end{align*}</script><p>$(2-2)$就是单个样本的损失函数。下面讨论训练集上的代价函数（cost function）。<br>对于多个观测样本$X$和观测值$Y$，似然函数可写成：</p>
 <script type="math/tex; mode=display">
-\begin{align*} L(\theta) &=P(\boldsymbol{Y}|\boldsymbol{X};\theta) \\ &=\prod_{i=1}^{m}P(y^{(i)}|x^{(i)};\theta) \\ &=\prod_{i=1}^{m}(h_\theta(x^{(i)}))^{y^{(i)}}(1-h_\theta(x^{(i)}))^{1-y^{(i)}}\\ \tag{2-3}  
+\begin{align*}  L(\theta) &=P(\boldsymbol{Y}|\boldsymbol{X};\theta)  \\  &=\prod_{i=1}^{m}P(y^{(i)}|x^{(i)};\theta)  \\  &=\prod_{i=1}^{m}(h_\theta(x^{(i)}))^{y^{(i)}}(1-h_\theta(x^{(i)}))^{1-y^{(i)}}\\  \tag{2-3}  
 \end{align*}</script><p>对数似然函数为：</p>
 <script type="math/tex; mode=display">
-\begin{align*} l(\theta) &=\log L(\theta) \\ &=\sum_{i=1}^{m}y^{(i)}\log h_\theta(x^{(i)})+(1-y^{(i)})\log (1-h_\theta(x^{(i)}))\\ \tag{2-4} \end{align*}</script><p>因为对数似然函数需要最大化，而损失函数需要最小化，因此我们选择如下表达式作为损失函数：</p>
-<script type="math/tex; mode=display">J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}y^{(i)}\log h_\theta(x^{(i)})+(1-y^{(i)})\log (1-h_\theta(x^{(i)}))\right] \tag{2-5}</script><p>$(2-5)$就是代价函数（cost function），它等价于对所有的$(2-2)$取平均。<br>损失函数（loss function）是定义在单个样本上的，代价函数（cost function）是定义在多个样本上的。</p>
-<h2 id="3-梯度下降方法求解最优的参数-w-和-b-（一层神经网络）"><a href="#3-梯度下降方法求解最优的参数-w-和-b-（一层神经网络）" class="headerlink" title="3.梯度下降方法求解最优的参数$w$和$b$（一层神经网络）"></a>3.梯度下降方法求解最优的参数$w$和$b$（一层神经网络）</h2><p>下面我们讨论只有输入层和输出层（激活函数为sigmoid函数）的简单神经网络的前向传播和反向传播过程，也即logistic回归。</p>
-<h3 id="3-1-前向传播"><a href="#3-1-前向传播" class="headerlink" title="3.1.前向传播"></a>3.1.前向传播</h3><script type="math/tex; mode=display">
+\begin{align*}  l(\theta) &=\log L(\theta)  \\  &=\sum_{i=1}^{m}y^{(i)}\log h_\theta(x^{(i)})+(1-y^{(i)})\log  (1-h_\theta(x^{(i)}))\\  \tag{2-4}  \end{align*}</script><p>因为对数似然函数需要最大化，而损失函数需要最小化，因此我们选择如下表达式作为损失函数：</p>
+<script type="math/tex; mode=display">J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}y^{(i)}\log h_\theta(x^{(i)})+(1-y^{(i)})\log  (1-h_\theta(x^{(i)}))\right]  \tag{2-5}</script><p>$(2-5)$就是代价函数（cost function），它等价于对所有的$(2-2)$取平均。<br>损失函数（loss function）是定义在单个样本上的，代价函数（cost function）是定义在多个样本上的。</p>
+<h1 id="3-梯度下降方法求解最优的参数-w-和-b-（一层神经网络）"><a href="#3-梯度下降方法求解最优的参数-w-和-b-（一层神经网络）" class="headerlink" title="3.梯度下降方法求解最优的参数$w$和$b$（一层神经网络）"></a>3.梯度下降方法求解最优的参数$w$和$b$（一层神经网络）</h1><p>利用logistic可以构造一个只含有输出层的神经网络，其结构图如下：<br><img src="https://img-blog.csdnimg.cn/20210122193351221.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<center>图3.1 用logistic回归表示的单层神经网络结构图</center>
+
+<p>下面介绍其作为神经网络时的前向传播、反向传播过程，为后面理解更复杂的神经网络打下基础。<br>logistic回归的代价函数的凸函数，因此可以用梯度下降的方法求得全局最优值，并且与初始化的方式无关，一般利用零初始化。</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+w&:=w-\alpha\frac{\partial J(w,b)}{\partial w}\\
+b&:=b-\alpha\frac{\partial J(b,b)}{\partial b}\\
+\tag{3-1}
+\end{align*}</script><p>注意，Andrew NG在Cousera开设的深度学习课程中，求偏导用的是符号$d$，我们这里不区分$\partial$和$d$。<br>下面我们讨论只有输入层和输出层（激活函数为sigmoid函数）的简单神经网络的前向传播和反向传播过程，也即logistic回归。</p>
+<h2 id="3-1-前向传播"><a href="#3-1-前向传播" class="headerlink" title="3.1.前向传播"></a>3.1.前向传播</h2><script type="math/tex; mode=display">
 \begin{align*}  X&=\left[x^{(1)},x^{(2)},\cdots,x^{(m)}\right]\\  Z&=\left[z^{(1)},z^{(2)},\cdots,z^{(m)}\right]\\  
 &=[w^Tx^{(1)}+b,w^Tx^{(2)}+b,\cdots,w^Tx^{(m)}+b]\\  A&=\left[a^{(1)},a^{(2)},\cdots,a^{(m)}\right]\\
 &=\left[\sigma\left(a^{(1)}\right),\sigma\left(a^{(2)}\right),\cdots,\sigma\left(a^{(m)}\right)\right]\\
@@ -1109,10 +1513,11 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{3-2}  \end{align*}</scr
 <script type="math/tex; mode=display">
 \begin{align*} 
 \rm{d}\it{Z}&=A-Y\\
-\rm d\it w&= \frac{1}{m}\cdot X\cdot \rm{d}\it{Z}^T\\  &=\frac{1}{m}X\left(A-Y\right)^T \\  \rm d\it b&= \frac{1}{m}\cdot\sum_{i=1}^{m}\left(\rm{d}\it{Z^{(i)}}\right) \\  \tag{3-5}  \end{align*}</script><p>注意，$(3-5)$的流程可以理解为先对每一个样本求损失函数关于$z$的梯度，并对每个样本求出$\rm{d}\it{w}$，在对所有样本的$\rm{d}\it{w}$球平均，因此有$1/m$。</p>
-<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/logistic%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D.JPG" alt="logistic回归梯度下降"></center></p>
-<p><center>图3.2 logistic回归梯度下降</center><br>也可以对$m$个样本的代价函数一次性直接求偏导，这需要一定的向量微分和复合函数微分的知识。这样的话，在$\rm{d}\it{Z}$中就会有一个$1/m$，那么在求$\rm{d}\it{w}$时就不用另外再加一个$1/m$了，并且形状可能互为转置，最终的结果是一样的。具体过程这里省略，有兴趣的读者可以自行推导。</p>
-<h2 id="4-单层神经网络示例代码"><a href="#4-单层神经网络示例代码" class="headerlink" title="4.单层神经网络示例代码"></a>4.单层神经网络示例代码</h2><p>网络结构见图3.1<br>请点击下面的超链接跳转至github页面：<br><a href="https://github.com/lankuohsing/Coursera-Deep-Learning-Specialization/tree/master/Neural%20Networs%20and%20Deep%20Learning" target="_blank" rel="noopener">用logistic回归实现一层神经网络用来识别猫的图片</a><br>其中Logistic_Regression_with_a_Neural_Network_mindset.ipynb文件包含详细的注释和图示，但需要在jupyternotebook中运行；Logistic_Regression_with_a_Neural_Network_mindset.py文件可直接用“python”命令运行，两者的功能是一样的。</p>
+\rm d\it w&= \frac{1}{m}\cdot X\cdot \rm{d}\it{Z}^T\\  &=\frac{1}{m}X\left(A-Y\right)^T \\  \rm d\it b&= \frac{1}{m}\cdot\sum_{i=1}^{m}\left(\rm{d}\it{Z^{(i)}}\right) \\  \tag{3-5}  \end{align*}</script><p>注意，$(3-5)$的流程可以理解为先对每一个样本求损失函数关于$z$的梯度，并对每个样本求出$\rm{d}\it{w}$，在对所有样本的$\rm{d}\it{w}$球平均，因此有$1/m$。<br><img src="https://img-blog.csdnimg.cn/20210122193535549.JPG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<center>图3.2 logistic回归梯度下降</center>
+
+<p>也可以对$m$个样本的代价函数一次性直接求偏导，这需要一定的向量微分和复合函数微分的知识。这样的话，在$\rm{d}\it{Z}$中就会有一个$1/m$，那么在求$\rm{d}\it{w}$时就不用另外再加一个$1/m$了，并且形状可能互为转置，最终的结果是一样的。具体过程这里省略，有兴趣的读者可以自行推导。</p>
+<h1 id="4-单层神经网络示例代码"><a href="#4-单层神经网络示例代码" class="headerlink" title="4.单层神经网络示例代码"></a>4.单层神经网络示例代码</h1><p>网络结构见图3.1<br>请点击下面的超链接跳转至github页面：<br><a href="https://github.com/lankuohsing/Coursera-Deep-Learning-Specialization/tree/master/Neural%20Networs%20and%20Deep%20Learning" target="_blank" rel="noopener">用logistic回归实现一层神经网络用来识别猫的图片</a><br>其中Logistic_Regression_with_a_Neural_Network_mindset.ipynb文件包含详细的注释和图示，但需要在jupyternotebook中运行；Logistic_Regression_with_a_Neural_Network_mindset.py文件可直接用“python”命令运行，两者的功能是一样的。</p>
 <h2 id="5-两层神经网络"><a href="#5-两层神经网络" class="headerlink" title="5.两层神经网络"></a>5.两层神经网络</h2><h3 id="5-1-前向传播"><a href="#5-1-前向传播" class="headerlink" title="5.1.前向传播"></a>5.1.前向传播</h3><script type="math/tex; mode=display">
 \begin{align*}  X&=\left[x^{(1)},x^{(2)},\cdots,x^{(m)}\right]\\  
 W^{[1]}&=\left[w_1^{[1]},w_2^{[1]},\cdots,w_{n_1}^{[1]}\right]^{T}\\
@@ -1124,7 +1529,7 @@ b^{[2]}&=\left[b_1^{[2]},b_2^{[2]},\cdots,b_{n_2}^{[2]}\right]\\
 Z^{[2]}&=W^{[2]}A^{[1]}+b^{[2]}\\
 A^{[2]}&=g^{[2]}\left(Z^{[2]}\right)\\
 Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{5-1}  \end{align*}</script><p>$(5-1)$中从上到下的顺序可以代表前向传播过程。</p>
-<h3 id="5-2-反向传播"><a href="#5-2-反向传播" class="headerlink" title="5.2.反向传播"></a>5.2.反向传播</h3><script type="math/tex; mode=display">
+<h2 id="5-2-反向传播"><a href="#5-2-反向传播" class="headerlink" title="5.2.反向传播"></a>5.2.反向传播</h2><script type="math/tex; mode=display">
 \begin{align*} 
 {\rm d}Z^{[2]}&=A^{[2]}-Y\\
 {\rm d}W^{[2]}&=\frac{1}{m}{\rm d}Z^{[2]}A^{[1]\ T}\\  
@@ -1134,14 +1539,16 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{5-1}  \end{align*}</scr
 {\rm d}W^{[1]}&=\frac{1}{m}{\rm d}Z^{[1]}A^{[0]\ T}\\  
 {\rm d}b^{[1]}&=\frac{1}{m}np.sum\left({\rm d}Z^{[1]},axis=1,keepdims=True\right)\\  \tag{5-2}
 \end{align*}</script><p>$(5-2)$中从上到下的顺序可以代表前向传播过程。</p>
-<h3 id="5-3-关于参数的初始化"><a href="#5-3-关于参数的初始化" class="headerlink" title="5.3.关于参数的初始化"></a>5.3.关于参数的初始化</h3><p>在单层神经网络（logistic回归）中，可以将参数初始化wie全零值；但是在多层神经网络中，$W$不能初始化为0，否则每一层的各个节点对应的$W$会训练成一样的值；$b$可以初始化为0  $W$不能初始化为特别大，浅层网络一般是0.01量级；因为太大了的话，激活函数的自变量要么正向很大，要么负向很大，导致斜率趋近于0 ，收敛速度很慢。尤其是你使用$sigmoid$或$tanh$激活函数。如果不使用这些激活函数，但是你是二分类问题（输出层是sigmoid函数），也会出现这个问题.</p>
-<h3 id="5-4-2层神经网络示例代码"><a href="#5-4-2层神经网络示例代码" class="headerlink" title="5.4.2层神经网络示例代码"></a>5.4.2层神经网络示例代码</h3><p>对如下二维平面上的点进行分类：</p>
-<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/planar.png"></center></p>
-<p><center>图5.1 二维平面上的非线性二分类数据集例子</center><br>网络结构如下：</p>
-<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E4%BB%8Elogistic%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/2_layer_NN.png"></center></p>
-<p><center>图5.2 2层神经网络结构例子</center><br>点击下面的超链接查看完整代码：<br><a href="https://github.com/lankuohsing/Coursera-Deep-Learning-Specialization/tree/master/Neural%20Networs%20and%20Deep%20Learning" target="_blank" rel="noopener">2层神经网络的示例代码</a><br>其中Palnar_data_clf_with_one_hidden_layer.ipynb文件包含详细的注释和图示，但需要在jupyternotebook中运行；Palnar_data_clf_with_one_hidden_layer.py文件可直接用“python”命令运行，两者的功能是一样的。</p>
-<h2 id="6-深层神经网络"><a href="#6-深层神经网络" class="headerlink" title="6.深层神经网络"></a>6.深层神经网络</h2><h3 id="6-1-每层的参数及变量的尺寸"><a href="#6-1-每层的参数及变量的尺寸" class="headerlink" title="6.1.每层的参数及变量的尺寸"></a>6.1.每层的参数及变量的尺寸</h3><script type="math/tex; mode=display">\begin{align*}  z^{[l]}&:\left(n^{[l]},1\right)\\  a^{[l]}&:\left(n^{[l]},1\right)\\  W^{[l]}&:\left(n^{[l]},n^{[l-1]}\right)\\  b^{[l]}&:\left(n^{[l]},1\right)\\  dW^{[l]}&:\left(n^{[l]},n^{[l-1]}\right)\\  db^{[l]}&:\left(n^{[l]},1\right)\\  \tag{6-1}
-\end{align*}</script><h3 id="6-2-前向传播递推公式"><a href="#6-2-前向传播递推公式" class="headerlink" title="6.2.前向传播递推公式"></a>6.2.前向传播递推公式</h3><script type="math/tex; mode=display">
+<h2 id="5-3-关于参数的初始化"><a href="#5-3-关于参数的初始化" class="headerlink" title="5.3.关于参数的初始化"></a>5.3.关于参数的初始化</h2><p>在单层神经网络（logistic回归）中，可以将参数初始化wie全零值；但是在多层神经网络中，$W$不能初始化为0，否则每一层的各个节点对应的$W$会训练成一样的值；$b$可以初始化为0  $W$不能初始化为特别大，浅层网络一般是0.01量级；因为太大了的话，激活函数的自变量要么正向很大，要么负向很大，导致斜率趋近于0 ，收敛速度很慢。尤其是你使用$sigmoid$或$tanh$激活函数。如果不使用这些激活函数，但是你是二分类问题（输出层是sigmoid函数），也会出现这个问题.</p>
+<h2 id="5-4-2层神经网络示例代码"><a href="#5-4-2层神经网络示例代码" class="headerlink" title="5.4.2层神经网络示例代码"></a>5.4.2层神经网络示例代码</h2><p>对如下二维平面上的点进行分类：<br><img src="https://img-blog.csdnimg.cn/20210122193616782.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<center>图5.1 二维平面上的非线性二分类数据集例子</center>
+
+<p>网络结构如下：<br><img src="https://img-blog.csdnimg.cn/20210122194003923.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<center>图5.2 2层神经网络结构例子</center>
+
+<p>点击下面的超链接查看完整代码：<br><a href="https://github.com/lankuohsing/Coursera-Deep-Learning-Specialization/tree/master/Neural%20Networs%20and%20Deep%20Learning" target="_blank" rel="noopener">2层神经网络的示例代码</a><br>其中Palnar_data_clf_with_one_hidden_layer.ipynb文件包含详细的注释和图示，但需要在jupyternotebook中运行；Palnar_data_clf_with_one_hidden_layer.py文件可直接用“python”命令运行，两者的功能是一样的。</p>
+<h1 id="6-深层神经网络"><a href="#6-深层神经网络" class="headerlink" title="6.深层神经网络"></a>6.深层神经网络</h1><h2 id="6-1-每层的参数及变量的尺寸"><a href="#6-1-每层的参数及变量的尺寸" class="headerlink" title="6.1.每层的参数及变量的尺寸"></a>6.1.每层的参数及变量的尺寸</h2><script type="math/tex; mode=display">\begin{align*}  z^{[l]}&:\left(n^{[l]},1\right)\\  a^{[l]}&:\left(n^{[l]},1\right)\\  W^{[l]}&:\left(n^{[l]},n^{[l-1]}\right)\\  b^{[l]}&:\left(n^{[l]},1\right)\\  dW^{[l]}&:\left(n^{[l]},n^{[l-1]}\right)\\  db^{[l]}&:\left(n^{[l]},1\right)\\  \tag{6-1}
+\end{align*}</script><h2 id="6-2-前向传播递推公式"><a href="#6-2-前向传播递推公式" class="headerlink" title="6.2.前向传播递推公式"></a>6.2.前向传播递推公式</h2><script type="math/tex; mode=display">
 \begin{align*}  X&=\left[x^{(1)},x^{(2)},\cdots,x^{(m)}\right]\\  
 W^{[l]}&=\left[w_1^{[l]},w_2^{[l]},\cdots,w_{n_l}^{[l]}\right]^{T}\\
 b^{[l]}&=\left[b_1^{[l]},b_2^{[l]},\cdots,b_{n_l}^{[l]}\right]\\
@@ -1151,13 +1558,13 @@ W^{[l+1]}&=\left[w_1^{[l+1]},w_2^{[l+1]},\cdots,w_{n_l+1}^{[l+1]}\right]^{T}\\
 b^{[l+1]}&=\left[b_1^{[l+1]},b_2^{[l+1]},\cdots,b_{n_2}^{[l+1]}\right]\\
 Z^{[l+1]}&=W^{[l+1]}A^{[l]}+b^{[l+1]}\\
 A^{[l+1]}&=g^{[l+1]}\left(Z^{[l+1]}\right)\\
-Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</script><h3 id="6-3-反向传播递推公式"><a href="#6-3-反向传播递推公式" class="headerlink" title="6.3.反向传播递推公式"></a>6.3.反向传播递推公式</h3><script type="math/tex; mode=display">
+Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</script><h2 id="6-3-反向传播递推公式"><a href="#6-3-反向传播递推公式" class="headerlink" title="6.3.反向传播递推公式"></a>6.3.反向传播递推公式</h2><script type="math/tex; mode=display">
 \begin{align*} {\rm d}Z^{[l]}&={\rm d}A^{[l]}*{g^{[l]}}'\left(Z^{[l]}\right)\\  
 {\rm d}W^{[l]}&=\frac{1}{m}{\rm d}Z^{[l]}A^{[l-1]\ T}\\  
 {\rm d}b^{[l]}&=\frac{1}{m}np.sum\left({\rm d}Z^{[l]},axis=1,keepdims=True\right)\\  
 {\rm d}A^{[l-1]}&={W^{[l]}}^T{\rm d}Z^{[l]}\\  
 \tag{6-3}
-\end{align*}</script><h3 id="6-4-多层神经网络的示例代码"><a href="#6-4-多层神经网络的示例代码" class="headerlink" title="6.4.多层神经网络的示例代码"></a>6.4.多层神经网络的示例代码</h3><p>点击如下超链接。<br><a href="https://github.com/lankuohsing/Coursera-Deep-Learning-Specialization/tree/master/Neural%20Networs%20and%20Deep%20Learning" target="_blank" rel="noopener">对比了2层神经网络和5层神经网络在对猫分类时的性能</a><br>Deep Neural Network - Application.py<br>Deep Neural Network - Application.ipynb</p>
+\end{align*}</script><h2 id="6-4-多层神经网络的示例代码"><a href="#6-4-多层神经网络的示例代码" class="headerlink" title="6.4.多层神经网络的示例代码"></a>6.4.多层神经网络的示例代码</h2><p>点击如下超链接。<br><a href="https://github.com/lankuohsing/Coursera-Deep-Learning-Specialization/tree/master/Neural%20Networs%20and%20Deep%20Learning" target="_blank" rel="noopener">对比了2层神经网络和5层神经网络在对猫分类时的性能</a><br>Deep Neural Network - Application.py<br>Deep Neural Network - Application.ipynb</p>
 
           
         
@@ -1335,6 +1742,310 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</scr
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog../../2017/06/27/参数估计之最大似然估计/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guoxing Lan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="../../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Guoxing Lan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="../../2017/06/27/参数估计之最大似然估计/" itemprop="url">参数估计之最大似然估计</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-27T11:34:26+08:00">
+                2017-06-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/Tutorials-of-Statistics/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Statistics</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="参数估计之最大似然估计"><a href="#参数估计之最大似然估计" class="headerlink" title="参数估计之最大似然估计"></a>参数估计之最大似然估计</h1><p>（本章内容是后面logistic回归和softmax回归的基础）<br>基本思路：对于离散总体，设有样本观测值$x_1,x_2,\cdots ,x_n$，我们写出该观测值出现的概率，它一般依赖于某个或某些参数，用$\theta$表示，将该概率看成$\theta$的函数，用$L(\theta)$表示，称为<strong>似然函数</strong>：</p>
+<script type="math/tex; mode=display">L(\theta)=P(X_1=x_1,\cdots ,X_n=x_n;\theta)    \tag{1}</script><p>求最大似然估计就是找$\theta$的估计值$\hat {\theta}=\hat {\theta}(x_1,\cdots ,x_n)$使得上式的$L(\theta)$达到最大。</p>
+<h2 id="例子1"><a href="#例子1" class="headerlink" title="例子1"></a>例子1</h2><p>设产品分为合格品与不合格品两类，我们用一个随机变量$X$来表示某个产品经检查后的不合格品数，则$X=0$表示合格品，$X=1$表示不合格品，则$X$服从二点分布$b(1,p)$，其中$p$是未知的不合格率。先抽取n个产品看是否合格，得到样本$x_1,\cdots ,x_n$，这批观测值发生的概率为：</p>
+<script type="math/tex; mode=display">
+\begin{align*}  
+P(X_1=x_1,\cdots ,X_n=x_n;p) &= \prod_{i=1}^np^{x_i}(1-p)^{1-x_i}\\
+&=p^{\sum_{i=1}^nx_i}(1-p)^{n-\sum_{i=1}^nx_i}
+\tag{2}
+\end{align*}</script><p>似然函数为</p>
+<script type="math/tex; mode=display">L(p)=p^{\sum_{i=1}^nx_i}(1-p)^{n-\sum_{i=1}^nx_i} \tag{3}</script><p>要求$p$使得$L(p)$最大，可将$(3)$两端取对数并关于$p$求导令其为0（这里其实省略了证明$(3)$是一个凹函数的过程），得到<strong>似然方程</strong>：</p>
+<script type="math/tex; mode=display">
+\frac{\partial{L(p)}}{\partial{p}}=0 \tag{4}</script><p>求解$(4)$即可得到$p$的最大似然估计，为</p>
+<script type="math/tex; mode=display">
+\hat{p}=\hat{p}(x_1,\cdots,x_n)=\frac{1}{n}\sum _{i=1}^{n}x_i=\bar x \tag{5}</script>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog../../2017/06/04/前馈神经网络基础教程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guoxing Lan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="../../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Guoxing Lan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="../../2017/06/04/前馈神经网络基础教程/" itemprop="url">前馈神经网络基础教程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-04T12:27:26+08:00">
+                2017-06-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Deep Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>@(深度学习)[神经网络]<br><a href="http://ufldl.stanford.edu/wiki/index.php/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C" target="_blank" rel="noopener">本文主要参考链接</a></p>
+<h1 id="1-前馈神经网络基础教程"><a href="#1-前馈神经网络基础教程" class="headerlink" title="1. 前馈神经网络基础教程"></a>1. 前馈神经网络基础教程</h1><h2 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1. 概述"></a>1.1. 概述</h2><p>以监督学习为例，假设我们有训练样本集$(x(^i),y(^i))$，那么神经网络算法能够提供一种负责且非线性的假设模型$h_{W,b}(x)$，它具有参数$W,b$，可以通过调整此参数来拟合我们的数据。</p>
+<p>为了描述神经网络，我们先从最简单的神经网络讲起，这个神经网络仅由一个“神经元”构成，以下即是这个“神经元”的图示：<br><img src="https://img-blog.csdnimg.cn/img_convert/4e058fd99ab0b07da76f722a9028fdc5.png" alt="单个神经元示意图"></p>
+<p>这个“神经元”是一个以$x_1, x_2, x_3$及截距+1为输入值的运算单元，其输出为$h_{W,b}(x)=f(W^TX)=f(\sum_{i=1}^{3}W_ix_i+b)$，其中函数$f:\mathscr{R}\longmapsto \mathscr{R}$被称为激活函数。注意，有的教程中用$x_0=1$来表示截距+1。在本教程中，我们选用sigmoid函数作为激活函数$f(\cdot)$：</p>
+<script type="math/tex; mode=display">f(z)=\frac{1}{1+exp(-z)}</script><p>可以看出，这个单一“神经元”的输入输出映射关系其实就是一个逻辑回归(logistic regression)。</p>
+<h2 id="1-2-神经网络模型"><a href="#1-2-神经网络模型" class="headerlink" title="1.2. 神经网络模型"></a>1.2. 神经网络模型</h2><p>所谓神经网络就是将许多个单一“神经元”联结在一起，这样，一个“神经元”的输出就可以是另一个“神经元”的输入。下图是一个简单的神经网络例子：<br><img src="https://img-blog.csdnimg.cn/img_convert/e1a4fa64474f2ab9624d534a37dcba9f.png" alt="这里写图片描述"><br>我们使用圆圈来表示神经网络的输入，标上“+1”的圆圈被称为<strong>偏置节点</strong>，也就是截距项。神经网络最左边的一层叫做<strong>输入层</strong>，最右边的一层叫做<strong>输出层</strong>（在本例中，输出层只有一个节点）。中间所有节点组成的一层叫做<strong>隐藏层</strong>，因为我们不能在训练样本集中观测到它们的值。同时可以看到，以上神经网络的例子中有3个<strong>输入单元</strong>（偏置单元不计在内），3个<strong>隐藏单元</strong>以及1个输出单元。</p>
+<p>我们用$n_l$来表示网络的层数，本例中$n_l=3$，记第$l$层记为$L_l$，于是$L_1$是输入层，$L_{n_l}$是输出层。本例神经网络有参数$(W,b)=(W^{(1)},b^{(1)},W^{(2)},b^{(2)})$，其中$W_{ij}^{(l)}$（下面的式子中用到）是第$l$层第$j$单元与第$l+1$层第$i$单元之间的联接参数（连接线上的权重，从$j$到$i$），$b_i^{(l)}$是第$l+1$层第$i$单元的偏置项。因此在本例中，$W^{(1)}\in\mathscr{R}^{3\times3}$，$W^{(2)}\in\mathscr{R}^{1\times3}$。注意，偏置单元没有输入，是因为他们总是输出+1。同时，我们用$s_l$表示第$l$层的结点数（不包括偏置单元）。</p>
+<p>我们用$a_i^{(l)}$表示第$l$层第$i$单元的激活值的（输出值）。当$l=1$时，$a_i^{(l)}=x_i$，也就是输入层的第$i$个输入值（输入值的第$i$个特征）。对于给定参数集合$W,b$，我们的神经网络就可以按照$h_{W,b}(x)$来计算输出结果。本例中神经网络的计算步骤如下：<br>\begin{align}<br>a_1^{(2)}&amp;=f(W_{11}^{(1)}x_1+W_{12}^{(1)}x_2+W_{13}^{(1)}x_3+b_1^{(1)})\\<br>a_2^{(2)}&amp;=f(W_{21}^{(1)}x_1+W_{22}^{(1)}x_2+W_{23}^{(1)}x_3+b_2^{(1)})\\<br>a_3^{(2)}&amp;=f(W_{31}^{(1)}x_1+W_{32}^{(1)}x_2+W_{33}^{(1)}x_3+b_3^{(1)})\\<br>h_{W,b}(x)&amp;=a_1^{(3)}=f(W_{11}^{(2)}a_1^{(2)}+W_{12}^{(2)}a_2^{(2)}+W_{13}^{(2)}a_3^{(2)}+b_1^{(2)})<br>\end{align}<br>我们用$z_i^{(l)}$表示第$l$层第$i$单元输入加权和（包括偏置单元），比如，$z_i^{(2)}=\sum_{j=1}^nW_{ij}^{(1)}x_j+b_i^{(1)}$，$a_i^{(2)}=f(z_i^{(2)})$。</p>
+<p>我们将激活函数$f(\cdot)$扩展为向量形式：$f([z_1,z_2,z_3])=[f(z_1),f(z_2),f(z_3)]$，那么，上面的等式可以更简洁地表示为：<br>\begin{align}<br>z^{(2)}&amp;=W^{(1)}x+b^{(1)}\\<br>a^{(2)}&amp;=f(z^{(2)})\\<br>z^{(3)}&amp;=W^{(2)}a^{(2)}+b^{(2)}\\<br>h_{W,b}(x)&amp;=a^{(3)}=f(z^{(3)})\\<br>\end{align}<br>我们将上面的计算步骤叫做<strong>前向传播</strong>。给定第$l$层的激活值$a^{(l)}$后，第$l+1$层的激活值$a^{(l+1)}$就可以按照下面步骤计算得到：<br>\begin{align}<br>z^{(l+1)}&amp;=W^{(l)}a^{(l)}+b^{(l)}\\<br>a^{(l+1)}&amp;=f(z^{(l+1)})\\<br>\end{align}<br>将参数矩阵化，使用矩阵-向量运算方式，我们就可以利用线性代数的优势对神经网络进行快速求解。<br>神经网络也可以由多个隐藏层和多个输出单元，例如下图所示：<br><img src="https://img-blog.csdnimg.cn/img_convert/2fa20ec7757b81c276dda49036a5c3a8.png" alt="这里写图片描述"><br>像上图这样的网络，叫做前馈神经网络，这种联接图没有闭环或回路。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -1389,7 +2100,7 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</scr
               
                 <a href="https://lankuohsing.github.io/blog/archives">
               
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1400,7 +2111,7 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</scr
               
               <div class="site-state-item site-state-categories">
                 <a href="../../categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -1411,7 +2122,7 @@ Y&=\left[y^{(1)},y^{(2)},\cdots,y^{(m)}\right]\\    \tag{6-2}  \end{align*}</scr
               
               <div class="site-state-item site-state-tags">
                 <a href="../../tags/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

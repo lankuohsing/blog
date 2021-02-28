@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="../../../../lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="../../../../lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="../../../../css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../../images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../../images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="../../../../images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="../../../../images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Deep Learning,Neural Networks," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="@(深度学习)[神经网络]本文主要参考链接 1. 前馈神经网络基础教程1.1. 概述以监督学习为例，假设我们有训练样本集$(x(^i),y(^i))$，那么神经网络算法能够提供一种负责且非线性的假设模型$h_{W,b}(x)$，它具有参数$W,b$，可以通过调整此参数来拟合我们的数据。 为了描述神经网络，我们先从最简单的神经网络讲起，这个神经网络仅由一个“神经元”构成，以下即是这个“神经元”的图示">
+<meta name="keywords" content="Deep Learning,Neural Networks">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前馈神经网络基础教程">
+<meta property="og:url" content="https://lankuohsing.github.io/blog/2017/06/04/前馈神经网络基础教程/index.html">
+<meta property="og:site_name" content="Guoxing Lan">
+<meta property="og:description" content="@(深度学习)[神经网络]本文主要参考链接 1. 前馈神经网络基础教程1.1. 概述以监督学习为例，假设我们有训练样本集$(x(^i),y(^i))$，那么神经网络算法能够提供一种负责且非线性的假设模型$h_{W,b}(x)$，它具有参数$W,b$，可以通过调整此参数来拟合我们的数据。 为了描述神经网络，我们先从最简单的神经网络讲起，这个神经网络仅由一个“神经元”构成，以下即是这个“神经元”的图示">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/4e058fd99ab0b07da76f722a9028fdc5.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/e1a4fa64474f2ab9624d534a37dcba9f.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/2fa20ec7757b81c276dda49036a5c3a8.png">
+<meta property="og:updated_time" content="2021-02-28T06:43:22.480Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前馈神经网络基础教程">
+<meta name="twitter:description" content="@(深度学习)[神经网络]本文主要参考链接 1. 前馈神经网络基础教程1.1. 概述以监督学习为例，假设我们有训练样本集$(x(^i),y(^i))$，那么神经网络算法能够提供一种负责且非线性的假设模型$h_{W,b}(x)$，它具有参数$W,b$，可以通过调整此参数来拟合我们的数据。 为了描述神经网络，我们先从最简单的神经网络讲起，这个神经网络仅由一个“神经元”构成，以下即是这个“神经元”的图示">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/img_convert/4e058fd99ab0b07da76f722a9028fdc5.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lankuohsing.github.io/blog/2017/06/04/前馈神经网络基础教程/"/>
+
+
+
+
+
+  <title>前馈神经网络基础教程 | Guoxing Lan</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/lankuohsing"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Guoxing Lan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Journey To Truth</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="https://lankuohsing.github.io/blog" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="https://lankuohsing.github.io/blog/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="https://lankuohsing.github.io/blog/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="https://lankuohsing.github.io/blog/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="https://lankuohsing.github.io/blog/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guoxing Lan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="../../../../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Guoxing Lan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">前馈神经网络基础教程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-04T12:27:26+08:00">
+                2017-06-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../../../categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Deep Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>@(深度学习)[神经网络]<br><a href="http://ufldl.stanford.edu/wiki/index.php/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C" target="_blank" rel="noopener">本文主要参考链接</a></p>
+<h1 id="1-前馈神经网络基础教程"><a href="#1-前馈神经网络基础教程" class="headerlink" title="1. 前馈神经网络基础教程"></a>1. 前馈神经网络基础教程</h1><h2 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1. 概述"></a>1.1. 概述</h2><p>以监督学习为例，假设我们有训练样本集$(x(^i),y(^i))$，那么神经网络算法能够提供一种负责且非线性的假设模型$h_{W,b}(x)$，它具有参数$W,b$，可以通过调整此参数来拟合我们的数据。</p>
+<p>为了描述神经网络，我们先从最简单的神经网络讲起，这个神经网络仅由一个“神经元”构成，以下即是这个“神经元”的图示：<br><img src="https://img-blog.csdnimg.cn/img_convert/4e058fd99ab0b07da76f722a9028fdc5.png" alt="单个神经元示意图"></p>
+<p>这个“神经元”是一个以$x_1, x_2, x_3$及截距+1为输入值的运算单元，其输出为$h_{W,b}(x)=f(W^TX)=f(\sum_{i=1}^{3}W_ix_i+b)$，其中函数$f:\mathscr{R}\longmapsto \mathscr{R}$被称为激活函数。注意，有的教程中用$x_0=1$来表示截距+1。在本教程中，我们选用sigmoid函数作为激活函数$f(\cdot)$：</p>
+<script type="math/tex; mode=display">f(z)=\frac{1}{1+exp(-z)}</script><p>可以看出，这个单一“神经元”的输入输出映射关系其实就是一个逻辑回归(logistic regression)。</p>
+<h2 id="1-2-神经网络模型"><a href="#1-2-神经网络模型" class="headerlink" title="1.2. 神经网络模型"></a>1.2. 神经网络模型</h2><p>所谓神经网络就是将许多个单一“神经元”联结在一起，这样，一个“神经元”的输出就可以是另一个“神经元”的输入。下图是一个简单的神经网络例子：<br><img src="https://img-blog.csdnimg.cn/img_convert/e1a4fa64474f2ab9624d534a37dcba9f.png" alt="这里写图片描述"><br>我们使用圆圈来表示神经网络的输入，标上“+1”的圆圈被称为<strong>偏置节点</strong>，也就是截距项。神经网络最左边的一层叫做<strong>输入层</strong>，最右边的一层叫做<strong>输出层</strong>（在本例中，输出层只有一个节点）。中间所有节点组成的一层叫做<strong>隐藏层</strong>，因为我们不能在训练样本集中观测到它们的值。同时可以看到，以上神经网络的例子中有3个<strong>输入单元</strong>（偏置单元不计在内），3个<strong>隐藏单元</strong>以及1个输出单元。</p>
+<p>我们用$n_l$来表示网络的层数，本例中$n_l=3$，记第$l$层记为$L_l$，于是$L_1$是输入层，$L_{n_l}$是输出层。本例神经网络有参数$(W,b)=(W^{(1)},b^{(1)},W^{(2)},b^{(2)})$，其中$W_{ij}^{(l)}$（下面的式子中用到）是第$l$层第$j$单元与第$l+1$层第$i$单元之间的联接参数（连接线上的权重，从$j$到$i$），$b_i^{(l)}$是第$l+1$层第$i$单元的偏置项。因此在本例中，$W^{(1)}\in\mathscr{R}^{3\times3}$，$W^{(2)}\in\mathscr{R}^{1\times3}$。注意，偏置单元没有输入，是因为他们总是输出+1。同时，我们用$s_l$表示第$l$层的结点数（不包括偏置单元）。</p>
+<p>我们用$a_i^{(l)}$表示第$l$层第$i$单元的激活值的（输出值）。当$l=1$时，$a_i^{(l)}=x_i$，也就是输入层的第$i$个输入值（输入值的第$i$个特征）。对于给定参数集合$W,b$，我们的神经网络就可以按照$h_{W,b}(x)$来计算输出结果。本例中神经网络的计算步骤如下：<br>\begin{align}<br>a_1^{(2)}&amp;=f(W_{11}^{(1)}x_1+W_{12}^{(1)}x_2+W_{13}^{(1)}x_3+b_1^{(1)})\\<br>a_2^{(2)}&amp;=f(W_{21}^{(1)}x_1+W_{22}^{(1)}x_2+W_{23}^{(1)}x_3+b_2^{(1)})\\<br>a_3^{(2)}&amp;=f(W_{31}^{(1)}x_1+W_{32}^{(1)}x_2+W_{33}^{(1)}x_3+b_3^{(1)})\\<br>h_{W,b}(x)&amp;=a_1^{(3)}=f(W_{11}^{(2)}a_1^{(2)}+W_{12}^{(2)}a_2^{(2)}+W_{13}^{(2)}a_3^{(2)}+b_1^{(2)})<br>\end{align}<br>我们用$z_i^{(l)}$表示第$l$层第$i$单元输入加权和（包括偏置单元），比如，$z_i^{(2)}=\sum_{j=1}^nW_{ij}^{(1)}x_j+b_i^{(1)}$，$a_i^{(2)}=f(z_i^{(2)})$。</p>
+<p>我们将激活函数$f(\cdot)$扩展为向量形式：$f([z_1,z_2,z_3])=[f(z_1),f(z_2),f(z_3)]$，那么，上面的等式可以更简洁地表示为：<br>\begin{align}<br>z^{(2)}&amp;=W^{(1)}x+b^{(1)}\\<br>a^{(2)}&amp;=f(z^{(2)})\\<br>z^{(3)}&amp;=W^{(2)}a^{(2)}+b^{(2)}\\<br>h_{W,b}(x)&amp;=a^{(3)}=f(z^{(3)})\\<br>\end{align}<br>我们将上面的计算步骤叫做<strong>前向传播</strong>。给定第$l$层的激活值$a^{(l)}$后，第$l+1$层的激活值$a^{(l+1)}$就可以按照下面步骤计算得到：<br>\begin{align}<br>z^{(l+1)}&amp;=W^{(l)}a^{(l)}+b^{(l)}\\<br>a^{(l+1)}&amp;=f(z^{(l+1)})\\<br>\end{align}<br>将参数矩阵化，使用矩阵-向量运算方式，我们就可以利用线性代数的优势对神经网络进行快速求解。<br>神经网络也可以由多个隐藏层和多个输出单元，例如下图所示：<br><img src="https://img-blog.csdnimg.cn/img_convert/2fa20ec7757b81c276dda49036a5c3a8.png" alt="这里写图片描述"><br>像上图这样的网络，叫做前馈神经网络，这种联接图没有闭环或回路。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="../../../../tags/Deep-Learning/" rel="tag"># Deep Learning</a>
+          
+            <a href="../../../../tags/Neural-Networks/" rel="tag"># Neural Networks</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="../../27/参数估计之最大似然估计/" rel="prev" title="参数估计之最大似然估计">
+                参数估计之最大似然估计 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="../../../../images/avatar.jpg"
+                alt="Guoxing Lan" />
+            
+              <p class="site-author-name" itemprop="name">Guoxing Lan</p>
+              <p class="site-description motion-element" itemprop="description">On The Journey To Truth</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="https://lankuohsing.github.io/blog/archives">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="../../../../categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="../../../../tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-前馈神经网络基础教程"><span class="nav-number">1.</span> <span class="nav-text">1. 前馈神经网络基础教程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-概述"><span class="nav-number">1.1.</span> <span class="nav-text">1.1. 概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-神经网络模型"><span class="nav-number">1.2.</span> <span class="nav-text">1.2. 神经网络模型</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async="" src="busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Guoxing Lan</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="../../../../js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="../../../../js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="../../../../js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="../../../../js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

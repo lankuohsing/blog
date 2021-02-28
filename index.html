@@ -2084,7 +2084,7 @@ S^2&=\frac{n}{n-1}\left(\frac{1}{n}\sum_{i=1}^{n}(x_i-\bar x)^2\right)\\
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2018/06/28/卷积神经网络入门/">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2020/02/20/nlp入门基础之语言模型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Guoxing Lan">
@@ -2103,7 +2103,7 @@ S^2&=\frac{n}{n-1}\left(\frac{1}{n}\sum_{i=1}^{n}(x_i-\bar x)^2\right)\\
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="2018/06/28/卷积神经网络入门/" itemprop="url">卷积神经网络入门</a></h1>
+                <a class="post-title-link" href="2020/02/20/nlp入门基础之语言模型/" itemprop="url">nlp入门基础之语言模型</a></h1>
         
 
         <div class="post-meta">
@@ -2115,8 +2115,8 @@ S^2&=\frac{n}{n-1}\left(\frac{1}{n}\sum_{i=1}^{n}(x_i-\bar x)^2\right)\\
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-28T22:30:38+08:00">
-                2018-06-28
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-02-20T00:52:22+08:00">
+                2020-02-20
               </time>
             
 
@@ -2138,8 +2138,8 @@ S^2&=\frac{n}{n-1}\left(\frac{1}{n}\sum_{i=1}^{n}(x_i-\bar x)^2\right)\\
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Tutorials of Deep Learning</span>
+                  <a href="categories/Tutorials-of-Natural-Language-Processing/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorials of Natural Language Processing</span>
                   </a>
                 </span>
 
@@ -2177,94 +2177,54 @@ S^2&=\frac{n}{n-1}\left(\frac{1}{n}\sum_{i=1}^{n}(x_i-\bar x)^2\right)\\
       
         
           
-            <h2 id="1-计算机视觉（Computer-Vision）领域介绍"><a href="#1-计算机视觉（Computer-Vision）领域介绍" class="headerlink" title="1. 计算机视觉（Computer Vision）领域介绍"></a>1. 计算机视觉（Computer Vision）领域介绍</h2><p>图片分类(Image Classification)、目标检测(Object detection)、神经风格转换(Neural Style Transfer)。<br>计算机视觉的一大挑战就是输入样本的尺寸可以任意大，进一步导致神经网络的参数很多，容易过拟合并且对计算机的内存和运算速度要求极高。为了解决这个问题，可以引入卷积运算。</p>
-<h2 id="2-卷积运算"><a href="#2-卷积运算" class="headerlink" title="2. 卷积运算"></a>2. 卷积运算</h2><h3 id="2-1-一维场合"><a href="#2-1-一维场合" class="headerlink" title="2.1. 一维场合"></a>2.1. 一维场合</h3><p>卷积的一个重要物理意义是：一个函数（如：单位响应）在另一个函数（如：输入信号）上的<strong>加权叠加</strong>。  对于线性时不变系统，如果知道该系统的单位响应，那么将单位响应和输入信号求卷积，就相当于把输入信号的各个时间点的单位响应 加权叠加，就直接得到了输出信号。  形象的物理含义见<a href="https://www.zhihu.com/question/22298352/answer/34267457" target="_blank" rel="noopener">怎样通俗易懂地解释卷积？ - 知乎</a><br>给定一个输入信号序列$x(t), t=1,···,n$，和单位响应序列（有时也称滤波器）$f(t), t=1,···,m$，一般情况下单位响应的长度$m$远小于输入信号长度$n$。  则卷积输出：  </p>
+            <h1 id="nlp入门基础之语言模型"><a href="#nlp入门基础之语言模型" class="headerlink" title="nlp入门基础之语言模型"></a>nlp入门基础之语言模型</h1><hr>
+<p>@[toc]<br><a href="https://zhuanlan.zhihu.com/p/28080127" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/28080127</a><br><a href="https://zhuanlan.zhihu.com/p/52061158" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/52061158</a><br><a href="https://blog.csdn.net/weixin_40056628/article/details/89364456" target="_blank" rel="noopener">https://blog.csdn.net/weixin_40056628/article/details/89364456</a></p>
+<h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>语言模型（language model）是用来计算一个句子的概率的模型，或者预测下一个词出现的概率。通俗地讲，就是用来评估一个句子有多大的可能性是有意义的（是人话而不是一堆杂乱无章的词语组合）。<br>一段自然语言文本可以看做是一个离散时间序列$s=\omega_1,\omega_2,\cdots,\omega_T$，而一个语言模型的作用是构建这个时间序列的概率分布$P(s)$。概率计算公式可以表示为：</p>
 <script type="math/tex; mode=display">
-\begin{align*} 
-y(t) &=(f*x)(t)\\  &=\sum_{k=1}^{\infty}f(t-k+1)·x(k)) \\ 
-&=\sum_{k=1}^{\infty}f(k)·x(t-k+1)) \\  
-&=\sum_{k=1}^{m}f(k)·x(t-k+1))\\
-\tag{2-1}  
-\end{align*}</script><p>在卷积神经网络中，对于不在$[1,n]$范围之内的$x(t)$用零补齐(zero-padding)，输出长度一般为$n+m-1$。此时也称为<strong>宽卷积</strong>。另一类是<strong>窄卷积</strong>，输出长度为$n-m+1$  </p>
-<h3 id="2-2-二维场合"><a href="#2-2-二维场合" class="headerlink" title="2.2. 二维场合"></a>2.2. 二维场合</h3><p>二维卷积经常用在图像处理中。给定一个图像$x_{ij}, 1\le i\le M,1\le j\le N$，和滤波器$f_{ij}, 1\le i\le m,1\le j\le n$，一般$m &lt;&lt; M,n &lt;&lt; N$。<br>卷积的输出为：  </p>
+\begin{align*}
+P(s)&=P(\omega_1,\omega_2,\cdots,\omega_T)\\
+&=P(\omega_1)P(\omega_2|\omega_1)P(\omega_3|\omega_1,\omega_2)\cdots P(\omega_T|\omega_1,\omega_2,\cdots,\omega_{T-1})\\
+&=\prod_{t=1}^{T}P(\omega_t|\omega_1,\omega_2,\cdots,\omega_{t-1})\\
+\tag{1-1}
+\end{align*}</script><p>对于$P(\omega_t|\omega_1,\omega_2,\cdots,\omega_{t-1})$，可以在大量娱乐库中采用频率统计的方式来近似估计：</p>
 <script type="math/tex; mode=display">
-\begin{align*} y_{ij}&=\sum_{u=1}^{+\infty}\sum_{v=1}^{+\infty}f_{i-u+1,i-v+1}·x_{u,v}\\  
-&=\sum_{u=1}^{m}\sum_{v=1}^{n}f_{u,v}·x_{i-u+1,i-v+1}\\
-\tag{2-2}  
-\end{align*}</script><p>在图像处理中，常用的均值滤波（mean filter）就是当前位置的像素值设为滤波器窗口中素有像素的平均值，也就是$f_{uv}=\frac{1}{mn}$。<br>上面的运算是信号与系统里面的定义，在实际的操作中通常要将卷积核进行翻转（水平和竖直方向上分别进行一次翻转）再与输入信号进行逐元素相乘（再相加）。但是在深度学习中，简化了翻转的操作，因此其实不适用于上述的公式。深度学习里面的卷积，更严谨的称呼是交叉相关（cross-correlation），但是由于习惯，还是叫做卷积。</p>
-<h2 id="3-卷积操作的作用和优点"><a href="#3-卷积操作的作用和优点" class="headerlink" title="3. 卷积操作的作用和优点"></a>3. 卷积操作的作用和优点</h2><h3 id="3-1-参数共享和连接的稀疏性"><a href="#3-1-参数共享和连接的稀疏性" class="headerlink" title="3.1. 参数共享和连接的稀疏性"></a>3.1. 参数共享和连接的稀疏性</h3><p>假设输入图像形状为$32\times 32\times 3$，卷积核形状为$5\times 5\times 6$，则卷积后的图像大小为$28\times 28\times 6$。如果是传统的神经网络，那么参数个数为：$3072\times 4704\approx 14M$，而在卷积神经网络中参数个数为$(5\times 5+1)\times 6=156$<br>卷积核在图像上移动时，参数不变（参数共享）<br>输出图像上的每个像素只来源于上一层图像的一个局部（连接的稀疏性）</p>
-<h3 id="3-2-平移不变性"><a href="#3-2-平移不变性" class="headerlink" title="3.2. 平移不变性"></a>3.2. 平移不变性</h3><h3 id="3-2-边缘检测"><a href="#3-2-边缘检测" class="headerlink" title="3.2. 边缘检测"></a>3.2. 边缘检测</h3><h2 id="4-Padding（填充）"><a href="#4-Padding（填充）" class="headerlink" title="4. Padding（填充）"></a>4. Padding（填充）</h2><p>常规卷积操作的后果：  </p>
+\begin{align*}
+P(\omega_t|\omega_1,\omega_2,\cdots,\omega_{t-1})&=\frac{C(\omega_1,\omega_2,\cdots,\omega_t)}{\sum_{\omega}C(\omega_1,\omega_2,\cdots,\omega_{t-1},\omega)}\\
+&=\frac{C(\omega_1,\omega_2,\cdots,\omega_t)}{C(\omega_1,\omega_2,\cdots,\omega_{t-1})}\\
+\tag{1-2}
+\end{align*}</script><p>直接计算上式是不现实的。假设词汇表大小为$V$，由上式可以看到，产生第$i$个词$\omega_i$的概率是由已经产生的$i-1$个词$\omega_1,\omega_2,\cdots,\omega_{i-1}$决定的，那么我们必须考虑所有$V^{i-1}$种不同历史情况下，产生第$i$个词的概率。这样模型中就会有$V^i$个自由参数（每个条件概率看成一个参数）。这在实际中几乎是无法从训练数据中估计出这些参数的。并且，很多词的组合可能在语料库中根本不存在，这样会导致最后估计出的概率为零（数据稀疏问题）。<br>因此需要引入语言模型来降低参数个数。语言模型有基于统计模型的，比如n元语法（n-gram），也有基于神经网络的。</p>
+<h1 id="2-n元语法"><a href="#2-n元语法" class="headerlink" title="2. n元语法"></a>2. n元语法</h1><p>n元语法(n-grams)是基于n-1阶马尔科夫链的概率语言模型，也即在n-gram模型中，一个词的出现概率只与前面n-1个词有关：</p>
+<script type="math/tex; mode=display">
+P(\omega_1,\omega_2,\cdots,\omega_T)=\prod_{t=1}^{T}P(\omega_t|\omega_{t-(n-1)},\omega_2,\cdots,\omega_{t-1})\\\tag{2-1}</script><p>每个条件概率需要实现在大量语料库中根据频率近似求得。</p>
 <ul>
-<li>shrinking image没经过一次卷积操作，图片都会缩小 </li>
-<li>throw away info from edge（忽视边界信息） ，角落或者边界上的像素被使用的次数比中间的像素少很多</li>
+<li>n=1: unigram，每个词独立于历史</li>
+<li>n=2: bigram，每个词只与它前面的一个词有关。实际中常用</li>
+<li>n=3: trigram，每个词只与它前面的两个词有关</li>
 </ul>
-<p>记输入图片尺寸为$n\times n$，滤波器大小为$f\times f$，填充的数量为$p$，下面是两种常用的填充方式：</p>
-<ul>
-<li>“valid”: no padding $n\times n\ *\ f\times f \rightarrow n-f+1\ \times\ n-f+1$  </li>
-<li>“Same”: Pad so that output size is the same as the input size $(n+2p-f+1)\times (n+2p-f+1)$， 其中$p=\frac{f-1}{2}$。</li>
-</ul>
-<p>在计算机视觉领域，f基本上是奇数。因为如果是偶数，需要不对称的填充。而且奇数的滤波器有一个中心，这样可以描述滤波器的位置。$3\times3$的滤波器最常见</p>
-<h2 id="5-Strided-Convolutions-带步长的卷积"><a href="#5-Strided-Convolutions-带步长的卷积" class="headerlink" title="5. Strided Convolutions(带步长的卷积)"></a>5. Strided Convolutions(带步长的卷积)</h2><p>假设padding p, stride S，则卷积操作的尺寸运算为：$(n\times n)*(f\times f)\ \rightarrow\ \left(\frac{n+2p-f}{S}+1\right)\times \left(\frac{n+2p-f}{S}+1\right)$<br>如果不能整除，则向下取整：$\lfloor\frac{n+2p-f}{S}+1\rfloor\times \lfloor\frac{n+2p-f}{S}+1\rfloor$ ，这意味着滤波器必须全部落在（填充后的）图像上。</p>
-<h2 id="6-对三维图片（RGB）的卷积操作"><a href="#6-对三维图片（RGB）的卷积操作" class="headerlink" title="6. 对三维图片（RGB）的卷积操作"></a>6. 对三维图片（RGB）的卷积操作</h2><p>RGB图像有三个通道（channel），或者叫做深度（depth），因此卷积核也应该有三个通道。卷积核的三个通道分别与RGB图像的三个通道逐元素相乘，再将乘积结果相加，得到卷积后的图像。下图是检测红色垂直边缘（上）和整体图像的垂直边缘（下）的例子：</p>
-<center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Convolutions%20on%20RGB%20image.JPG"></center>
-<center>图6.1 RGB图像卷积操作例子</center>
-有时为了检测多种类型的边缘，可以用同时多个滤波器对图像进行卷积操作，具体的尺寸运算总结如下：
-$n\times n\times n_c\ *\ f\times f\times n_c\ \rightarrow\ n-f+1\times n-f+1\times n_c'$
-其中$n_c$代表通道数，通常图像的通道数与滤波器的通道数相等；$n$和$f$分别代表图像和滤波器每个通道的尺寸；$n_c'$代表滤波器的个数
-<center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Multiple%20Filters.JPG"></center>
-<center>图6.2 同时用多个卷积核对图像进行卷积操作</center>
+<p>n元语法模型可能的缺陷：</p>
+<ol>
+<li>参数空间过大</li>
+<li>数据稀疏</li>
+</ol>
+<h2 id="2-1-一元模型（unigram）"><a href="#2-1-一元模型（unigram）" class="headerlink" title="2.1. 一元模型（unigram）"></a>2.1. 一元模型（unigram）</h2><p>一元模型假设每句子中的每个每个词都是独立的，也即：</p>
+<script type="math/tex; mode=display">
+p(s)=p(\omega_1)p(\omega_2)\cdots p(\omega_T)\\\tag{2-2}</script><p>需要实现在语料库中统计每个字的频率。</p>
+<h2 id="2-2-二元模型（bigram）"><a href="#2-2-二元模型（bigram）" class="headerlink" title="2.2. 二元模型（bigram）"></a>2.2. 二元模型（bigram）</h2><script type="math/tex; mode=display">
+p(s)=p(\omega_1|start)p(\omega_2|\omega_1)\cdots p(\omega_T|end)\\\tag{2-3}</script><p>注意需要有句子开头和结尾标识符。实践中，需要先统计语料库中词语的两两组合情况的各自频率，再统计每个词的频率，以便得到条件概率。</p>
+<h1 id="3-n-gram模型实践"><a href="#3-n-gram模型实践" class="headerlink" title="3. n-gram模型实践"></a>3. n-gram模型实践</h1><h2 id="3-1-文本分类"><a href="#3-1-文本分类" class="headerlink" title="3.1. 文本分类"></a>3.1. 文本分类</h2><p>假设类别有两类：$Y_1,Y_2$,原始文本为$X$。由贝叶斯公司可知：</p>
+<script type="math/tex; mode=display">
+P(Y_i|X)\propto P(X|Y_i)P(Y_i),i=1,2\tag{2-4}</script><p>$P(Y_i)$就是类别$Y_i$的文本比例；$P(X|Y_i)$就是在类别$Y_i$下句子$X$的概率，可以由n-gram算得</p>
+<p>在上述贝叶斯假设条件下，可以简化过程，直接将训练样本的n-gram特征作为输入去训练一个分类器，得到分类模型。</p>
+<h1 id="4-神经网络语言模型"><a href="#4-神经网络语言模型" class="headerlink" title="4. 神经网络语言模型"></a>4. 神经网络语言模型</h1><h2 id="4-1-基于前馈神经网络的语言模型"><a href="#4-1-基于前馈神经网络的语言模型" class="headerlink" title="4.1. 基于前馈神经网络的语言模型"></a>4.1. 基于前馈神经网络的语言模型</h2><p>Bengio在2003的论文A Neural Probabilistic Language Model。<br><img src="https://img-blog.csdnimg.cn/202007020011489.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<center>图4.1 前馈神经网络语言模型</center>
 
-<h2 id="7-一层卷积层的例子"><a href="#7-一层卷积层的例子" class="headerlink" title="7. 一层卷积层的例子"></a>7. 一层卷积层的例子</h2><p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Example%20of%20a%20convolutional%20layer.JPG"></center></p>
-<p><center>图7.1 一层卷积层的例子</center><br>卷积核相关说明：</p>
-<script type="math/tex; mode=display">
-\begin{align*} f^{[l]}&=filter\ size,\\  
-p^{[l]}&=padding\\  s^{[l]}&=stride\\ 
-\tag{7-1}
-\end{align*}</script><p>卷积核的形状为: </p>
-<script type="math/tex; mode=display">f^{[l]}\times f^{[l]}\times n_c^{[l-1]}\tag{7-2}</script><p>输入输出的形状：</p>
-<script type="math/tex; mode=display">
-\begin{align*} Input&: n_H^{[l-1]}\times n_W^{[l-1]}\times n_c^{[l-1]}\\  
-Output&: n_H^{[l]}\times n_W^{[l]}\times n_c^{[l]}\\  
-\tag{7-3}
-\end{align*}</script><p>其中：</p>
-<script type="math/tex; mode=display">
-\begin{align*} n_H^{[l]}&=\lfloor\frac{n_H^{[l-1]}+2p^{[l]}-f^{l}}{S^{[l]}}+1\rfloor\\  n_W^{[l]}&=\lfloor\frac{n_W^{[l-1]}+2p^{[l]}-f^{l}}{S^{[l]}}+1\rfloor\\  
-\tag{7-4}
-\end{align*}</script><p>Activations: $a^{[l]}=n_H^{[l]}\times n_W^{[l]}\times n_c^{[l]}$<br>Batch or mini batch: $A^{[l]}=m\times n_H^{[l]}\times n_W^{[l]}\times n_c^{[l]}$<br>Weights: $f^{[l]}\times f^{[l]}\times n_c^{[l-1]}\times n_c^{l}$<br>bias: $n_c^{[l]}\rightarrow (1,1,1,n_c^{[l]})$</p>
-<h2 id="8-卷积神经网络的一个完整例子"><a href="#8-卷积神经网络的一个完整例子" class="headerlink" title="8. 卷积神经网络的一个完整例子"></a>8. 卷积神经网络的一个完整例子</h2><p>一个完整的卷积神经网络模型：</p>
-<p><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Example%20Convnet.JPG"></center></p>
-<p><center>图8.1 一个完整卷积神经网络例子</center><br>在设计卷积神经网络中的许多工作是选择合适的超参数，例如总单元数多少？步长多少？padding多少？使用了多少滤波器等。<br>Types of layer in a convolutional network:  </p>
-<ul>
-<li>Convolution (CONV)  </li>
-<li>Pooling (POOL )  </li>
-<li>Fully connected (FC)</li>
-</ul>
-<h2 id="9-Pooling-layer（池化层）"><a href="#9-Pooling-layer（池化层）" class="headerlink" title="9. Pooling layer（池化层）"></a>9. Pooling layer（池化层）</h2><p>Max pooling  没有参数，因此不需要通过反向传播来学习参数<br>多通道图片时，对每个通道分别进行max pooling<br>pooling层的作用：平移不变性，减少图片尺寸<a href="https://www.zhihu.com/question/36686900/answer/130890492" target="_blank" rel="noopener">pooling层的作用-知乎</a>  </p>
-<p>The pooling (POOL) layer reduces the height and width of the input. It helps reduce computation, as well as helps make feature detectors more invariant to its position in the input.<br>max pooling比较常用，average pooling不常用<br>hyperparameters:  </p>
-<ul>
-<li>f: filter size (f=2,s=2,used quite often)  </li>
-<li>s: stride  </li>
-<li>Max or average pooling<h2 id="10-卷积神经网络经典模型"><a href="#10-卷积神经网络经典模型" class="headerlink" title="10. 卷积神经网络经典模型"></a>10. 卷积神经网络经典模型</h2><h3 id="10-1-Outline"><a href="#10-1-Outline" class="headerlink" title="10.1 Outline"></a>10.1 Outline</h3>经典的网络结构：</li>
-<li>LeNet-5</li>
-<li>AlexNet</li>
-<li>VGG</li>
-<li>ResNet</li>
-<li>Inception<h3 id="10-1-LeNet-5"><a href="#10-1-LeNet-5" class="headerlink" title="10.1 LeNet-5"></a>10.1 LeNet-5</h3>在计算层数时通常把有参数的算作一层，因为pooling层没有参数，因此conv层和pooling层放在一起当作一层.<br>LetNet-5结构图：<center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/LeNet-5.png"></center>
-<center>图10.1 LeNet-5模型结构图</center>
-LetNet-5参数表
-<center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/LeNet-5%E5%8F%82%E6%95%B0.JPG"></center>
-<center>图10.2 LetNet-5参数说明</center></li>
-<li>用的是sigmoid/tanh激活函数</li>
-<li>由于那时的计算机性能比较差，采用了比较复杂的训练技巧<br>注意：</li>
-<li>最大池化没有任何参数</li>
-<li>卷积层趋向于拥有越来越少的参数，多数参数集中在神经网络的全连接层上</li>
-<li>随着神经网络的深入，激活输入大小也逐渐变小。如果减少得太快，通常不利于网络性能<h3 id="10-2-AlexNet"><a href="#10-2-AlexNet" class="headerlink" title="10.2 AlexNet"></a>10.2 AlexNet</h3><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/AlexNet.png"></center>
-<center>图10.3 AlexNet模型结构图</center></li>
-<li>与LSNet-5架构相似，但是规模大许多，约60M个参数</li>
-<li>用了ReLU激活函数</li>
-<li>由于计算机性能仍然不是很好，采用复杂的训练技巧（将不同的层放在两个GPU上分别训练）</li>
-<li>用了Local Response Normalization，但是后面被发现不太有效<h3 id="10-3-VGG-16"><a href="#10-3-VGG-16" class="headerlink" title="10.3 VGG-16"></a>10.3 VGG-16</h3><center><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/VGG-16.png"></center><br><center>图10.4 VGG-16模型结构图</center><br>138M个参数<br>16是指有16层含有参数的层。<br>前面两层都是64个$3\times 3$的卷积核进行卷积操作。</li>
-</ul>
+<p>先给每个词在连续空间中赋予一个向量(词向量)，再通过神经网络去学习这种分布式表征。利用神经网络去建模当前词出现的概率与其前 n-1 个词之间的约束关系。很显然这种方式相比 n-gram 具有更好的<strong>泛化能力</strong>，<strong>只要词表征足够好。</strong>从而很大程度地降低了数据稀疏带来的问题。但是这个结构的明显缺点是仅包含了<strong>有限的前文信息</strong>。<br>该模型利用前n-1个词去预测下一个词，输入层是n-1个词的one-hot向量（每个向量是$1\times V$），再乘以一个$1\times D$的权重矩阵，得到$1\times D$的中间向量，将n-1个中间向量拼接成隐藏层（长度为$D(n-1)$）。隐藏层的激活函数为tanh，输出层为一个全连接层再接一个softmax函数生成概率分布。该模型的副产物就是词向量（输入层到隐藏层的权重矩阵）<br>这篇论文是词向量的鼻祖，后面的cbow和skip-gram都是由这里启发而来。</p>
+<h2 id="4-2-基于循环神经网络的语言模型"><a href="#4-2-基于循环神经网络的语言模型" class="headerlink" title="4.2. 基于循环神经网络的语言模型"></a>4.2. 基于循环神经网络的语言模型</h2><p>为了解决定长信息（只能利用前面n-1个词的信息）的问题，Mikolov在2010的论文 Recurrent neural network based language model。<br><img src="https://img-blog.csdnimg.cn/20200702001205749.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<center>图4.2 RNN语言模型（图片来源见水印）</center>
+
+<p>网络的输入层是”s我想你”，输出层可以看作是分别计算条件概率 P(w|s)、P(w|s我)、P(w|s我想)、P(w|s我想你) 在整个词表V中的值。而我们的目标就是使期望词对应的条件概率尽可能大。</p>
+<p>相比单纯的前馈神经网络，隐状态的传递性使得RNN语言模型原则上可以捕捉前向序列的所有信息(虽然可能比较弱)。通过在整个训练集上优化交叉熵来训练模型，使得网络能够尽可能建模出自然语言序列与后续词之间的内在联系。</p>
+<p>为了解决依赖的信息过长的问题，后续又有LSTM、attention等改进方法</p>
 
           
         
@@ -2313,7 +2273,7 @@ LetNet-5参数表
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2018/06/25/神经网络之将二分类问题推广到多分类问题/">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog2019/10/15/SVD分解推导证明/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Guoxing Lan">
@@ -2332,7 +2292,7 @@ LetNet-5参数表
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="2018/06/25/神经网络之将二分类问题推广到多分类问题/" itemprop="url">神经网络之将二分类问题推广到多分类问题</a></h1>
+                <a class="post-title-link" href="2019/10/15/SVD分解推导证明/" itemprop="url">SVD分解推导证明</a></h1>
         
 
         <div class="post-meta">
@@ -2344,8 +2304,8 @@ LetNet-5参数表
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-25T16:02:54+08:00">
-                2018-06-25
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-15T22:55:48+08:00">
+                2019-10-15
               </time>
             
 
@@ -2367,8 +2327,8 @@ LetNet-5参数表
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="categories/Tutorials-of-Deep-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Tutorials of Deep Learning</span>
+                  <a href="categories/Mathematical-Fundamentals/" itemprop="url" rel="index">
+                    <span itemprop="name">Mathematical Fundamentals</span>
                   </a>
                 </span>
 
@@ -2406,28 +2366,82 @@ LetNet-5参数表
       
         
           
-            <p>将神经网络应用到多类分类问题中时，输出层的形式不能用logistic函数（sigmoid激活函数），而应该推广到softmax函数。二分类问题与多分类问题的神经网络模型的最大区别就是输出层。因此下面重点讲解softmax函数的原理。</p>
-<h2 id="1-Softmax回归详解"><a href="#1-Softmax回归详解" class="headerlink" title="1. Softmax回归详解"></a>1. Softmax回归详解</h2><p>在softmax回归中，我们解决的是多分类问题（相对于logistic回归解决的二分类问题），标记$y$可以取$k$个不同的值。对于训练集$\{(x^{(1)},y^{(1)}),\cdots,(x^{(m)},y^{(m)})\}$，我们有$y^{(j)}\in \{1,2,\cdots,k\}$。<br>对于给定的测试输入$x$，我们想用假设函数针对每一个类别$j$估算出概率值$P(y=j|x)$。因此，我们的假设函数要输出一个$k$维的向量（向量元素的和为1）来表示$k$个估计的概率值。我们采用如下形式的假设函数$h_{\theta}(x)$：  </p>
+            <h1 id="SVD分解推导证明"><a href="#SVD分解推导证明" class="headerlink" title="SVD分解推导证明"></a>SVD分解推导证明</h1><hr>
+<p>@[toc]</p>
+<h2 id="0-线性代数与矩阵基础知识回顾"><a href="#0-线性代数与矩阵基础知识回顾" class="headerlink" title="0. 线性代数与矩阵基础知识回顾"></a>0. 线性代数与矩阵基础知识回顾</h2><p>本文讨论的范围实数空间，不涉及复数空间，因此各种术语和定理都以实空间下的名称为准，当然也可以推广到复数空间，只需进行一些名词的变换（对称矩阵-Hermitian举矩阵，正交矩阵-酉矩阵）。</p>
+<h3 id="0-1-正交向量组"><a href="#0-1-正交向量组" class="headerlink" title="0.1. 正交向量组"></a>0.1. 正交向量组</h3><p>对于向量$x_1,x_2,\cdots,x_k\in R^n$，若$x_i^Tx_j=0,\forall (i,j)\in \{(i,j)\lvert 1\leq i&lt;j\leq k\}$，则称$x_1,x_2,\cdots,x_k$是一组正交向量组，简称<strong>正交组</strong>。如果正交组里面的向量还是归一化的，即$x_i^Tx_i=1,i=1,2,\cdots,k$，则称该正交组为<strong>标准正交组</strong>。</p>
+<h3 id="0-2-正交矩阵"><a href="#0-2-正交矩阵" class="headerlink" title="0.2. 正交矩阵"></a>0.2. 正交矩阵</h3><p>一个实的正方矩阵$Q\in R^{n\times n}$称为正交矩阵，若：</p>
+<script type="math/tex; mode=display">
+QQ^T=Q^TQ=I\\
+\tag{0,2}</script><p>由上述定义可以推出如下几个等价的叙述：</p>
+<ol>
+<li>$Q$是正交矩阵</li>
+<li>$Q^T$是正交矩阵</li>
+<li>$Q$是非奇异的，并且$Q^T=Q^{-1}$</li>
+<li>$QQ^T=Q^TQ=I$</li>
+<li>$Q=[q_1,q_2,\cdots,q_n]$的列组成标准正交组</li>
+<li>$Q$的行组成标准正交组</li>
+<li>$\forall x\in R^n, y=Qx$的Euclidean长度与$x$的Euclidean长度相等，也即有$y^Ty=x^Tx$。<h3 id="0-3-正定矩阵"><a href="#0-3-正定矩阵" class="headerlink" title="0.3. 正定矩阵"></a>0.3. 正定矩阵</h3>一个对称矩阵$A$称为</li>
+</ol>
+<ul>
+<li>正定矩阵($A&gt;0$)：若二次型$x^TAx&gt;0,\forall x\neq 0$;</li>
+<li>半正定矩阵($A\geq 0$)：若二次型$x^TAx\geq 0,\forall x\neq 0$;</li>
+<li>负定矩阵：如果$-A$是正定的</li>
+<li>半负定矩阵：如果$-A$是半正定的</li>
+</ul>
+<p>正定矩阵的等价条件：</p>
+<ul>
+<li>存在可逆矩阵$C$使$C^TC$等于该矩阵</li>
+<li>正定矩阵$&lt;=&gt;$所有特征值取正实数，半正定矩阵$&lt;=&gt;$所有特征值取非负实数</li>
+</ul>
+<h3 id="0-4-特征值"><a href="#0-4-特征值" class="headerlink" title="0.4. 特征值"></a>0.4. 特征值</h3><ul>
+<li>对于n阶对称矩阵$A$的特征值都是实数。</li>
+<li>对于n阶对称矩阵$A$，总存在正交阵$Q$，使得$Q^{-1}AQ$是对角阵，且对角线元素就是$A$的特征值按从大到小排列。即$Q^{-1}AQ=diag(\lambda_1,\lambda_2,\cdots,\lambda_n),\lambda_1&gt;\lambda_2&gt;\cdots&gt;\lambda_n$。</li>
+</ul>
+<h2 id="1-奇异值分解（Singular-Value-Decomposition）"><a href="#1-奇异值分解（Singular-Value-Decomposition）" class="headerlink" title="1. 奇异值分解（Singular Value Decomposition）"></a>1. 奇异值分解（Singular Value Decomposition）</h2><h3 id="1-1-svd的数学描述"><a href="#1-1-svd的数学描述" class="headerlink" title="1.1. svd的数学描述"></a>1.1. svd的数学描述</h3><p>svd告诉我们，对任意$m\times n$的矩阵$A$，都可以表示为下面这种形式：</p>
+<script type="math/tex; mode=display">
+A=U\Sigma V^T\\
+\tag{1,1}</script><p>其中$U$是$m \times m$的正交阵，$V$是$n\times n$的正交阵，$\Sigma$是$m\times n$的对角阵，</p>
+<script type="math/tex; mode=display">
+\Sigma=\begin{bmatrix} 
+\Sigma_1 &0\\
+0 &0 \\  
+\end{bmatrix} \\
+\tag{1,2}</script><p>$\Sigma_1=diag(\sigma_1,\sigma_2,\cdots,\sigma_r),r=rank(A)$，其对角元素按照从大到小排列</p>
+<h3 id="1-2-svd的证明"><a href="#1-2-svd的证明" class="headerlink" title="1.2. svd的证明"></a>1.2. svd的证明</h3><p>在开始证明前，先给出几个引理：</p>
+<ul>
+<li>引理1：$A^TA$可对角化，且具有实的非负特征值（这是因为$A^TA$是半正定矩阵）</li>
+<li>引理2：$rank(A)=rank(A^TA)=rank(AA^T)$</li>
+<li>引理3：$A=0\ \Leftrightarrow\ A^TA=0$</li>
+</ul>
+<p>下面开始证明：<br>设$rank(A)=r$，根据引理1和引理2，存在$n\times n$的正交矩阵$V$，使得</p>
+<script type="math/tex; mode=display">
+V^T(A^TA)V=diag(\lambda_1,\lambda_2,\cdots,\lambda_n)\\
+\tag{1,3}</script><p>其中$\lambda_1&gt;\lambda_2&gt;\cdots&gt;\lambda_r&gt;0=\lambda_{r+1}=\cdots=\lambda_n$为$A^TA$的n个非负特征根。<br>令$\Sigma_1=diag(\sigma_1,\sigma_2,\cdots,\sigma_r)=diag(\sqrt\sigma_1,\sqrt\sigma_2,\cdots,\sqrt\sigma_r)$，$V_1=[v_1,v_2,\cdots,v_r]，V_2=[v_{r+1},v_{r+2},\cdots,v_{n}]$，并且有$V=[V_1,V_2]$。<br>从而有$A^TAV_1=V_1\Sigma_1^2$，进一步得到：</p>
+<script type="math/tex; mode=display">
+\Sigma_1^{-1}V_1^TA^TAV_1\Sigma_1^{-1}=I\\
+\tag{1,4}</script><p>令$U_1=AV_1\Sigma_1^{-1}$，则有$U_1^TU_1=I$。此时，我们可以选择$m-r$组标准正交向量与$U_1$的列向量组成一组标准正交基，也即$U=[U_1,U_2]$是一个m阶正交阵，且$U_1^TU_2=0$。<br>另一方面，容易得到：</p>
+<script type="math/tex; mode=display">
+A^TAV_2=V_20\ \Rightarrow\ V2^TA^TAV_2=0\\
+\tag{1,4}</script><p>根据引理3可得$AV_2=0$</p>
+<p>综上可得：</p>
 <script type="math/tex; mode=display">
 \begin{align*}
-h_{\theta}(x^{(i)})&=  \begin{bmatrix} P(y^{(i)}=1|x^{(i)};\theta) \\  P(y^{(i)}=2|x^{(i)};\theta) \\  \vdots \\  P(y^{(i)}=10|x^{(i)};\theta)  \end{bmatrix} \\
-&=\frac{1}{\sum_{j=1}^ke^{\theta_j^Tx^{(i)}}}  \begin{bmatrix} e^{\theta_1^Tx^{(i)}} \\  e^{\theta_2^Tx^{(i)}} \\  \vdots \\  e^{\theta_k^Tx^{(i)}}  \end{bmatrix} \\
-\tag{1-1}  
-\end{align*}</script><p>假设输入向量$x$的维数为$n$，则参数$\theta$是一个$k\times (n+1)$的参数矩阵，之所以是$n+1$是因为把截距项$b$表示成了$\theta_0\times x_0$，其中$x_0=1$是一个人工辅助变量。<br>利用极大似然估计的方法，可以得到每一类的后验概率表达式：</p>
-<script type="math/tex; mode=display">P(y^{(i)}|x^{(i)};\theta)=\prod_{j=1}^k\left\{\frac{e^{\theta_j^Tx^{(i)}}}{\sum_{l=1}^ke^{\theta_l^Tx^{(i)}}}\right\}^{1(y^{(i)}=j)} \tag{1-2}</script><p>似然函数为：  </p>
-<script type="math/tex; mode=display">
-\begin{align*} 
-L(\theta) &=P(\boldsymbol{Y}|\boldsymbol{X};\theta) \\ 
-&=\prod_{i=1}^{m}P(y^{(i)}|x^{(i)};\theta) \\ 
-&=\prod_{i=1}^{m}\prod_{j=1}^k\left\{\frac{e^{\theta_j^Tx^{(i)}}}{\sum_{l=1}^ke^{\theta_l^Tx^{(i)}}}\right\}^{1(y^{(i)}=j)}\\
-\tag{1-3}  \end{align*}</script><p>对数似然函数为：  </p>
-<script type="math/tex; mode=display">
-\begin{align*} l(\theta) &=\log L(\theta) \\  
-&=\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{\theta_j^Tx^{(i)}}}{\sum_{l=1}^ke^{\theta_l^Tx^{(i)}}}}\\ 
-\tag{1-4}  
-\end{align*}</script><p>上面的$(1-4)$就是loss function。<br>cost function为： </p>
-<script type="math/tex; mode=display">
-J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{\theta_j^Tx^{(i)}}}{\sum_{l=1}^ke^{\theta_l^Tx^{(i)}}}}\right] \tag{1-5}</script><p>多分类问题的目标就是利用训练数据来训练模型参数$\theta$使其能够最小化$(1-5)$。$(1-5)$是一个凸函数，可以利用梯度下降法得到全局最小值。</p>
+U^TAV&=\begin{bmatrix} 
+U_1^TAV_1 &U_1^TAV_2\\
+U_2^TAV_1 &U_2^TAV_2 \\  
+\end{bmatrix} \\
+&=\begin{bmatrix} 
+\Sigma_1 &0\\
+U_2^TU_1\Sigma_1 &0 \\  
+\end{bmatrix} \\
+&=\begin{bmatrix} 
+\Sigma_1 &0\\
+0 &0 \\  
+\end{bmatrix} \\
+&=\Sigma\\
+\tag{1,5}
+\end{align*}</script><p>也即$A=U\Sigma V^T$，到此奇异值分解定理得证。</p>
 
           
         
@@ -2517,7 +2531,7 @@ J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{
               
                 <a href="https://lankuohsing.github.io/blog/archives">
               
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2528,7 +2542,7 @@ J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{
               
               <div class="site-state-item site-state-categories">
                 <a href="categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -2539,7 +2553,7 @@ J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{
               
               <div class="site-state-item site-state-tags">
                 <a href="tags/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

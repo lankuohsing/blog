@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="../../../../lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="../../../../lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="../../../../css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../../images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../../images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="../../../../images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="../../../../images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linear Algebra," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="SVD分解推导证明 @[toc] 0. 线性代数与矩阵基础知识回顾本文讨论的范围实数空间，不涉及复数空间，因此各种术语和定理都以实空间下的名称为准，当然也可以推广到复数空间，只需进行一些名词的变换（对称矩阵-Hermitian举矩阵，正交矩阵-酉矩阵）。 0.1. 正交向量组对于向量$x_1,x_2,\cdots,x_k\in R^n$，若$x_i^Tx_j=0,\forall (i,j)\in">
+<meta name="keywords" content="Linear Algebra">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SVD分解推导证明">
+<meta property="og:url" content="https://lankuohsing.github.io/blog/2019/10/15/SVD分解推导证明/index.html">
+<meta property="og:site_name" content="Guoxing Lan">
+<meta property="og:description" content="SVD分解推导证明 @[toc] 0. 线性代数与矩阵基础知识回顾本文讨论的范围实数空间，不涉及复数空间，因此各种术语和定理都以实空间下的名称为准，当然也可以推广到复数空间，只需进行一些名词的变换（对称矩阵-Hermitian举矩阵，正交矩阵-酉矩阵）。 0.1. 正交向量组对于向量$x_1,x_2,\cdots,x_k\in R^n$，若$x_i^Tx_j=0,\forall (i,j)\in">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2021-02-28T06:33:48.451Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SVD分解推导证明">
+<meta name="twitter:description" content="SVD分解推导证明 @[toc] 0. 线性代数与矩阵基础知识回顾本文讨论的范围实数空间，不涉及复数空间，因此各种术语和定理都以实空间下的名称为准，当然也可以推广到复数空间，只需进行一些名词的变换（对称矩阵-Hermitian举矩阵，正交矩阵-酉矩阵）。 0.1. 正交向量组对于向量$x_1,x_2,\cdots,x_k\in R^n$，若$x_i^Tx_j=0,\forall (i,j)\in">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lankuohsing.github.io/blog/2019/10/15/SVD分解推导证明/"/>
+
+
+
+
+
+  <title>SVD分解推导证明 | Guoxing Lan</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/lankuohsing"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Guoxing Lan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Journey To Truth</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="https://lankuohsing.github.io/blog" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="https://lankuohsing.github.io/blog/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="https://lankuohsing.github.io/blog/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="https://lankuohsing.github.io/blog/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="https://lankuohsing.github.io/blog/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lankuohsing.github.io/blog">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Guoxing Lan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="../../../../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Guoxing Lan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SVD分解推导证明</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-15T22:55:48+08:00">
+                2019-10-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../../../categories/Mathematical-Fundamentals/" itemprop="url" rel="index">
+                    <span itemprop="name">Mathematical Fundamentals</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="SVD分解推导证明"><a href="#SVD分解推导证明" class="headerlink" title="SVD分解推导证明"></a>SVD分解推导证明</h1><hr>
+<p>@[toc]</p>
+<h2 id="0-线性代数与矩阵基础知识回顾"><a href="#0-线性代数与矩阵基础知识回顾" class="headerlink" title="0. 线性代数与矩阵基础知识回顾"></a>0. 线性代数与矩阵基础知识回顾</h2><p>本文讨论的范围实数空间，不涉及复数空间，因此各种术语和定理都以实空间下的名称为准，当然也可以推广到复数空间，只需进行一些名词的变换（对称矩阵-Hermitian举矩阵，正交矩阵-酉矩阵）。</p>
+<h3 id="0-1-正交向量组"><a href="#0-1-正交向量组" class="headerlink" title="0.1. 正交向量组"></a>0.1. 正交向量组</h3><p>对于向量$x_1,x_2,\cdots,x_k\in R^n$，若$x_i^Tx_j=0,\forall (i,j)\in \{(i,j)\lvert 1\leq i&lt;j\leq k\}$，则称$x_1,x_2,\cdots,x_k$是一组正交向量组，简称<strong>正交组</strong>。如果正交组里面的向量还是归一化的，即$x_i^Tx_i=1,i=1,2,\cdots,k$，则称该正交组为<strong>标准正交组</strong>。</p>
+<h3 id="0-2-正交矩阵"><a href="#0-2-正交矩阵" class="headerlink" title="0.2. 正交矩阵"></a>0.2. 正交矩阵</h3><p>一个实的正方矩阵$Q\in R^{n\times n}$称为正交矩阵，若：</p>
+<script type="math/tex; mode=display">
+QQ^T=Q^TQ=I\\
+\tag{0,2}</script><p>由上述定义可以推出如下几个等价的叙述：</p>
+<ol>
+<li>$Q$是正交矩阵</li>
+<li>$Q^T$是正交矩阵</li>
+<li>$Q$是非奇异的，并且$Q^T=Q^{-1}$</li>
+<li>$QQ^T=Q^TQ=I$</li>
+<li>$Q=[q_1,q_2,\cdots,q_n]$的列组成标准正交组</li>
+<li>$Q$的行组成标准正交组</li>
+<li>$\forall x\in R^n, y=Qx$的Euclidean长度与$x$的Euclidean长度相等，也即有$y^Ty=x^Tx$。<h3 id="0-3-正定矩阵"><a href="#0-3-正定矩阵" class="headerlink" title="0.3. 正定矩阵"></a>0.3. 正定矩阵</h3>一个对称矩阵$A$称为</li>
+</ol>
+<ul>
+<li>正定矩阵($A&gt;0$)：若二次型$x^TAx&gt;0,\forall x\neq 0$;</li>
+<li>半正定矩阵($A\geq 0$)：若二次型$x^TAx\geq 0,\forall x\neq 0$;</li>
+<li>负定矩阵：如果$-A$是正定的</li>
+<li>半负定矩阵：如果$-A$是半正定的</li>
+</ul>
+<p>正定矩阵的等价条件：</p>
+<ul>
+<li>存在可逆矩阵$C$使$C^TC$等于该矩阵</li>
+<li>正定矩阵$&lt;=&gt;$所有特征值取正实数，半正定矩阵$&lt;=&gt;$所有特征值取非负实数</li>
+</ul>
+<h3 id="0-4-特征值"><a href="#0-4-特征值" class="headerlink" title="0.4. 特征值"></a>0.4. 特征值</h3><ul>
+<li>对于n阶对称矩阵$A$的特征值都是实数。</li>
+<li>对于n阶对称矩阵$A$，总存在正交阵$Q$，使得$Q^{-1}AQ$是对角阵，且对角线元素就是$A$的特征值按从大到小排列。即$Q^{-1}AQ=diag(\lambda_1,\lambda_2,\cdots,\lambda_n),\lambda_1&gt;\lambda_2&gt;\cdots&gt;\lambda_n$。</li>
+</ul>
+<h2 id="1-奇异值分解（Singular-Value-Decomposition）"><a href="#1-奇异值分解（Singular-Value-Decomposition）" class="headerlink" title="1. 奇异值分解（Singular Value Decomposition）"></a>1. 奇异值分解（Singular Value Decomposition）</h2><h3 id="1-1-svd的数学描述"><a href="#1-1-svd的数学描述" class="headerlink" title="1.1. svd的数学描述"></a>1.1. svd的数学描述</h3><p>svd告诉我们，对任意$m\times n$的矩阵$A$，都可以表示为下面这种形式：</p>
+<script type="math/tex; mode=display">
+A=U\Sigma V^T\\
+\tag{1,1}</script><p>其中$U$是$m \times m$的正交阵，$V$是$n\times n$的正交阵，$\Sigma$是$m\times n$的对角阵，</p>
+<script type="math/tex; mode=display">
+\Sigma=\begin{bmatrix} 
+\Sigma_1 &0\\
+0 &0 \\  
+\end{bmatrix} \\
+\tag{1,2}</script><p>$\Sigma_1=diag(\sigma_1,\sigma_2,\cdots,\sigma_r),r=rank(A)$，其对角元素按照从大到小排列</p>
+<h3 id="1-2-svd的证明"><a href="#1-2-svd的证明" class="headerlink" title="1.2. svd的证明"></a>1.2. svd的证明</h3><p>在开始证明前，先给出几个引理：</p>
+<ul>
+<li>引理1：$A^TA$可对角化，且具有实的非负特征值（这是因为$A^TA$是半正定矩阵）</li>
+<li>引理2：$rank(A)=rank(A^TA)=rank(AA^T)$</li>
+<li>引理3：$A=0\ \Leftrightarrow\ A^TA=0$</li>
+</ul>
+<p>下面开始证明：<br>设$rank(A)=r$，根据引理1和引理2，存在$n\times n$的正交矩阵$V$，使得</p>
+<script type="math/tex; mode=display">
+V^T(A^TA)V=diag(\lambda_1,\lambda_2,\cdots,\lambda_n)\\
+\tag{1,3}</script><p>其中$\lambda_1&gt;\lambda_2&gt;\cdots&gt;\lambda_r&gt;0=\lambda_{r+1}=\cdots=\lambda_n$为$A^TA$的n个非负特征根。<br>令$\Sigma_1=diag(\sigma_1,\sigma_2,\cdots,\sigma_r)=diag(\sqrt\sigma_1,\sqrt\sigma_2,\cdots,\sqrt\sigma_r)$，$V_1=[v_1,v_2,\cdots,v_r]，V_2=[v_{r+1},v_{r+2},\cdots,v_{n}]$，并且有$V=[V_1,V_2]$。<br>从而有$A^TAV_1=V_1\Sigma_1^2$，进一步得到：</p>
+<script type="math/tex; mode=display">
+\Sigma_1^{-1}V_1^TA^TAV_1\Sigma_1^{-1}=I\\
+\tag{1,4}</script><p>令$U_1=AV_1\Sigma_1^{-1}$，则有$U_1^TU_1=I$。此时，我们可以选择$m-r$组标准正交向量与$U_1$的列向量组成一组标准正交基，也即$U=[U_1,U_2]$是一个m阶正交阵，且$U_1^TU_2=0$。<br>另一方面，容易得到：</p>
+<script type="math/tex; mode=display">
+A^TAV_2=V_20\ \Rightarrow\ V2^TA^TAV_2=0\\
+\tag{1,4}</script><p>根据引理3可得$AV_2=0$</p>
+<p>综上可得：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+U^TAV&=\begin{bmatrix} 
+U_1^TAV_1 &U_1^TAV_2\\
+U_2^TAV_1 &U_2^TAV_2 \\  
+\end{bmatrix} \\
+&=\begin{bmatrix} 
+\Sigma_1 &0\\
+U_2^TU_1\Sigma_1 &0 \\  
+\end{bmatrix} \\
+&=\begin{bmatrix} 
+\Sigma_1 &0\\
+0 &0 \\  
+\end{bmatrix} \\
+&=\Sigma\\
+\tag{1,5}
+\end{align*}</script><p>也即$A=U\Sigma V^T$，到此奇异值分解定理得证。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="../../../../tags/Linear-Algebra/" rel="tag"># Linear Algebra</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="../../../../2018/06/28/卷积神经网络入门/" rel="next" title="卷积神经网络入门">
+                <i class="fa fa-chevron-left"></i> 卷积神经网络入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="../../../../2020/02/20/nlp入门基础之语言模型/" rel="prev" title="nlp入门基础之语言模型">
+                nlp入门基础之语言模型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="../../../../images/avatar.jpg"
+                alt="Guoxing Lan" />
+            
+              <p class="site-author-name" itemprop="name">Guoxing Lan</p>
+              <p class="site-description motion-element" itemprop="description">On The Journey To Truth</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="https://lankuohsing.github.io/blog/archives">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="../../../../categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="../../../../tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SVD分解推导证明"><span class="nav-number">1.</span> <span class="nav-text">SVD分解推导证明</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#0-线性代数与矩阵基础知识回顾"><span class="nav-number">1.1.</span> <span class="nav-text">0. 线性代数与矩阵基础知识回顾</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0-1-正交向量组"><span class="nav-number">1.1.1.</span> <span class="nav-text">0.1. 正交向量组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-2-正交矩阵"><span class="nav-number">1.1.2.</span> <span class="nav-text">0.2. 正交矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-3-正定矩阵"><span class="nav-number">1.1.3.</span> <span class="nav-text">0.3. 正定矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-4-特征值"><span class="nav-number">1.1.4.</span> <span class="nav-text">0.4. 特征值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-奇异值分解（Singular-Value-Decomposition）"><span class="nav-number">1.2.</span> <span class="nav-text">1. 奇异值分解（Singular Value Decomposition）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-svd的数学描述"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.1. svd的数学描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-svd的证明"><span class="nav-number">1.2.2.</span> <span class="nav-text">1.2. svd的证明</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async="" src="busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Guoxing Lan</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="../../../../js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="../../../../js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="../../../../js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="../../../../js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="将神经网络应用到多类分类问题中时，输出层的形式不能用logistic函数（sigmoid激活函数），而应该推广到softmax函数。二分类问题与多分类问题的神经网络模型的最大区别就是输出层。因此下面重点讲解softmax函数的原理。 1. Softmax回归详解在softmax回归中，我们解决的是多分类问题（相对于logistic回归解决的二分类问题），标记$y$可以取$k$个不同的值。对于训练集">
+<meta name="description" content="@[toc] 将神经网络应用到多类分类问题中时，输出层的形式不能用logistic函数（sigmoid激活函数），而应该推广到softmax函数。二分类问题与多分类问题的神经网络模型的最大区别就是输出层。因此下面重点讲解softmax函数的原理。 1. Softmax回归详解在softmax回归中，我们解决的是多分类问题（相对于logistic回归解决的二分类问题），标记$y$可以取$k$个不同">
 <meta name="keywords" content="Deep Learning,Neural Networks">
 <meta property="og:type" content="article">
 <meta property="og:title" content="神经网络之将二分类问题推广到多分类问题">
 <meta property="og:url" content="https://lankuohsing.github.io/blog/2018/06/25/神经网络之将二分类问题推广到多分类问题/index.html">
 <meta property="og:site_name" content="Guoxing Lan">
-<meta property="og:description" content="将神经网络应用到多类分类问题中时，输出层的形式不能用logistic函数（sigmoid激活函数），而应该推广到softmax函数。二分类问题与多分类问题的神经网络模型的最大区别就是输出层。因此下面重点讲解softmax函数的原理。 1. Softmax回归详解在softmax回归中，我们解决的是多分类问题（相对于logistic回归解决的二分类问题），标记$y$可以取$k$个不同的值。对于训练集">
+<meta property="og:description" content="@[toc] 将神经网络应用到多类分类问题中时，输出层的形式不能用logistic函数（sigmoid激活函数），而应该推广到softmax函数。二分类问题与多分类问题的神经网络模型的最大区别就是输出层。因此下面重点讲解softmax函数的原理。 1. Softmax回归详解在softmax回归中，我们解决的是多分类问题（相对于logistic回归解决的二分类问题），标记$y$可以取$k$个不同">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-06-25T08:11:56.438Z">
+<meta property="og:updated_time" content="2021-02-28T06:34:52.018Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="神经网络之将二分类问题推广到多分类问题">
-<meta name="twitter:description" content="将神经网络应用到多类分类问题中时，输出层的形式不能用logistic函数（sigmoid激活函数），而应该推广到softmax函数。二分类问题与多分类问题的神经网络模型的最大区别就是输出层。因此下面重点讲解softmax函数的原理。 1. Softmax回归详解在softmax回归中，我们解决的是多分类问题（相对于logistic回归解决的二分类问题），标记$y$可以取$k$个不同的值。对于训练集">
+<meta name="twitter:description" content="@[toc] 将神经网络应用到多类分类问题中时，输出层的形式不能用logistic函数（sigmoid激活函数），而应该推广到softmax函数。二分类问题与多分类问题的神经网络模型的最大区别就是输出层。因此下面重点讲解softmax函数的原理。 1. Softmax回归详解在softmax回归中，我们解决的是多分类问题（相对于logistic回归解决的二分类问题），标记$y$可以取$k$个不同">
 
 
 
@@ -292,7 +292,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-25T16:02:54+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-25T16:03:52+08:00">
                 2018-06-25
               </time>
             
@@ -357,7 +357,9 @@
       
 
       
-        <p>将神经网络应用到多类分类问题中时，输出层的形式不能用logistic函数（sigmoid激活函数），而应该推广到softmax函数。二分类问题与多分类问题的神经网络模型的最大区别就是输出层。因此下面重点讲解softmax函数的原理。</p>
+        <hr>
+<p>@[toc]</p>
+<p>将神经网络应用到多类分类问题中时，输出层的形式不能用logistic函数（sigmoid激活函数），而应该推广到softmax函数。二分类问题与多分类问题的神经网络模型的最大区别就是输出层。因此下面重点讲解softmax函数的原理。</p>
 <h2 id="1-Softmax回归详解"><a href="#1-Softmax回归详解" class="headerlink" title="1. Softmax回归详解"></a>1. Softmax回归详解</h2><p>在softmax回归中，我们解决的是多分类问题（相对于logistic回归解决的二分类问题），标记$y$可以取$k$个不同的值。对于训练集$\{(x^{(1)},y^{(1)}),\cdots,(x^{(m)},y^{(m)})\}$，我们有$y^{(j)}\in \{1,2,\cdots,k\}$。<br>对于给定的测试输入$x$，我们想用假设函数针对每一个类别$j$估算出概率值$P(y=j|x)$。因此，我们的假设函数要输出一个$k$维的向量（向量元素的和为1）来表示$k$个估计的概率值。我们采用如下形式的假设函数$h_{\theta}(x)$：  </p>
 <script type="math/tex; mode=display">
 \begin{align*}
@@ -504,7 +506,7 @@ J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{
               
                 <a href="https://lankuohsing.github.io/blog/archives">
               
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -515,7 +517,7 @@ J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{
               
               <div class="site-state-item site-state-categories">
                 <a href="../../../../categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -526,7 +528,7 @@ J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m}\sum_{j=1}^k1(y^{(i)}=j)\log{\frac{e^{
               
               <div class="site-state-item site-state-tags">
                 <a href="../../../../tags/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
