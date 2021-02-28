@@ -1267,15 +1267,15 @@ x_i^{\star}=exp\left(-(a_i^T\lambda^{\star}+\nu^{\star}+1)\right),i=1,2,\cdots,n
         
           
             <hr>
-<p>[TOC]</p>
+<p>@[toc]</p>
 <h1 id="1-前馈神经网络的缺点"><a href="#1-前馈神经网络的缺点" class="headerlink" title="1. 前馈神经网络的缺点"></a>1. 前馈神经网络的缺点</h1><p>对于输入向量中个分量的位置信息不感知，也即无法利用序列型输入特征向量中的位置信息（将个分量调换顺序最后训练出的模型是等价的），但是在实际的任务中，各分量是有先后关系的。例如，我们在理解一段文本时，孤立地理解每个字或者词是不够的，还要将它们作为一个整体的序列来理解。</p>
-<h1 id="2-循环神经网络RNN"><a href="#2-循环神经网络RNN" class="headerlink" title="2. 循环神经网络RNN"></a>2. 循环神经网络RNN</h1><h2 id="2-1-RNN的基本结构与数学定义"><a href="#2-1-RNN的基本结构与数学定义" class="headerlink" title="2.1. RNN的基本结构与数学定义"></a>2.1. RNN的基本结构与数学定义</h2><p>输入层的维数是$(n_x,m,T_x)$,其中$n_x$是每个训练样本的维数，例如输入词one-hot向量的大小，也即词典大小；$m$是一个batch的大小；$T_x$是输入序列的长度。</p>
+<h1 id="2-循环神经网络RNN"><a href="#2-循环神经网络RNN" class="headerlink" title="2. 循环神经网络RNN"></a>2. 循环神经网络RNN</h1><h2 id="2-1-RNN的基本结构与数学定义"><a href="#2-1-RNN的基本结构与数学定义" class="headerlink" title="2.1. RNN的基本结构与数学定义"></a>2.1. RNN的基本结构与数学定义</h2><p>RNN的输入数据，一般有三个维度：batch大小，时间长度，特征维数。TensorFlow中的RNN层API的输入数据shape为[batch, timesteps, feature]。因为本节的图片来自Andrew NG的Coursera公开课中的例子，因此这里的RNN输入数据形状将以Andrew NG的习惯为例，这不影响原理的讲解。输入层的维数是$(n_x,m,T_x)$,其中$n_x$是每个训练样本的维数；$m$是一个batch的大小；$T_x$是输入序列的长度。</p>
 <p>输出层的维数是$(n_y,m,T_y)$,其中$n_y$是输出预测向量的维数；$m$是一个batch的大小；$T_y$是输出序列的长度。</p>
-<p>我们先研究输入向量和输出向量相等，即$n_x=n_y$的情况，结构图如下所示（图片来源<a href="https://www.coursera.org/learn/nlp-sequence-models/notebook/X20PE/building-a-recurrent-neural-network-step-by-step）。" target="_blank" rel="noopener">https://www.coursera.org/learn/nlp-sequence-models/notebook/X20PE/building-a-recurrent-neural-network-step-by-step）。</a><br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/%E6%A0%87%E5%87%86RNN%E6%A8%A1%E5%9E%8B-%E8%BE%93%E5%85%A5%E7%BB%B4%E6%95%B0%E7%AD%89%E4%BA%8E%E8%BE%93%E5%87%BA%E7%BB%B4%E6%95%B0.png" alt="RNN的基本结构"></p>
+<p>我们先研究输入向量和输出向量相等，即$n_x=n_y$的情况，结构图如下所示（图片来源<a href="https://www.coursera.org/learn/nlp-sequence-models/notebook/X20PE/building-a-recurrent-neural-network-step-by-step）。" target="_blank" rel="noopener">https://www.coursera.org/learn/nlp-sequence-models/notebook/X20PE/building-a-recurrent-neural-network-step-by-step）。</a><br><img src="https://img-blog.csdnimg.cn/20200915224055966.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <center>图2.1 RNN基本结构</center>
 
 
-<p>上下标说明举例：$a_5^{(2)[3]<4>}$表示第2个训练样本，第3层，第4个时刻，激活函数输出向量的第5维。<br>每个RNN-Cell的内部结构见下图<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/RNN%E7%9A%84%E4%B8%80%E4%B8%AA%E5%9F%BA%E6%9C%AC%E5%8D%95%E5%85%83.png" alt="RNN的一个基本单元"></4></p>
+<p>上下标说明举例：$a_5^{(2)[3]<4>}$表示第2个训练样本，第3层，第4个时刻，激活函数输出向量的第5维。<br>每个RNN-Cell的内部结构见下图<br><img src="https://img-blog.csdnimg.cn/20200915224125412.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></4></p>
 <center>图2.2 RNN的一个基本单元</center>
 
 <p>注意，输出$\hat y$是状态向量$a$经过线性变换再经过softmax变换得到的。</p>
@@ -1285,22 +1285,22 @@ a^{\langle t\rangle}&=tanh\left(W_{ax}x^{\langle t\rangle}+W_{aa}a^{\langle t-1\
 \hat y^{\langle t\rangle}&=softmax\left(W_{ya}a^{\langle t\rangle}+b_y\right)\\
 \tag{2-1}
 \end{align*}</script><p>需要注意的是，在不同的RNN-Cell中，上述公式里面的参数$W,b$都是共享的。</p>
-<h2 id="2-2-输入输出长度的讨论"><a href="#2-2-输入输出长度的讨论" class="headerlink" title="2.2. 输入输出长度的讨论"></a>2.2. 输入输出长度的讨论</h2><h3 id="2-2-1-n-x-n-y-n"><a href="#2-2-1-n-x-n-y-n" class="headerlink" title="2.2.1. $n_x=n_y=n$"></a>2.2.1. $n_x=n_y=n$</h3><p>第一种情况是输入输出长度相等的情况，如下图所示（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/RNN-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E9%95%BF%E5%BA%A6%E7%9B%B8%E7%AD%89.jpg" alt="RNN-输入输出长度相等"></p>
+<h2 id="2-2-输入输出长度的讨论"><a href="#2-2-输入输出长度的讨论" class="headerlink" title="2.2. 输入输出长度的讨论"></a>2.2. 输入输出长度的讨论</h2><h3 id="2-2-1-n-x-n-y-n"><a href="#2-2-1-n-x-n-y-n" class="headerlink" title="2.2.1. $n_x=n_y=n$"></a>2.2.1. $n_x=n_y=n$</h3><p>第一种情况是输入输出长度相等的情况，如下图所示（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="https://img-blog.csdnimg.cn/20200915224210915.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <center>图2.3 RNN-输入输出长度相等</center>
 
 <p>常用于序列标注模型，例如命名实体识别模型中。</p>
-<h3 id="2-2-2-n-x-n-n-y-1"><a href="#2-2-2-n-x-n-n-y-1" class="headerlink" title="2.2.2. $n_x=n,n_y=1$"></a>2.2.2. $n_x=n,n_y=1$</h3><p>第二种情况是输入长度为N，输出长度为1（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/RNN-%E8%BE%93%E5%87%BA%E9%95%BF%E5%BA%A6%E4%B8%BA1.jpg" alt="RNN-输出长度为1"></p>
+<h3 id="2-2-2-n-x-n-n-y-1"><a href="#2-2-2-n-x-n-n-y-1" class="headerlink" title="2.2.2. $n_x=n,n_y=1$"></a>2.2.2. $n_x=n,n_y=1$</h3><p>第二种情况是输入长度为N，输出长度为1（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="https://img-blog.csdnimg.cn/20200915224233564.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <center>图2.4 RNN-输出长度为1</center>
 
-<p>模型只在最后一个时刻输出，常用于文本分类模型</p>
-<h3 id="2-2-3-n-x-1-n-y-n"><a href="#2-2-3-n-x-1-n-y-n" class="headerlink" title="2.2.3. $n_x=1,n_y=n$"></a>2.2.3. $n_x=1,n_y=n$</h3><p>第三种情况是输入长度为1，输出长度为N。uti实现时，可以将输入作为最开始时刻的输入，也可以作为所有时刻的输入（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/RNN-%E8%BE%93%E5%85%A5%E9%95%BF%E5%BA%A6%E4%B8%BA1.jpg" alt="RNN-输入长度为1"></p>
+<p>模型只在最后一个时刻输出，常用于文本分类模型<br>利用RNN网络预测sin函数的代码例子：<a href="https://github.com/lankuohsing/TensorFlow-Examples/blob/master/RNN/RNN_sin.py" target="_blank" rel="noopener">https://github.com/lankuohsing/TensorFlow-Examples/blob/master/RNN/RNN_sin.py</a></p>
+<h3 id="2-2-3-n-x-1-n-y-n"><a href="#2-2-3-n-x-1-n-y-n" class="headerlink" title="2.2.3. $n_x=1,n_y=n$"></a>2.2.3. $n_x=1,n_y=n$</h3><p>第三种情况是输入长度为1，输出长度为N。uti实现时，可以将输入作为最开始时刻的输入，也可以作为所有时刻的输入（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="https://img-blog.csdnimg.cn/20200915224253817.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <center>图2.5 RNN-输入长度为1</center>
 
-<p><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/RNN-%E8%BE%93%E5%85%A5%E9%95%BF%E5%BA%A6%E4%B8%BA1%EF%BC%88%E8%BE%93%E5%85%A5%E7%89%B9%E5%BE%81%E5%9C%A8%E6%89%80%E6%9C%89%E6%97%B6%E5%88%BB%E9%87%8D%E5%A4%8D%E4%BD%BF%E7%94%A8%EF%BC%89.jpg" alt="RNN-输入长度为1（输入特征在所有时刻重复使用）"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200915224310543.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <center>图2.6 RNN-输入长度为1（输入特征在所有时刻重复使用）</center>
 
 <p>常用于文字生成模型中。</p>
-<h3 id="2-2-4-n-x-n-n-y-m-，Encoder-Decoder模型"><a href="#2-2-4-n-x-n-n-y-m-，Encoder-Decoder模型" class="headerlink" title="2.2.4. $n_x=n,n_y=m$，Encoder-Decoder模型"></a>2.2.4. $n_x=n,n_y=m$，Encoder-Decoder模型</h3><p>第四种情况是输入长度为N,输出长度为M的情况，也即Encoder-Decoder模型（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/Encoder-Decoder.png" alt="Encoder-Decoder模型"></p>
+<h3 id="2-2-4-n-x-n-n-y-m-，Encoder-Decoder模型"><a href="#2-2-4-n-x-n-n-y-m-，Encoder-Decoder模型" class="headerlink" title="2.2.4. $n_x=n,n_y=m$，Encoder-Decoder模型"></a>2.2.4. $n_x=n,n_y=m$，Encoder-Decoder模型</h3><p>第四种情况是输入长度为N,输出长度为M的情况，也即Encoder-Decoder模型（图片来源<a href="https://www.jianshu.com/p/c5723c3bb921" target="_blank" rel="noopener">https://www.jianshu.com/p/c5723c3bb921</a>）<br><img src="https://img-blog.csdnimg.cn/2020091522433218.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <center>图2.7 Encoder-Decoder模型，输入输出长度为一般情况的RNN</center>
 
 <p>常用于语音识别、机器翻译等场景。在后面的章节中我们会详细介绍Encoder-Decoder模型</p>
@@ -1315,7 +1315,7 @@ C^{\langle t\rangle}=\Gamma_u*\tilde C^{\langle t\rangle}+（1-\Gamma_u）* C^{\
 <p>The cat, which already ate …, was full</p>
 </blockquote>
 <p>cat后面的词直到was之前，都不需要更新$C$,直接等于cat对应的$C$<br>可以解决梯度消失的问题.输出层的梯度可以传播到cat处</p>
-<p>注：$C$和$\Gamma$都可以是想聊，它们在相乘时采用的是element-wise的乘法。当为向量时，与cat的单复数无关的词对应的$\Gamma$可能有些维度为零，有些维度不为零。为零的维度，是用来保留cat的单复数信息的；不为零的维度可能是保留其他语义信息的，比如是不是food呀之类的<br>目前讨论的是简化版的GRU，结构图如下<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/GRU.png" alt=""></p>
+<p>注：$C$和$\Gamma$都可以是想聊，它们在相乘时采用的是element-wise的乘法。当为向量时，与cat的单复数无关的词对应的$\Gamma$可能有些维度为零，有些维度不为零。为零的维度，是用来保留cat的单复数信息的；不为零的维度可能是保留其他语义信息的，比如是不是food呀之类的<br>目前讨论的是简化版的GRU，结构图如下<br><img src="https://img-blog.csdnimg.cn/20200915224500120.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <center>图3.1GRU的一个基本单元</center>
 
 <p>完整的GRU：</p>
@@ -1340,14 +1340,14 @@ a^{\langle t\rangle}&=\Gamma_o*tanh\left(C^{\langle t\rangle}\right)\\
 \tilde y^{\langle t\rangle}&=softmax(a^{\langle t\rangle})\\
 \tag{3-2}
 \end{align*}</script><p>(注意公式里面的$\Gamma_u$等价于图片中的$\Gamma_i$)</p>
-<p><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/LSTM_%E5%9F%BA%E6%9C%AC%E5%8D%95%E5%85%83.png" alt="LSTM基本单元"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200915224534385.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <center>图3.2 LSTM的一个基本单元</center>
 
-<p><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/%E6%A0%87%E5%87%86LSTM%E6%A8%A1%E5%9E%8B-%E8%BE%93%E5%85%A5%E7%BB%B4%E6%95%B0%E7%AD%89%E4%BA%8E%E8%BE%93%E5%87%BA%E7%BB%B4%E6%95%B0.png" alt="标准LSTM模型-输入维数等于输出维数"></p>
+<p><img src="https://img-blog.csdnimg.cn/2020091522455885.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <center>图3.3 标准LSTM模型-输入维数等于输出维数</center>
 
-<h3 id="3-2-1-peephole连接"><a href="#3-2-1-peephole连接" class="headerlink" title="3.2.1. peephole连接"></a>3.2.1. peephole连接</h3><p><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/LSTM%E5%8F%98%E7%A7%8D-peephole.png" alt="LSTM-peephole"></p>
-<center>图3.4 LSTM——peephole</center>
+<h3 id="3-2-1-peephole连接"><a href="#3-2-1-peephole连接" class="headerlink" title="3.2.1. peephole连接"></a>3.2.1. peephole连接</h3><p><img src="https://img-blog.csdnimg.cn/20200915224655547.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<center>图3.4 LSTM带有peephole</center>
 
 <script type="math/tex; mode=display">
 \begin{align*}
@@ -1371,27 +1371,26 @@ a_0^{\langle t\rangle}&=\Gamma_o*tanh\left(C^{\langle t\rangle}\right)\\
 a^{\langle t\rangle}&=W_{proj}a_0^{\langle t\rangle}+b_{proj}\\
 \tilde y^{\langle t\rangle}&=softmax(a^{\langle t\rangle})\\
 \tag{3-4}
-\end{align*}</script><h1 id="4-Encoder-Decoder模型"><a href="#4-Encoder-Decoder模型" class="headerlink" title="4. Encoder-Decoder模型"></a>4. Encoder-Decoder模型</h1><p>由前面的章节我们知道，Encoder-Decoder模型就是输入输出长度为一般情况的RNN模型，示意图如下：<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/Encoder-Decoder.png" alt="Encoder-Decoder"></p>
+\end{align*}</script><h1 id="4-Encoder-Decoder模型"><a href="#4-Encoder-Decoder模型" class="headerlink" title="4. Encoder-Decoder模型"></a>4. Encoder-Decoder模型</h1><p>由前面的章节我们知道，Encoder-Decoder模型就是输入输出长度为一般情况的RNN模型，示意图如下：<br><img src="https://img-blog.csdnimg.cn/20200915224730164.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <center>图4.1 Encoder-Decoder</center>
 
 <p>其中Encoder负责将输入进行编码，得到语义编码向量C；Decoder负责将语义编码向量C进行解码，得到输出。以机器翻译为例，英文作为输入，输出为中文。可以用如下的数学模型来表示：</p>
 <script type="math/tex; mode=display">
 \begin{align*}
-input&=&lt x_1,x_2,\cdots,x_n &gt\\
+input&= ( x_1,x_2,\cdots,x_n )\\
 C&=f(input)\\
 y_i&=g( C,y_1,y_2,\cdots,y_{i-1} ),i=1,2,\cdots,m\\
-output&=&lt y_1,y_2,\cdots,y_m &gt\\
+output&=( y_1,y_2,\cdots,y_m )\\
 \tag{4-1}
-\end{align*}</script><p>从Encoder得到C的方式有多种，可以将Encoder最后一个时刻的隐藏状态作为C，也可以将所有的隐藏状态进行某种变换得到C。<br>语义编码C在Decoder中的作用当时有多种，常见的有如下两种<br>（1） C作为Decoder的初始状态$h_0$。<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/C%E4%BD%9C%E4%B8%BADecoder%E7%9A%84%E5%88%9D%E5%A7%8B%E7%8A%B6%E6%80%81h0.png" alt="C作为Decoder的初始状态h0"></p>
+\end{align*}</script><p>从Encoder得到C的方式有多种，可以将Encoder最后一个时刻的隐藏状态作为C，也可以将所有的隐藏状态进行某种变换得到C。<br>语义编码C在Decoder中的作用当时有多种，常见的有如下两种<br>（1） C作为Decoder的初始状态$h_0$。<br><img src="https://img-blog.csdnimg.cn/20200915224752523.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <center>图4.2 C作为Decoder的初始状态h0</center>
 
-<p>（2） C作为Decoder的每一步输入。<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/RNN/C%E4%BD%9C%E4%B8%BADecoder%E7%9A%84%E6%AF%8F%E4%B8%80%E6%AD%A5%E8%BE%93%E5%85%A5.png" alt="C作为Decoder的每一步输入"></p>
-<center>图4.3 C作为Decoder的每一步输入</center>
+<p>（2） C作为Decoder的每一步输入。<br><img src="https://img-blog.csdnimg.cn/20200915224806800.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<center>图4.2 C作为Decoder的每一步输入</center>
 
-<p>具体公式和应用场景见下一小节。</p>
-<h2 id="4-1-几种典型的encoder-decoder"><a href="#4-1-几种典型的encoder-decoder" class="headerlink" title="4.1. 几种典型的encoder-decoder"></a>4.1. 几种典型的encoder-decoder</h2><p>参考<a href="https://zhuanlan.zhihu.com/p/70880679" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/70880679</a></p>
-<h3 id="4-1-1-第一种-语义编码C作为Decoder的初始输入"><a href="#4-1-1-第一种-语义编码C作为Decoder的初始输入" class="headerlink" title="4.1.1. 第一种:语义编码C作为Decoder的初始输入"></a>4.1.1. 第一种:语义编码C作为Decoder的初始输入</h3><p><a href="https://arxiv.org/abs/1409.3215" target="_blank" rel="noopener">https://arxiv.org/abs/1409.3215</a> Sequence to Sequence Learning with Neural Networks<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/encoder-decoder-%E6%A1%86%E6%9E%B61.jpg" alt=""></p>
-<center>图4.4 Encoder-Decoder框架1-C作为Decoder的初始输入</center>
+
+<h2 id="4-1-几种典型的encoder-decoder"><a href="#4-1-几种典型的encoder-decoder" class="headerlink" title="4.1. 几种典型的encoder-decoder"></a>4.1. 几种典型的encoder-decoder</h2><h3 id="4-1-1-第一种-语义编码C作为Decoder的初始输入"><a href="#4-1-1-第一种-语义编码C作为Decoder的初始输入" class="headerlink" title="4.1.1. 第一种:语义编码C作为Decoder的初始输入"></a>4.1.1. 第一种:语义编码C作为Decoder的初始输入</h3><p>本小节的encode-decoder模型可以看成是seq2seq的开山之作，来源于google的论文<a href="https://arxiv.org/abs/1409.3215" target="_blank" rel="noopener">https://arxiv.org/abs/1409.3215</a> Sequence to Sequence Learning with Neural Networks。该论文的模型是为了翻译问题而提出的，其中的encoder和decoder都采用LSTM，decoder中采用了beam search来提升效果。此外，该论文还采用了一个tric——将输入源句子倒序输入。这是因为，无论RNN还是LSTM，其实都是有偏的，即顺序越靠后的单词最终占据的信息量越大。如果源句子是正序的话，则采用的是最后一个词对应的state来作为decoder的输入来预测第一个词。这样是是不符合直觉的，因为没有对齐。将源句子倒序后，某种意义上实现了一定的对齐。<br><img src="https://img-blog.csdnimg.cn/20200924234108210.jpg#pic_center" alt="在这里插入图片描述"></p>
+<center>图4.3 Encoder-Decoder框架1-C作为Decoder的初始输入</center>
 
 <p>Encoder：</p>
 <script type="math/tex; mode=display">
@@ -1405,8 +1404,8 @@ c&=h_T\\
 h_t&=tanh(W[h_{t-1},y_{t-1}]+b),h_0=c\\
 o_t&=softmax(Vh_t+d)\\
 \tag{4-3}
-\end{align*}</script><h3 id="4-1-2-第一种-语义编码C作为Decoder的每一步输入"><a href="#4-1-2-第一种-语义编码C作为Decoder的每一步输入" class="headerlink" title="4.1.2. 第一种:语义编码C作为Decoder的每一步输入"></a>4.1.2. 第一种:语义编码C作为Decoder的每一步输入</h3><p><a href="https://arxiv.org/pdf/1406.1078" target="_blank" rel="noopener">https://arxiv.org/pdf/1406.1078</a> Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/encoder-decoder-%E6%A1%86%E6%9E%B62.jpg" alt=""></p>
-<center>图4.5 Encoder-Decoder框架1-C作为Decoder的每一步输入</center>
+\end{align*}</script><h3 id="4-1-2-第一种-语义编码C作为Decoder的每一步输入"><a href="#4-1-2-第一种-语义编码C作为Decoder的每一步输入" class="headerlink" title="4.1.2. 第一种:语义编码C作为Decoder的每一步输入"></a>4.1.2. 第一种:语义编码C作为Decoder的每一步输入</h3><p><a href="https://arxiv.org/pdf/1406.1078" target="_blank" rel="noopener">https://arxiv.org/pdf/1406.1078</a> Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation<br><img src="https://img-blog.csdnimg.cn/20200924234038757.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<center>图4.4 Encoder-Decoder框架2-C作为Decoder的每一步输入</center>
 
 <p>Encoder：</p>
 <script type="math/tex; mode=display">
@@ -1425,25 +1424,24 @@ o_t&=softmax(Vh_t+c)\\
 <li>如果在Decoder阶段，仅仅将C作为初始状态，随着时间往后推进，C的作用会越来越微弱。</li>
 </ol>
 <p>事实上，Attention机制的提出，主要就是为了解决上述问题。</p>
-<h1 id="5-Attention机制详解"><a href="#5-Attention机制详解" class="headerlink" title="5. Attention机制详解"></a>5. Attention机制详解</h1><p>前面讲到，在一般形式的encoder-decoder中，输入信息先经过encoder编码保存在C中，C再被decoder使用。这种“直接粗暴”的方式，可能会导致输入信息没有被合理的利用，尤其是当输入信息过长的时候。为了解决这个问题，Attention机制被提出，解决的思路是：在decoder阶段，每个时间点输入的C是不同的(示意图如下图所示)，需要根据当前时刻要输出的y去合理地选择输入x中的上下文信息。<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/attention%E6%9C%BA%E5%88%B6%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="Attention机制示意图"></p>
+<h1 id="5-Attention机制详解"><a href="#5-Attention机制详解" class="headerlink" title="5. Attention机制详解"></a>5. Attention机制详解</h1><p>前面讲到，在一般形式的encoder-decoder中，输入信息先经过encoder编码保存在C中，C再被decoder使用。这种“直接粗暴”的方式，可能会导致输入信息没有被合理的利用，尤其是当输入信息过长的时候。为了解决这个问题，Attention机制被提出，解决的思路是：在decoder阶段，每个时间点输入的C是不同的(示意图如下图所示)，需要根据当前时刻要输出的y去合理地选择输入x中的上下文信息。<br><img src="https://img-blog.csdnimg.cn/20200915224835251.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <center>图5.1 Attention机制示意图</center>
 
-<p>具体来讲，就是对encoder的隐藏状态进行加权求和，以便得到不同的C，以中文翻译英文为例，示意图如下（图片来源<a href="https://www.jianshu.com/p/d2ae158fc9e5" target="_blank" rel="noopener">https://www.jianshu.com/p/d2ae158fc9e5</a>）：<br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/Attention-%E5%AF%B9encoder%E9%9A%90%E8%97%8F%E7%8A%B6%E6%80%81%E8%BF%9B%E8%A1%8C%E5%8A%A0%E6%9D%83%E6%B1%82%E5%92%8C%E5%BE%97%E5%88%B0%E4%B8%8D%E5%90%8C%E7%9A%84C.png" alt="Attention-对encoder隐藏状态进行加权求和得到不同的C"></p>
+<p>具体来讲，就是对encoder的隐藏状态进行加权求和，以便得到不同的C，以中文翻译英文为例，示意图如下：<br><img src="https://img-blog.csdnimg.cn/20200915224848492.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <center>图5.2 Attention-对encoder隐藏状态进行加权求和得到不同的C</center>
 
 <p>记$a_{ij}$为encoder中第$j$个隐藏状态$h_j$到decoder中第$i$个隐藏状态$h_i’$对应的$c_i$的权重，可以通过训练确定的，具体计算方法见后文。attention机制的核心思想可以概括为”对输入信息加权求和得到编码信息c”，也即如下公式：</p>
 <script type="math/tex; mode=display">
-c_i=\sum_{j=1}^{n_x}a_{ij}h_j\tag{5-1}</script><h2 id="5-1-attention机制中权重系数的计算过程"><a href="#5-1-attention机制中权重系数的计算过程" class="headerlink" title="5.1. attention机制中权重系数的计算过程"></a>5.1. attention机制中权重系数的计算过程</h2><p>attention机制中权重系数有多种计算过程，对应于不同种类的attention机制。但是大部分的attention机制，都能表示为下文提到的三个抽象阶段。这里先引入几个概念。<br>我们将模型输入内容记为source，输出内容记为target。<br>source可以表示为一个一个的（key,value），target则表示为一个一个的query。在机器翻译中，key和value合并为一个，就是输入句子中每个单词对应的隐藏层状态。<br>通过计算Query和各个Key的相似性或者相关性（需要进行softmax归一化），得到每个Key对应Value的权重系数，然后对Value进行加权求和，即得到了最终的Attention数值。</p>
+c_i=\sum_{j=1}^{n_x}a_{ij}h_j\tag{5-1}</script><h2 id="5-1-attention机制中权重系数的计算过程"><a href="#5-1-attention机制中权重系数的计算过程" class="headerlink" title="5.1. attention机制中权重系数的计算过程"></a>5.1. attention机制中权重系数的计算过程</h2><p>attention机制中权重系数有多种计算过程，对应于不同种类的attention机制。但是大部分的attention机制，都能表示为下文提到的三个抽象阶段。这里先引入几个概念。<br>我们将模型输入内容记为source，输出内容记为target。<br>source可以表示为一个一个的<key,value>，target则表示为一个一个的query。在机器翻译中，key和value合并为一个，就是输入句子中每个单词对应的隐藏层状态。<br>通过计算Query和各个Key的相似性或者相关性（需要进行softmax归一化），得到每个Key对应Value的权重系数，然后对Value进行加权求和，即得到了最终的Attention数值。</key,value></p>
 <script type="math/tex; mode=display">
-Attention(Query_i,Source)=\sum_{j=1}^{L_x}Similarity(Query,key_j)*value_j\tag{5-2}</script><p>具体来说可以分为三个阶段，如下图所示：</p>
-<p><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/attention%E4%B8%AD%E6%9D%83%E9%87%8D%E7%B3%BB%E6%95%B0%E8%AE%A1%E7%AE%97%E7%9A%84%E4%B8%89%E4%B8%AA%E9%98%B6%E6%AE%B5.jpg" alt="attention机制中计算权重系数的三个阶段"></p>
+Attention(Query_i,Source)=\sum_{j=1}^{L_x}Similarity(Query,key_j)*value_j\tag{5-2}</script><p>具体来说可以分为三个阶段，如下图所示：<br><img src="https://img-blog.csdnimg.cn/2020091522491044.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <center>图5.3 attention机制中计算权重系数的三个阶段</center>
 
 <p>其中第一阶段计算相似性时有多种方法，例如向量点积、余弦相似度，甚至可以用一个小的神经网络来通过学习的方式计算。<br>第二阶段softmax归一化的公式如下：</p>
 <script type="math/tex; mode=display">
-a_{ij}=softmax(S_{ij})=\frac{exp(Sim_{ij})}{\sum_{j=1}^{L_x}exp(Sim_{ij})}\tag{5-3}</script><h2 id="5-2-几种典型的attention机制"><a href="#5-2-几种典型的attention机制" class="headerlink" title="5.2. 几种典型的attention机制"></a>5.2. 几种典型的attention机制</h2><p><a href="https://zhuanlan.zhihu.com/p/70905983" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/70905983</a></p>
-<h3 id="5-2-1-第一种-Bahdanau-Attention"><a href="#5-2-1-第一种-Bahdanau-Attention" class="headerlink" title="5.2.1. 第一种:Bahdanau Attention"></a>5.2.1. 第一种:<strong>Bahdanau Attention</strong></h3><p><a href="https://arxiv.org/abs/1409.0473" target="_blank" rel="noopener">https://arxiv.org/abs/1409.0473</a><br><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/encoder-decoder-%E6%A1%86%E6%9E%B62.jpg" alt="attention机制框架1"></p>
+a_{ij}=softmax(S_{ij})=\frac{exp(Sim_{ij})}{\sum_{j=1}^{L_x}exp(Sim_{ij})}\tag{5-3}</script><h2 id="5-2-几种典型的attention机制"><a href="#5-2-几种典型的attention机制" class="headerlink" title="5.2. 几种典型的attention机制"></a>5.2. 几种典型的attention机制</h2><h3 id="5-2-1-第一种-Bahdanau-Attention"><a href="#5-2-1-第一种-Bahdanau-Attention" class="headerlink" title="5.2.1. 第一种:Bahdanau Attention"></a>5.2.1. 第一种:<strong>Bahdanau Attention</strong></h3><p><a href="https://arxiv.org/abs/1409.0473" target="_blank" rel="noopener">https://arxiv.org/abs/1409.0473</a> Neural Machine Translation by Jointly Learning to Align and Translate，这篇论文可以看做是attention机制的开山论文。该论文也是为了解决翻译问题而提出的模型，encoder采用了双向的RNN结构，正向RNN和反向RNN的每个时刻的隐藏state拼接成一个两倍长的新的state。如果要用一个简洁的公式来概括attention，那就是<strong>mlp + softmax+加权求和</strong>。之前的模型都是用一个固定长度的语义向量C来将encoder和decode连接起来，而这篇论文里是采用一个attention模型来连接。<br><img src="https://img-blog.csdnimg.cn/20200926002437289.JPG#pic_center" alt="在这里插入图片描述"></p>
 <center>图5.4 attention机制框架1</center>
+
 
 <p>Encoder：</p>
 <script type="math/tex; mode=display">
@@ -1453,34 +1451,70 @@ h_i&=tanh(W[h_{i-1},x_i]+b)\\
 \end{align*}</script><p>语义向量：</p>
 <script type="math/tex; mode=display">
 \begin{align*}
-e_{ti}&=v_a^T tanh(W_a [s_{i-1,h_i}])\\
-\alpha_{it}&=\frac{exp(e_{ti})}{\sum_{k=1}^Texp(e_{tk})}\\
-c_t&=\sum_{i=1}^T\alpha_{ti}h_i\\
+e_{ij}&=a(s_{i-1},h_j)\\
+\alpha_{ij}&=\frac{exp(e_{ij})}{\sum_{k=1}^{T_x}exp(e_{ik})}\\
+c_i&=\sum_{j=1}^{T_x}\alpha_{ij}h_j\\
 \tag{5-5}
-\end{align*}</script><p>其中$e_{ti}$是Encoder中$i$时刻隐藏层状态$h_i$对Decoder中$t$时刻以仓储状态$s_t$的影响程度；$\alpha_{ti}$是对$e_{ti}$进行softmax归一化成的概率，也即前文提到的$a_{ij}$或者叫attention权重；$c_t$是$t$时刻的语义向量。<br>Decoder:</p>
+\end{align*}</script><p>其中$e_{ij}$是Encoder中$j$时刻隐藏层状态$h_j$对Decoder中$i$时刻的处处状态$s_i$的影响程度；$a(s_{i-1},h_j)$称为一个对齐模型，本论文中采用的是一个单隐藏层的多层感知机$a(s_{i-1},h_j)=v_a^T tanh(W_a s_{i-1}+U_ah_i)$，注意在实际推理的时候，$U_ah_i$是可以在推理之前预先算好的以减少推理计算量；$\alpha_{ti}$是对$e_{ti}$进行softmax归一化成的概率，也即前文提到的$a_{ij}$或者叫attention权重；$c_t$是$t$时刻的语义向量。可见上述计算得到权重系数$\alpha_{ij}$的的过程主要分为两步：<strong>MLP+SOFTMAX</strong><br>Decoder:</p>
 <script type="math/tex; mode=display">
 \begin{align*}
-s_t&=tanh(W[s_{t-1},y_{t-1},c_t])\\
-o_t&=softmax(Vs_t)\\
+s_i&=tanh(W[s_{i-1},y_{i-1},c_i])\\
+o_i&=softmax(Vs_i)\\
 \tag{5-6}
-\end{align*}</script><h3 id="5-2-2-第二种：-Global-attentional-model"><a href="#5-2-2-第二种：-Global-attentional-model" class="headerlink" title="5.2.2. 第二种： Global attentional model"></a>5.2.2. 第二种： <strong>Global attentional model</strong></h3><p><img src="https://github.com/lankuohsing/Markdown-Images/raw/master/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/Attention/attention%E6%A1%86%E6%9E%B62-global-attention.JPG" alt="attention框架2-global-attention"></p>
-<center>图5.5 attention框架2-global attention</center>
+\end{align*}</script><h3 id="5-2-2-第二种：-Luong-Attention"><a href="#5-2-2-第二种：-Luong-Attention" class="headerlink" title="5.2.2. 第二种： Luong Attention"></a>5.2.2. 第二种： <strong>Luong Attention</strong></h3><p>源自此论文<a href="https://arxiv.org/abs/1508.04025" target="_blank" rel="noopener">https://arxiv.org/abs/1508.04025</a> Effective Approaches to Attention-based Neural Machine Translation。该论文提出了两种不同的attention：global attention和local attention。前者attention将作用在源句子的每个词，计算量较大；后者是出于减小计算量的考虑，只关注一个区间内的词（并且是在一个句子内部）。</p>
+<h4 id="5-2-2-1-Global-attention"><a href="#5-2-2-1-Global-attention" class="headerlink" title="5.2.2.1. Global attention"></a>5.2.2.1. Global attention</h4><p><img src="https://img-blog.csdnimg.cn/20210110210144453.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<center>图5.5 attention框架2.1-global attention</center>
 
-<p>Encoder与第一种attention是一样的。<br>语义向量：</p>
+<p><strong>Encoder与上一小节中的不同之处在于</strong>，采用最顶层的LSTM的隐藏状态用于计算后续的语义向量C。<br><strong>语义向量</strong>与上一小节的不同之处在于，在计算权重系数$\alpha_{ij}$的时候利用的是decoder中第$i$个隐藏状态（上一小节是第$i-1$个）和encoder中第$j$个隐藏状态来计算：</p>
 <script type="math/tex; mode=display">
 \begin{align*}
-s_t&=tanh(W[s_{t-1},y_{t-1}])\\
-e_{ti}&=s_t^TW_ah_i\\
-\alpha_{it}&=\frac{exp(e_{ti})}{\sum_{k=1}^Texp(e_{tk})}\\
-c_t&=\sum_{i=1}^T\alpha_{ti}h_i\\
-\tag{5-7}
-\end{align*}</script><p>Decoder：</p>
+e_{ij}&=a(s_{i},h_j)\\
+\alpha_{ij}&=\frac{exp(e_{ij})}{\sum_{k=1}^{T_x}exp(e_{ik})}\\
+c_i&=\sum_{j=1}^{T_x}\alpha_{ij}h_j\\
+ s_i&=tanh(W[s_{i-1},y_{i-1}])\\
+\end{align*}</script><p>其中$a(s_{i},h_j)$的选择有多种：</p>
+<script type="math/tex; mode=display">
+a(s_{i},h_j)=\left\{  
+\begin{align*}  
+&s_i^Th_j &dot \\  
+&s_i^TW_a h_j &general\\  
+&v_a^Ttanh(W_a[s_i;h_j]) &concat \\
+\end{align*}  
+\right.
+\tag{5-7}</script><p><strong>Decoder</strong>：</p>
 <script type="math/tex; mode=display">
 \begin{align*}
-\tilde s_t&=tanh(W[s_t,c_t])\\
-o_t&=softmax(V\tilde s_t)\\
+\tilde s_i&=tanh(W[s_i,c_i])\\
+o_i&=softmax(V\tilde s_i)\\
 \tag{5-8}
-\end{align*}</script><p>第一种attention机制和第二种的区别主要在于计算影响程度$e_{ti}$的函数（一般称之为对齐函数）不同，第一种依赖于$h_i$和$s_{t-1}$，第二种依赖于$h_i$和$s_t$。</p>
+\end{align*}</script><h4 id="5-2-2-2-Local-Attention"><a href="#5-2-2-2-Local-Attention" class="headerlink" title="5.2.2.2. Local Attention"></a>5.2.2.2. Local Attention</h4><p>Global attention的缺点在于，预测某个target word时，需要计算该target对应的hidden state与encoder汇总所有hidden state之间的关系。当输入句子比较长时，这将非常耗时。Local attention就散为了解决这个问题，它只关注源句子中一个窗口内的词对应的hidden state。它的思想来源于soft-attention和hard-attention。<br><img src="https://img-blog.csdnimg.cn/20210110210559614.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<center>图5.6 attention框架2.2-local attention</center>
+
+<p>具体来说，对于要预测的某个target word， 首先计算出一个对齐位置$p_j$,然后一个以$p_i$为中心的窗口$[p_i-D,p_i+D]$会被用来计算$c_i$。窗口大小由经验给定。计算$c_i$的方法与前面类似。<br>因此，重点在于如何计算$p_i$。论文给出了两种方法：</p>
+<ol>
+<li>单调对齐方式（Monotonic alignment）：假设源句子和目标句子是单调对齐的。取$p_i=i$。</li>
+<li>预测对齐方式（Predictive alignment）：采用如下公式计算$p_i$:<script type="math/tex; mode=display">
+p_i=S\cdot sigmoid(v_p^Ttanh(W_ps_i))\tag{5-9}</script>其中S是源句子的长度。同时，为了增大$p_i$附近的hidden state权重，权重系数将再乘上一个高斯分布：<script type="math/tex; mode=display">
+a_{ij}=\alpha_{ij}\cdot exp\left(-\frac{(j-p_i)^2}{2\delta^2}\right)\tag{5-10}</script>其中$\delta=D/2$。$p_i$是个实数，而j是个整数<h3 id="5-2-3-Self-Attention"><a href="#5-2-3-Self-Attention" class="headerlink" title="5.2.3. Self-Attention"></a>5.2.3. <strong>Self-Attention</strong></h3>参考<a href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">https://jalammar.github.io/illustrated-transformer/</a><br>Self-Attention最著名的应用是在论文<a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">https://arxiv.org/abs/1706.03762</a> Attention Is All You Need中，作为transformer结构的一个重要组成部分。<br>前面提到的几种attention，都是应用于基于RNN或者LSTM的encoder-decoder架构，通过计算decoder中隐藏状态和encoder中各个隐藏状态之间的关系来得到对应的权重。在《Attention Is All You Need》中，完全抛弃RNN/LSTM/CNN等结构，仅采用attention机制来进行机器翻译任务。并且在本论文中的attention机制采用的是self-attention，在encode源句子中一个词时，会计算这个词与源句子中其他词的相关性，减少了外部信息的依赖（这里我的理解是，与前面的几种attention机制不同，self-attention不需要decoder中的信息，也即encode一个句子时只用到了自身的信息，这就是self的含义）。<br>下面个详细讲解self-attention原理。<strong>第一阶段</strong>是计算三个vector，见下图：图片来源<a href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">https://jalammar.github.io/illustrated-transformer/</a></li>
+</ol>
+<p><img src="https://img-blog.csdnimg.cn/20210117001503897.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<center>图5.7 self-attention vectors</center>
+
+<p>为了简单起见，假设输入句子只有两个词，是”Thinking Machines”。如上图所示：首先得到这两个词的Embedding向量$x_1,x_2$（跟一般的nlp任务中的Embedding向量是一个概念），然后对于每个词，都计算出三个向量：Query Vector，Key Vector和Value Vector。计算过程为分别乘以三个矩阵：$W^Q,W^K,W^V$。<br><strong>第二阶段</strong>是计算attention分数，假设现在要计算的是”Thinking”的attention值，那么需要计算”Thinking”与该句子中所有词的分数。需要计算$score(q_1,k_1),score(q_1,k_2)$。常见是计算公式是内积。过程如下图所示：<br><img src="https://img-blog.csdnimg.cn/20210117001439975.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<center>图5.8 self-attention score</center>
+
+<p><strong>第三阶段</strong>是对分数进行归一化。首先除以$\sqrt d_k$（Key Vector的维度），这是为了避免梯度爆炸；然后进行softmax归一化，这样是为了使得分数都在$[0,1]$之间。<br><img src="https://img-blog.csdnimg.cn/20210117001427754.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<center>图5.9 self-attention softmax</center>
+
+<p>这个分数代表了encode “Thinking”需要放置多少注意力在各个单词上,不妨记为$s_{1i}$。<br><strong>第四阶段</strong>就是利用上述得到分数对所有的Value Vector加权求和得到”Thinking”的representation： $z_1=\sum_{i=1}^{L_x}s_{1i}*v_i$<br><img src="https://img-blog.csdnimg.cn/20210117001414777.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<center>图5.10 self-attention output</center>
+
+<p>值得注意的是，上述过程是可以并行化计算的，这是self-attention相对于RNN,LSTM等序列模型的优势（在处理长序列问题上）。<br>最后，我们给出self-attention的紧凑表达式：</p>
+<script type="math/tex; mode=display">
+z=softmax(\frac{Q\cdot K}{\sqrt {d_k}})V\tag{5-11}</script><p>这样就一步到位得到了输入句子中所有词的represent vector。<br><img src="https://img-blog.csdnimg.cn/20210117161542872.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-HzRS859m-1610871220672)(index_files/self-attention-matrix-calculation-2.png &quot;self-attention 紧凑计算形式&quot;)\]"></p>
+<center>图5.11 self-attention 紧凑计算形式</center>
+
+<h3 id="5-2-4-Multi-Head-Attention"><a href="#5-2-4-Multi-Head-Attention" class="headerlink" title="5.2.4. Multi-Head Attention"></a>5.2.4. Multi-Head Attention</h3><p>所谓multi-head attention，其实就是将输入的Embedding切分成多份，对每一份独立地进行self-attention，然后将结果concat在一起。这是为了增加模型对于其他位置的词的注意力能力。因为如果只是一个self-attention，很容易使得某个词的注意力大部分集中在它自身。</p>
 
           
         
