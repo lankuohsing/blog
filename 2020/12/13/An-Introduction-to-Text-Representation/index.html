@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Guoxing Lan">
 <meta property="og:description" content="[TOC] 1. IntroductionBefore feeding our text data into a model, we need firstly transformed it to a numerical format that the model can understand. That is called text representation, and it is a nec">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2021-02-28T16:04:39.553Z">
+<meta property="og:updated_time" content="2021-03-01T14:28:10.667Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="An Introduction to Text Representation">
 <meta name="twitter:description" content="[TOC] 1. IntroductionBefore feeding our text data into a model, we need firstly transformed it to a numerical format that the model can understand. That is called text representation, and it is a nec">
@@ -372,16 +372,14 @@
 <script type="math/tex; mode=display">
 X(s)=\sum_{w_i\in s}{X(w_i)}</script><p>Where $X(w_i)$ is the one-hot encoding vector of $w_i$ in sentence $s$, and $X(s)$ is the vector of $s$.<br>In example 1, for a sentence “I like computer and science”, its sentence vector is:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1,1,0,1,0,1,1)</span><br></pre></td></tr></table></figure></p>
 <h3 id="3-1-1-Bag-of-Words-weighted-by-term-count"><a href="#3-1-1-Bag-of-Words-weighted-by-term-count" class="headerlink" title="3.1.1. Bag of Words weighted by term count"></a>3.1.1. Bag of Words weighted by term count</h3><p>In one-hot encoding, every word has the same value—1, in the non-zero component of its feature vector, which ignores importance of different words. Thus, it can’t distinguish these two sentences: “I like computer and science” and “I like computer and computer science”.<br>To evalute the importance of a word, a straightforward way is to multiply the one-hot vector by a weight—the count of the word in the sentence. Then, the vector of “I like computer and computer science” can be represented as:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1,1,0,1,0,2,1)</span><br></pre></td></tr></table></figure></p>
-<h3 id="3-1-2-Word-of-Bags-weighted-by-TF-IDF"><a href="#3-1-2-Word-of-Bags-weighted-by-TF-IDF" class="headerlink" title="3.1.2. Word of Bags weighted by TF-IDF"></a>3.1.2. Word of Bags weighted by TF-IDF</h3><p>A better choice is to use TF-IDF(Term Frequency-Inverse Document Frequency. In this section, document is identity with sentence) as the weight, where $TF(t)=\frac{counts\ of\ word\ t\ in\ the\ doc}{num\ of\ words\ in\ the\ doc}$.<br>The original definition of IDF is:</p>
+<h3 id="3-1-2-Word-of-Bags-weighted-by-TF-IDF"><a href="#3-1-2-Word-of-Bags-weighted-by-TF-IDF" class="headerlink" title="3.1.2. Word of Bags weighted by TF-IDF"></a>3.1.2. Word of Bags weighted by TF-IDF</h3><p>A better choice is to use TF-IDF(Term Frequency-Inverse Document Frequency. In this section, document is identity with sentence) as the weight, where $TF(t)=\frac{counts\ of\ word\ t\ in\ the\ doc}{num\ of\ words\ in\ the\ doc}$. </p>
+<p>The original definition of IDF is:</p>
 <script type="math/tex; mode=display">
-IDF(t)=ln\frac{n}{df(t)}
-$$, 
-where $n$ is the number of documents while $df(t)$ is number of documents containing the target word $t$. To avoid division by zero, we can use the smoothing technique: $IDF(t)=ln\frac{1+n}{1+df(t)}$, and it looks like that there is a document containing all the words. What's more, to avoid $IDF=0$, we can add one to IDF:</script><p>IDF(t)=ln\frac{1+n}{1+df(t)}+1</p>
+IDF(t)=ln\frac{n}{df(t)}</script><p>where $n$ is the number of documents while $df(t)$ is number of documents containing the target word $t$. To avoid division by zero, we can use the smoothing technique: $IDF(t)=ln\frac{1+n}{1+df(t)}$, and it looks like that there is a document containing all the words. What’s more, to avoid $IDF=0$, we can add one to IDF: </p>
 <script type="math/tex; mode=display">
-Then, TF-IDF$=TF(t)\cdot IDF(t)$
-Finally,</script><p>X(s)=\sum_{w_i\in s}{TF(w_i)\cdot IDF(w_i)\cdot X(w_i)}</p>
-<p>$$</p>
-<p>TF-IDF representation can be easily implemented by calling the following sk-learn functions:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vectorizer=CountVectorizer()</span><br><span class="line">transformer=TfidfTransformer()</span><br><span class="line">tfidf=transformer.fit_transform(vectorizer.fit_transform(corpus))</span><br></pre></td></tr></table></figure></p>
+IDF(t)=ln\frac{1+n}{1+df(t)}+1</script><p>Then, TF-IDF$=TF(t)\cdot IDF(t)$<br>Finally, </p>
+<script type="math/tex; mode=display">
+X(s)=\sum_{w_i\in s}{TF(w_i)\cdot IDF(w_i)\cdot X(w_i)}</script><p>TF-IDF representation can be easily implemented by calling the following sk-learn functions:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vectorizer=CountVectorizer()</span><br><span class="line">transformer=TfidfTransformer()</span><br><span class="line">tfidf=transformer.fit_transform(vectorizer.fit_transform(corpus))</span><br></pre></td></tr></table></figure></p>
 <p>or<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">transformer=TfidfVectorizer()</span><br><span class="line">tfidf2=transformer.fit_transform(corpus)</span><br></pre></td></tr></table></figure></p>
 <h3 id="3-1-3-Bag-of-Words-with-Word-Embeddings"><a href="#3-1-3-Bag-of-Words-with-Word-Embeddings" class="headerlink" title="3.1.3. Bag of Words with Word Embeddings"></a>3.1.3. Bag of Words with Word Embeddings</h3><p>In this method, each word is represented by word embeddings instead of one-hot encoding. The sentence is then represented by the average or weighted average of all the word vectors, like what we discussed above.</p>
 
