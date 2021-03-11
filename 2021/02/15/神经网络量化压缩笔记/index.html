@@ -88,7 +88,7 @@
 <meta property="og:description" content="@[toc]https://jackwish.net/2019/neural-network-quantization-introduction-chn.htmlhttps://zhuanlan.zhihu.com/p/149659607 0. 前言近年来，基于神经网络的深度学习在图像处理、自然语言处理、语音识别等领域取得了显著效果。一般情况下，一个神经网络模型越大（一般指参数量越大），模型的拟">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20210215223213448.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center">
-<meta property="og:updated_time" content="2021-02-15T14:34:49.243Z">
+<meta property="og:updated_time" content="2021-03-11T15:36:08.006Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="神经网络量化压缩笔记">
 <meta name="twitter:description" content="@[toc]https://jackwish.net/2019/neural-network-quantization-introduction-chn.htmlhttps://zhuanlan.zhihu.com/p/149659607 0. 前言近年来，基于神经网络的深度学习在图像处理、自然语言处理、语音识别等领域取得了显著效果。一般情况下，一个神经网络模型越大（一般指参数量越大），模型的拟">
@@ -381,7 +381,7 @@ x_{quantized}=x_{float}/x_{scale}+x_{quantized}^{max}-x_{float}^{max}/x_{scale}\
 <script type="math/tex; mode=display">
 x_{zero\_point}=x_{quantized}^{max}-x_{float}^{max}/x_{scale}\tag{2-5}</script><p>在工程中，int8可能会取[0,255] (无符号整数)</p>
 <p>有时float类型的极大值和极小值会太极端，从而使得放缩因子太大，导致最后量化后的结果太集中于某一个小的子区间，浪费了其他部分的值域空间。这时，可以读float类型的极大值极小值进行clip。例如，认为设为-1.0和1.0.</p>
-<p>这里留一个小彩蛋，为什么（2-3)里面不用$x-x^{min}$来计算缩放因子，而是采用$x-x^{max}$呢？虽然从数学上是等价的，但是工程实现上的效果会有点不一样</p>
+<p>这里留一个小彩蛋，为什么（2-3)里面不用$x-x^{min}$来与缩放因子相乘，而是采用$x-x^{max}$呢？虽然从数学上是等价的，但是工程实现上的效果会有点不一样，读者可以自己思考一下</p>
 
       
     </div>
