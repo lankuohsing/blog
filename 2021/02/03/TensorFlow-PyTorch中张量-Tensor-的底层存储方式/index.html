@@ -90,7 +90,7 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20210203231202217.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20210203231212171.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20210203231222692.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70">
-<meta property="og:updated_time" content="2021-03-11T15:26:17.159Z">
+<meta property="og:updated_time" content="2021-03-11T15:28:12.318Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TensorFlow&#x2F;PyTorch中张量(Tensor)的底层存储方式">
 <meta name="twitter:description" content="@[toc] 1 张量（Tensor）基本概念回顾张量（Tensor）其实就是多维数组，类似于NumPy里面的np.array。这里的维度，更准确的讲法应该叫阶（rank），这是为了跟向量（vector）的维度区分开的。vector其实就是rank为1的张量，我们说一个vector是n维的其实是说它有n个分量（标量）。而如果张量的维度（阶）是n维的，并不是说它有n个标量分量，而是说在表示这个张量">
@@ -384,9 +384,9 @@
 <li>对shape[n-i] (i=4,5,…,n)上的坐标递增,并重复前面的过程。</li>
 </ol>
 <p>一般情况下，假设高阶tensor的各个下标存在数组coordinates中, 各个阶的维数存在数组shape中，则转换为一维向量的下标index过程如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">index=0</span><br><span class="line">for(int i=0;i&lt;coordinates.size(); i++)&#123;</span><br><span class="line">    int tmp=coordinates[shape.size()-1-i]</span><br><span class="line">    for(int j=0;j&lt;i;j++)&#123;</span><br><span class="line">        tmp=tmp*shape[shape.size()-1-j]</span><br><span class="line">    &#125;</span><br><span class="line">    index=index+tmp</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">int index=0;</span><br><span class="line">for(int i=0;i&lt;coordinates.size(); i++)&#123;</span><br><span class="line">    int tmp=coordinates[shape.size()-1-i];</span><br><span class="line">    for(int j=0;j&lt;i;j++)&#123;</span><br><span class="line">        tmp=tmp*shape[shape.size()-1-j];</span><br><span class="line">    &#125;</span><br><span class="line">    index=index+tmp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>当然，还有一种基于动态规划的更高效的计算方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">index = coordinates[0];</span><br><span class="line">for(int i=1; i&lt;coordinates.size(); i++)&#123;</span><br><span class="line">index = index * shape[i] + coordinates[i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int index = coordinates[0];</span><br><span class="line">for(int i=1; i&lt;coordinates.size(); i++)&#123;</span><br><span class="line">index = index * shape[i] + coordinates[i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
