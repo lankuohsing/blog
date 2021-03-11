@@ -79,21 +79,21 @@
 
 
 
-<meta name="description" content="@[toc] 张量（Tensor）基本概念回顾张量（Tensor）其实就是多维数组，类似于NumPy里面的np.array。这里的维度，更准确的讲法应该叫阶（rank），这是为了跟向量（vector）的维度区分开的。vector其实就是rank为1的张量，我们说一个vector是n维的其实是说它有n个分量（标量）。而如果张量的维度（阶）是n维的，并不是说它有n个标量分量，而是说在表示这个张量时需">
+<meta name="description" content="@[toc] 1 张量（Tensor）基本概念回顾张量（Tensor）其实就是多维数组，类似于NumPy里面的np.array。这里的维度，更准确的讲法应该叫阶（rank），这是为了跟向量（vector）的维度区分开的。vector其实就是rank为1的张量，我们说一个vector是n维的其实是说它有n个分量（标量）。而如果张量的维度（阶）是n维的，并不是说它有n个标量分量，而是说在表示这个张量">
 <meta name="keywords" content="Neural Networks,Deep Learning">
 <meta property="og:type" content="article">
 <meta property="og:title" content="TensorFlow&#x2F;PyTorch中张量(Tensor)的底层存储方式">
 <meta property="og:url" content="https://lankuohsing.github.io/blog/2021/02/03/TensorFlow-PyTorch中张量-Tensor-的底层存储方式/index.html">
 <meta property="og:site_name" content="Guoxing Lan">
-<meta property="og:description" content="@[toc] 张量（Tensor）基本概念回顾张量（Tensor）其实就是多维数组，类似于NumPy里面的np.array。这里的维度，更准确的讲法应该叫阶（rank），这是为了跟向量（vector）的维度区分开的。vector其实就是rank为1的张量，我们说一个vector是n维的其实是说它有n个分量（标量）。而如果张量的维度（阶）是n维的，并不是说它有n个标量分量，而是说在表示这个张量时需">
+<meta property="og:description" content="@[toc] 1 张量（Tensor）基本概念回顾张量（Tensor）其实就是多维数组，类似于NumPy里面的np.array。这里的维度，更准确的讲法应该叫阶（rank），这是为了跟向量（vector）的维度区分开的。vector其实就是rank为1的张量，我们说一个vector是n维的其实是说它有n个分量（标量）。而如果张量的维度（阶）是n维的，并不是说它有n个标量分量，而是说在表示这个张量">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20210203231202217.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20210203231212171.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20210203231222692.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70">
-<meta property="og:updated_time" content="2021-03-11T13:59:18.754Z">
+<meta property="og:updated_time" content="2021-03-11T15:25:18.170Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TensorFlow&#x2F;PyTorch中张量(Tensor)的底层存储方式">
-<meta name="twitter:description" content="@[toc] 张量（Tensor）基本概念回顾张量（Tensor）其实就是多维数组，类似于NumPy里面的np.array。这里的维度，更准确的讲法应该叫阶（rank），这是为了跟向量（vector）的维度区分开的。vector其实就是rank为1的张量，我们说一个vector是n维的其实是说它有n个分量（标量）。而如果张量的维度（阶）是n维的，并不是说它有n个标量分量，而是说在表示这个张量时需">
+<meta name="twitter:description" content="@[toc] 1 张量（Tensor）基本概念回顾张量（Tensor）其实就是多维数组，类似于NumPy里面的np.array。这里的维度，更准确的讲法应该叫阶（rank），这是为了跟向量（vector）的维度区分开的。vector其实就是rank为1的张量，我们说一个vector是n维的其实是说它有n个分量（标量）。而如果张量的维度（阶）是n维的，并不是说它有n个标量分量，而是说在表示这个张量">
 <meta name="twitter:image" content="https://img-blog.csdnimg.cn/20210203231202217.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70">
 
 
@@ -363,7 +363,7 @@
       
         <hr>
 <p>@[toc]</p>
-<h1 id="张量（Tensor）基本概念回顾"><a href="#张量（Tensor）基本概念回顾" class="headerlink" title="张量（Tensor）基本概念回顾"></a>张量（Tensor）基本概念回顾</h1><p>张量（Tensor）其实就是多维数组，类似于NumPy里面的np.array。<br>这里的维度，更准确的讲法应该叫阶（rank），这是为了跟向量（vector）的维度区分开的。vector其实就是rank为1的张量，我们说一个vector是n维的其实是说它有n个分量（标量）。而如果张量的维度（阶）是n维的，并不是说它有n个标量分量，而是说在表示这个张量时需要用n个坐标轴。每个轴上都可以有多个分量。为了表示每个轴上的分量个数，引入形状（shape）的概念。<br>例如，一个三阶的张量，可以理解为是一个立方体。假设它的shape是$[3,2,5]$,那么下图就是一个具体的例子（下面两张图的来源均为<a href="https://www.tensorflow.org/guide/tensor" target="_blank" rel="noopener">https://www.tensorflow.org/guide/tensor</a>）：<br><img src="https://img-blog.csdnimg.cn/20210203231202217.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h1 id="1-张量（Tensor）基本概念回顾"><a href="#1-张量（Tensor）基本概念回顾" class="headerlink" title="1 张量（Tensor）基本概念回顾"></a>1 张量（Tensor）基本概念回顾</h1><p>张量（Tensor）其实就是多维数组，类似于NumPy里面的np.array。<br>这里的维度，更准确的讲法应该叫阶（rank），这是为了跟向量（vector）的维度区分开的。vector其实就是rank为1的张量，我们说一个vector是n维的其实是说它有n个分量（标量）。而如果张量的维度（阶）是n维的，并不是说它有n个标量分量，而是说在表示这个张量时需要用n个坐标轴。每个轴上都可以有多个分量。为了表示每个轴上的分量个数，引入形状（shape）的概念。<br>例如，一个三阶的张量，可以理解为是一个立方体。假设它的shape是$[3,2,5]$,那么下图就是一个具体的例子（下面两张图的来源均为<a href="https://www.tensorflow.org/guide/tensor" target="_blank" rel="noopener">https://www.tensorflow.org/guide/tensor</a>）：<br><img src="https://img-blog.csdnimg.cn/20210203231202217.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
 <center>图0.1 一个rank为3的tensor的例子</center>
 
 <p>而一个四阶张量的例子则用下图表示：<br><img src="https://img-blog.csdnimg.cn/20210203231212171.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
@@ -374,7 +374,7 @@
 <center>图0.3 1-6阶tensor的shape规律</center>
 
 <p>可以将规律总结为：从shape列表的最右边往左遍历，最开始三个阶按照“下-右-里”的顺序排列，然后打包成一个group，再将整个group按照“下-右-里”的顺序排列，满三次后再打包成一个group，如此往复循环。。</p>
-<h1 id="tensor在计算机内存中的存储方式"><a href="#tensor在计算机内存中的存储方式" class="headerlink" title="tensor在计算机内存中的存储方式"></a>tensor在计算机内存中的存储方式</h1><p>前面提到的rank和shape，都是数学上的定义，实际在内存中是一维存储的。<br>排列规律为：</p>
+<h1 id="2-tensor在计算机内存中的存储方式"><a href="#2-tensor在计算机内存中的存储方式" class="headerlink" title="2 tensor在计算机内存中的存储方式"></a>2 tensor在计算机内存中的存储方式</h1><p>前面提到的rank和shape，都是数学上的定义，实际在内存中是一维存储的。<br>排列规律为：</p>
 <ol>
 <li>假设rank为n，即shape列表的size为n.</li>
 <li>初始位置为原点</li>
@@ -383,7 +383,10 @@
 <li>将shape[n-3]上的坐标递增，继续3,4，直到shape[n-3]方向上的坐标和shape[n-2]方向上的坐标到了最大值，并且排完了这个坐标上的shape[n-1]方向的元素，此时shape[n-3]和shape[n-2]方向上坐标归零</li>
 <li>对shape[n-i] (i=4,5,…,n)上的坐标递增,并重复前面的过程。</li>
 </ol>
-<p>一般情况下，假设高阶tensor的下标为coordinates, 则转换为一维向量的下标index过程如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">index = coordinates[0];</span><br><span class="line">for(int i=1; i&lt;coordinates.size(); i++)&#123;</span><br><span class="line">index = index * shape[i] + coordinates[i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>一般情况下，假设高阶tensor的各个下标存在数组coordinates中, 各个阶的维数存在数组shape中，则转换为一维向量的下标index过程如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">index=0</span><br><span class="line">for(int i=0;i&lt;coordinates.size(); i++):</span><br><span class="line">    int tmp=coordinates[shape.size()-1-i]</span><br><span class="line">    for(int j=0;j&lt;i;j++):</span><br><span class="line">        tmp=tmp*shape[shape.size()-1-j]</span><br><span class="line">    index=index+tmp</span><br></pre></td></tr></table></figure>
+<p>当然，还有一种基于动态规划的更高效的计算方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">index = coordinates[0];</span><br><span class="line">for(int i=1; i&lt;coordinates.size(); i++)&#123;</span><br><span class="line">index = index * shape[i] + coordinates[i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -564,7 +567,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#张量（Tensor）基本概念回顾"><span class="nav-number">1.</span> <span class="nav-text">张量（Tensor）基本概念回顾</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tensor在计算机内存中的存储方式"><span class="nav-number">2.</span> <span class="nav-text">tensor在计算机内存中的存储方式</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-张量（Tensor）基本概念回顾"><span class="nav-number">1.</span> <span class="nav-text">1 张量（Tensor）基本概念回顾</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-tensor在计算机内存中的存储方式"><span class="nav-number">2.</span> <span class="nav-text">2 tensor在计算机内存中的存储方式</span></a></li></ol></div>
             
 
           </div>
