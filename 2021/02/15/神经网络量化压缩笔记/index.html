@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Neural Networks,Deep Learning,Model Compression," />
+  <meta name="keywords" content="Deep Learning,Neural Networks,Model Compression," />
 
 
 
@@ -80,7 +80,7 @@
 
 
 <meta name="description" content="@[toc]https://jackwish.net/2019/neural-network-quantization-introduction-chn.htmlhttps://zhuanlan.zhihu.com/p/149659607 0. 前言近年来，基于神经网络的深度学习在图像处理、自然语言处理、语音识别等领域取得了显著效果。一般情况下，一个神经网络模型越大（一般指参数量越大），模型的拟">
-<meta name="keywords" content="Neural Networks,Deep Learning,Model Compression">
+<meta name="keywords" content="Deep Learning,Neural Networks,Model Compression">
 <meta property="og:type" content="article">
 <meta property="og:title" content="神经网络量化压缩笔记">
 <meta property="og:url" content="https://lankuohsing.github.io/blog/2021/02/15/神经网络量化压缩笔记/index.html">
@@ -88,7 +88,7 @@
 <meta property="og:description" content="@[toc]https://jackwish.net/2019/neural-network-quantization-introduction-chn.htmlhttps://zhuanlan.zhihu.com/p/149659607 0. 前言近年来，基于神经网络的深度学习在图像处理、自然语言处理、语音识别等领域取得了显著效果。一般情况下，一个神经网络模型越大（一般指参数量越大），模型的拟">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20210215223213448.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center">
-<meta property="og:updated_time" content="2021-03-11T15:36:08.006Z">
+<meta property="og:updated_time" content="2021-03-23T13:37:24.882Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="神经网络量化压缩笔记">
 <meta name="twitter:description" content="@[toc]https://jackwish.net/2019/neural-network-quantization-introduction-chn.htmlhttps://zhuanlan.zhihu.com/p/149659607 0. 前言近年来，基于神经网络的深度学习在图像处理、自然语言处理、语音识别等领域取得了显著效果。一般情况下，一个神经网络模型越大（一般指参数量越大），模型的拟">
@@ -367,7 +367,7 @@
 <li>不改变原有模型结构，而是对已有的模型进行参数压缩。</li>
 </ul>
 <h1 id="1-量化压缩方法简介"><a href="#1-量化压缩方法简介" class="headerlink" title="1. 量化压缩方法简介"></a>1. 量化压缩方法简介</h1><p>量化压缩就是上一章节中的第二种解决方案，即对已有的模型进行参数压缩。所谓量化，就是用精度更低的类型来存储权重参数。例如，通常情况下模型默认以float32类型变量来存储权重，低精度就是以float16，int8甚至更低精度的类型来存储。最极端的情况下，可以采用一个bit来存储，也即二值神经网络。工业界中常采用的是int8类型。<br>在训练过程中，一般还是全精度（float32）类型，到了推理阶段，则有两种方案：一种是所有算子都支持量化后的类型的数据运算（以int8为例），因此模型的全过程中数据流都是int8；另一种是数据流仍是float32，每个算子前后分别有quantize层和dequantize层用以将float32转换为int8或者反过来。</p>
-<h1 id="2-量化压缩原理"><a href="#2-量化压缩原理" class="headerlink" title="2. 量化压缩原理"></a>2. 量化压缩原理</h1><h2 id="2-1-定点数与浮点数"><a href="#2-1-定点数与浮点数" class="headerlink" title="2.1. 定点数与浮点数"></a>2.1. 定点数与浮点数</h2><p>在计算机的存储中，int属于定点数，float和double属于浮点数。定点数与浮点数的介绍见<a href="https://www.jianshu.com/p/d39fb5792ac8" target="_blank" rel="noopener">https://www.jianshu.com/p/d39fb5792ac8</a><br>浮点数的存储与转换方式详解见<a href="https://www.cnblogs.com/lan0725/p/11515584.html" target="_blank" rel="noopener">https://www.cnblogs.com/lan0725/p/11515584.html</a><br>int8的值域为[-128,127],取值个数为$2^{8};$float32的值域为$[(2-2^{-23})\times 2^{127},(2^{-23}-2)\times 2^{127}]$,取值个数约为$2^{32}$。int8在整个值域上的精度分布是均匀的，而float32不是均匀的,0附近的精度越高，越往值域区间两边精度越低。这是因为，在给定指数时，float32在此指数对应的区间内数值个数是一定的，如下图所示（图片来源<a href="https://jackwish.net/2019/neural-network-quantization-introduction-chn.html" target="_blank" rel="noopener">https://jackwish.net/2019/neural-network-quantization-introduction-chn.html</a>）<br><img src="https://img-blog.csdnimg.cn/20210215223213448.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<h1 id="2-量化压缩原理"><a href="#2-量化压缩原理" class="headerlink" title="2. 量化压缩原理"></a>2. 量化压缩原理</h1><h2 id="2-1-定点数与浮点数"><a href="#2-1-定点数与浮点数" class="headerlink" title="2.1. 定点数与浮点数"></a>2.1. 定点数与浮点数</h2><p>在计算机的存储中，int属于定点数，float和double属于浮点数。定点数与浮点数的介绍见<a href="https://www.jianshu.com/p/d39fb5792ac8" target="_blank" rel="noopener">https://www.jianshu.com/p/d39fb5792ac8</a><br>浮点数的存储与转换方式详解见<a href="https://www.cnblogs.com/lan0725/p/11515584.html" target="_blank" rel="noopener">https://www.cnblogs.com/lan0725/p/11515584.html</a><br>int8的值域为[-128,127],取值个数为$2^{8};$float32的值域为$[(2^{-23}-2)\times 2^{127},(2-2^{-23})\times 2^{127}]$,取值个数约为$2^{32}$。int8在整个值域上的精度分布是均匀的，而float32不是均匀的,0附近的精度越高，越往值域区间两边精度越低。这是因为，在给定指数时，float32在此指数对应的区间内数值个数是一定的，如下图所示（图片来源<a href="https://jackwish.net/2019/neural-network-quantization-introduction-chn.html" target="_blank" rel="noopener">https://jackwish.net/2019/neural-network-quantization-introduction-chn.html</a>）<br><img src="https://img-blog.csdnimg.cn/20210215223213448.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RIVUNoaW5h,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <p><center>图2.1 float类型的数值个数分布</center></p>
 <h2 id="2-2-将浮点数量化为定点数"><a href="#2-2-将浮点数量化为定点数" class="headerlink" title="2.2. 将浮点数量化为定点数"></a>2.2. 将浮点数量化为定点数</h2><p>量化压缩的过程本质上是一个一个区间放缩到另一个区间的过程，这里仅讨论线性放缩:</p>
 <script type="math/tex; mode=display">
@@ -399,9 +399,9 @@ x_{zero\_point}=x_{quantized}^{max}-x_{float}^{max}/x_{scale}\tag{2-5}</script><
       
         <div class="post-tags">
           
-            <a href="../../../../tags/Neural-Networks/" rel="tag"># Neural Networks</a>
-          
             <a href="../../../../tags/Deep-Learning/" rel="tag"># Deep Learning</a>
+          
+            <a href="../../../../tags/Neural-Networks/" rel="tag"># Neural Networks</a>
           
             <a href="../../../../tags/Model-Compression/" rel="tag"># Model Compression</a>
           
